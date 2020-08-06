@@ -16,7 +16,7 @@ import 'package:mp_chart/mp/core/transformer/transformer.dart';
 import 'package:mp_chart/mp/painter/combined_chart_painter.dart';
 
 class CombinedChartController
-    extends BarLineScatterCandleBubbleController<CombinedChartPainter> {
+    extends BarLineScatterCandleBubbleController<CombinedChartPainter> with ChartPositionListener {
   bool drawValueAboveBar;
   bool highlightFullBarEnabled;
   bool drawBarShadow;
@@ -215,6 +215,12 @@ class CombinedChartController
   @override
   CombinedChartState createRealState() {
     return CombinedChartState();
+  }
+
+  @override
+  void updatePositionMatrix(Matrix4 positionMatrix, double mainChartWidth, double mainChartHeight) {
+    painter.viewPortHandler.setRangeMatrix(positionMatrix, mainChartWidth, mainChartHeight);
+    state.setStateIfNotDispose();
   }
 
 }
