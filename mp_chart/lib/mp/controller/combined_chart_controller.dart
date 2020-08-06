@@ -77,6 +77,7 @@ class CombinedChartController
       double extraBottomOffset = 0.0,
       double extraLeftOffset = 0.0,
       bool drawMarkers = true,
+        bool drawRange = false,
       bool resolveGestureHorizontalConflict = false,
       bool resolveGestureVerticalConflict = false,
       double descTextSize = 12,
@@ -143,6 +144,7 @@ class CombinedChartController
             touchEventListener: touchEventListener,
             chartTransListener: chartTransListener,
   chartPositionListener: chartPositionListener,
+  drawRange: drawRange,
   rangePaint: rangePaint);
 
   CombinedData get data => super.data;
