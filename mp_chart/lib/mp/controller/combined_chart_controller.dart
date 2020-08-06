@@ -7,6 +7,7 @@ import 'package:mp_chart/mp/core/data/combined_data.dart';
 import 'package:mp_chart/mp/core/description.dart';
 import 'package:mp_chart/mp/core/functions.dart';
 import 'package:mp_chart/mp/core/marker/i_marker.dart';
+import 'package:mp_chart/mp/core/range_chart_listener.dart';
 import 'package:mp_chart/mp/core/render/x_axis_renderer.dart';
 import 'package:mp_chart/mp/core/render/y_axis_renderer.dart';
 import 'package:mp_chart/mp/core/touch_listener.dart';
@@ -54,6 +55,7 @@ class CombinedChartController
       bool keepPositionOnRotation = false,
       Paint gridBackgroundPaint,
       Paint borderPaint,
+        Paint rangePaint,
       Color backgroundColor,
       Color gridBackColor,
       Color borderColor,
@@ -82,7 +84,8 @@ class CombinedChartController
       Color descTextColor,
       Color infoTextColor,
       Color infoBgColor,
-      ChartTransListener chartTransListener})
+      ChartTransListener chartTransListener,
+        ChartPositionListener chartPositionListener})
       : super(
             marker: marker,
             description: description,
@@ -138,7 +141,9 @@ class CombinedChartController
             axisLeftSettingFunction: axisLeftSettingFunction,
             axisRightSettingFunction: axisRightSettingFunction,
             touchEventListener: touchEventListener,
-            chartTransListener: chartTransListener);
+            chartTransListener: chartTransListener,
+  chartPositionListener: chartPositionListener,
+  rangePaint: rangePaint);
 
   CombinedData get data => super.data;
 
@@ -181,6 +186,7 @@ class CombinedChartController
         gridBackgroundPaint,
         backgroundPaint,
         borderPaint,
+        rangePaint,
         drawGridBackground,
         drawBorders,
         clipValuesToContent,
@@ -200,7 +206,9 @@ class CombinedChartController
         drawValueAboveBar,
         drawBarShadow,
         fitBars,
+        drawRange,
         drawOrder,
+        chartPositionListener,
         chartTransListener);
   }
 
@@ -208,4 +216,5 @@ class CombinedChartController
   CombinedChartState createRealState() {
     return CombinedChartState();
   }
+
 }
