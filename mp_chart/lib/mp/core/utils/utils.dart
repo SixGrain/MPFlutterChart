@@ -17,6 +17,9 @@ abstract class Utils {
   static double DEG2RAD = pi / 180.0;
 
   // ignore: non_constant_identifier_names
+  static double GRID_LINE_MARGIN = 4;
+
+  // ignore: non_constant_identifier_names
   static double FLOAT_EPSILON = 1.4E-45;
 
   static void drawXAxisValue(
@@ -51,6 +54,9 @@ abstract class Utils {
         case XAxisPosition.BOTTOM_INSIDE:
           paint.paint(c, Offset(drawOffsetX, drawOffsetY));
           break;
+        case XAxisPosition.BOTTOM_INSIDE_RIGHT:
+          paint.paint(c, Offset(drawOffsetX, drawOffsetY));
+          break;
         case XAxisPosition.TOP:
           paint.paint(c, Offset(drawOffsetX, drawOffsetY));
           break;
@@ -77,6 +83,12 @@ abstract class Utils {
               c,
               Offset(
                   drawOffsetX - paint.width / 2, drawOffsetY - paint.height));
+          break;
+        case XAxisPosition.BOTTOM_INSIDE_RIGHT:
+          paint.paint(
+              c,
+              Offset(
+                  drawOffsetX + GRID_LINE_MARGIN, drawOffsetY));
           break;
         case XAxisPosition.TOP:
           paint.paint(
@@ -123,6 +135,9 @@ abstract class Utils {
           paint.paint(c, Offset(drawOffsetX, drawOffsetY));
           break;
         case XAxisPosition.BOTTOM_INSIDE:
+          paint.paint(c, Offset(drawOffsetX, drawOffsetY));
+          break;
+        case XAxisPosition.BOTTOM_INSIDE_RIGHT:
           paint.paint(c, Offset(drawOffsetX, drawOffsetY));
           break;
         case XAxisPosition.TOP:
@@ -179,6 +194,9 @@ abstract class Utils {
         case XAxisPosition.BOTTOM_INSIDE:
           paint.paint(c, Offset(drawOffsetX, drawOffsetY));
           break;
+        case XAxisPosition.BOTTOM_INSIDE_RIGHT:
+          paint.paint(c, Offset(drawOffsetX, drawOffsetY));
+          break;
         case XAxisPosition.TOP:
           paint.paint(c, Offset(drawOffsetX, drawOffsetY));
           break;
@@ -204,6 +222,9 @@ abstract class Utils {
                   drawOffsetX - paint.width, drawOffsetY - paint.height / 2));
           break;
         case XAxisPosition.BOTTOM_INSIDE:
+          paint.paint(c, Offset(drawOffsetX, drawOffsetY - paint.height / 2));
+          break;
+        case XAxisPosition.BOTTOM_INSIDE_RIGHT:
           paint.paint(c, Offset(drawOffsetX, drawOffsetY - paint.height / 2));
           break;
         case XAxisPosition.TOP:

@@ -12,6 +12,7 @@ import 'package:mp_chart/mp/core/description.dart';
 import 'package:mp_chart/mp/core/entry/entry.dart';
 import 'package:mp_chart/mp/core/enums/legend_form.dart';
 import 'package:mp_chart/mp/core/enums/limit_label_postion.dart';
+import 'package:mp_chart/mp/core/enums/x_axis_position.dart';
 import 'package:mp_chart/mp/core/image_loader.dart';
 import 'package:mp_chart/mp/core/limit_line.dart';
 import 'package:mp_chart/mp/core/utils/color_utils.dart';
@@ -122,7 +123,9 @@ class LineChartWithRangeState extends State<LineChartWithRange> with ChartTransL
           legend.enabled = false;
         },
         xAxisSettingFunction: (xAxis, controller) {
-          xAxis.enabled = false;
+          xAxis..enabled = (true)
+            ..drawGridLines = (true)
+            ..position = (XAxisPosition.BOTTOM_INSIDE_RIGHT);
         },
         drawGridBackground: false,
         backgroundColor: ColorUtils.WHITE,
