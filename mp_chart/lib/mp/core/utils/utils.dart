@@ -20,6 +20,9 @@ abstract class Utils {
   static double GRID_LINE_MARGIN = 4;
 
   // ignore: non_constant_identifier_names
+  static double LABEL_AXIS_MARGIN = 10;
+
+  // ignore: non_constant_identifier_names
   static double FLOAT_EPSILON = 1.4E-45;
 
   static void drawXAxisValue(
@@ -76,7 +79,7 @@ abstract class Utils {
       paint.layout();
       switch (position) {
         case XAxisPosition.BOTTOM:
-          paint.paint(c, Offset(drawOffsetX - paint.width / 2, drawOffsetY));
+          paint.paint(c, Offset(drawOffsetX - paint.width / 2, drawOffsetY + LABEL_AXIS_MARGIN));
           break;
         case XAxisPosition.BOTTOM_INSIDE:
           paint.paint(

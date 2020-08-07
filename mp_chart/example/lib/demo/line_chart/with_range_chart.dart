@@ -94,7 +94,7 @@ class LineChartWithRangeState extends State<LineChartWithRange> with ChartTransL
           legend.shape = (LegendForm.LINE);
         },
         xAxisSettingFunction: (xAxis, controller) {
-
+          xAxis.position = XAxisPosition.BOTTOM;
         },
         drawGridBackground: false,
         backgroundColor: ColorUtils.WHITE,

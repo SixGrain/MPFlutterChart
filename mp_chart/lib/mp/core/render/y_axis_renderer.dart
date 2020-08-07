@@ -137,7 +137,7 @@ class YAxisRenderer extends AxisRenderer {
         if (position == YAxisLabelPosition.OUTSIDE_CHART) {
           axisLabelPaint.paint(
               c,
-              Offset(fixedPosition - axisLabelPaint.width,
+              Offset(fixedPosition - axisLabelPaint.width - 10,
                   positions[i * 2 + 1] - axisLabelPaint.height / 2));
         } else {
           axisLabelPaint.paint(
