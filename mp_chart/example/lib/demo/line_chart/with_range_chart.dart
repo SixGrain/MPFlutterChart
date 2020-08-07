@@ -85,16 +85,19 @@ class LineChartWithRangeState extends State<LineChartWithRange> with ChartTransL
         axisLeftSettingFunction: (axisLeft, controller) {
           axisLeft
             ..setAxisMaximum(200)
-            ..setAxisMinimum(-50);
+            ..setAxisMinimum(-50)
+            ..labelAxisPadding = 10;
         },
         axisRightSettingFunction: (axisRight, controller) {
-          axisRight.enabled = (false);
+          axisRight..enabled = (false)
+            ..labelAxisPadding = 10;
         },
         legendSettingFunction: (legend, controller) {
           legend.shape = (LegendForm.LINE);
         },
         xAxisSettingFunction: (xAxis, controller) {
-          xAxis.position = XAxisPosition.BOTTOM;
+          xAxis..position = XAxisPosition.BOTTOM
+              ..labelAxisPadding = 10;
         },
         drawGridBackground: false,
         backgroundColor: ColorUtils.WHITE,

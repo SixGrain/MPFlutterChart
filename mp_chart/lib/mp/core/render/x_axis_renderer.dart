@@ -250,7 +250,8 @@ class XAxisRenderer extends AxisRenderer {
         axisLabelPaint,
         anchor,
         angleDegrees,
-        position);
+        position,
+    labelAxisOffset: _xAxis.labelAxisPadding);
   }
 
   Path mRenderGridLinesPath = Path();

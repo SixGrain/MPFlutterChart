@@ -20,9 +20,6 @@ abstract class Utils {
   static double GRID_LINE_MARGIN = 4;
 
   // ignore: non_constant_identifier_names
-  static double LABEL_AXIS_MARGIN = 10;
-
-  // ignore: non_constant_identifier_names
   static double FLOAT_EPSILON = 1.4E-45;
 
   static void drawXAxisValue(
@@ -33,7 +30,8 @@ abstract class Utils {
       TextPainter paint,
       MPPointF anchor,
       double angleDegrees,
-      XAxisPosition position) {
+      XAxisPosition position,
+  {labelAxisOffset = 0}) {
     double drawOffsetX = 0;
     double drawOffsetY = 0;
 
@@ -79,7 +77,7 @@ abstract class Utils {
       paint.layout();
       switch (position) {
         case XAxisPosition.BOTTOM:
-          paint.paint(c, Offset(drawOffsetX - paint.width / 2, drawOffsetY + LABEL_AXIS_MARGIN));
+          paint.paint(c, Offset(drawOffsetX - paint.width / 2, drawOffsetY + labelAxisOffset));
           break;
         case XAxisPosition.BOTTOM_INSIDE:
           paint.paint(
@@ -97,7 +95,7 @@ abstract class Utils {
           paint.paint(
               c,
               Offset(
-                  drawOffsetX - paint.width / 2, drawOffsetY - paint.height));
+                  drawOffsetX - paint.width / 2, drawOffsetY - paint.height - labelAxisOffset));
           break;
         case XAxisPosition.TOP_INSIDE:
           paint.paint(c, Offset(drawOffsetX - paint.width / 2, drawOffsetY));
