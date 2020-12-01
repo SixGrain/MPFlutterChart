@@ -514,10 +514,6 @@ abstract class BarLineChartBasePainter<
   }
 
   void compute() {
-    if (_autoScaleMinMaxEnabled) {
-      autoScale();
-    }
-
     if (_axisLeft.enabled) {
       _axisRendererLeft.computeAxis(
           _axisLeft.axisMinimum, _axisLeft.axisMaximum, _axisLeft.inverted);
@@ -530,6 +526,10 @@ abstract class BarLineChartBasePainter<
 
     if (xAxis.enabled) {
       _xAxisRenderer.computeAxis(xAxis.axisMinimum, xAxis.axisMaximum, false);
+    }
+
+    if (_autoScaleMinMaxEnabled) {
+      autoScale();
     }
   }
 
