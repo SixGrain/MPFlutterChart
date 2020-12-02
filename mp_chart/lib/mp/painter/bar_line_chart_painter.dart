@@ -284,16 +284,16 @@ abstract class BarLineChartBasePainter<
                 viewPortHandler.mainChartDimensions.x) * getMeasuredWidth(),
             getMeasuredHeight());
       }
-      canvas.drawRect(
-          Rect.fromPoints(start, end),
-          _rangePaint);
+      try {
+        canvas.drawRect(
+            Rect.fromPoints(start, end),
+            _rangePaint);
+      } catch (e) {
+        print(e);
+      }
     }
 
     compute();
-
-    _xAxisRenderer.renderAxisLine(canvas);
-    _axisRendererLeft.renderAxisLine(canvas);
-    _axisRendererRight.renderAxisLine(canvas);
 
     if (xAxis.drawGridLinesBehindData) _xAxisRenderer.renderGridLines(canvas);
 
@@ -317,6 +317,10 @@ abstract class BarLineChartBasePainter<
     canvas.clipRect(viewPortHandler.getContentRect());
 
     renderer.drawData(canvas);
+
+    _xAxisRenderer.renderAxisLine(canvas);
+    _axisRendererLeft.renderAxisLine(canvas);
+    _axisRendererRight.renderAxisLine(canvas);
 
     if (!xAxis.drawGridLinesBehindData) _xAxisRenderer.renderGridLines(canvas);
 
