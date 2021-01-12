@@ -713,7 +713,7 @@ class LineChartRenderer extends LineRadarRenderer {
         double circleRadius = dataSet.getCircleRadius();
         double circleHoleRadius = dataSet.getCircleHoleRadius();
 
-        renderPaint..color = dataSet.getCircleColor(i % colorCount);
+        renderPaint..color = dataSet.getCircleColor(j % colorCount);
 
         if (drawTransparentCircleHole) {
           c.drawCircle(Offset(mCirclesBuffer[0], mCirclesBuffer[1]),
