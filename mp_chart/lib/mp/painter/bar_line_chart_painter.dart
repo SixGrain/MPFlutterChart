@@ -318,7 +318,7 @@ abstract class BarLineChartBasePainter<
 
     renderer.drawData(canvas);
 
-    _xAxisRenderer.renderAxisLine(canvas);
+    // _xAxisRenderer.renderAxisLine(canvas);
     _axisRendererLeft.renderAxisLine(canvas);
     _axisRendererRight.renderAxisLine(canvas);
 
