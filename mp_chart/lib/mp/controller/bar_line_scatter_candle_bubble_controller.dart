@@ -217,7 +217,7 @@ abstract class BarLineScatterCandleBubbleController<
     zoomMatrixBuffer ??= initZoomMatrixBuffer();
     axisRendererLeft = initAxisRendererLeft();
     axisRendererRight = initAxisRendererRight();
-    xAxisRenderer = initXAxisRenderer();
+    xAxisRenderer = xAxisRenderer ?? initXAxisRenderer();
     if (axisLeftSettingFunction != null) {
       axisLeftSettingFunction(axisLeft, this);
     }
