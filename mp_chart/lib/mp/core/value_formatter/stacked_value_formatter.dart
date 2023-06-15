@@ -4,19 +4,23 @@ import 'package:mp_chart/mp/core/value_formatter/value_formatter.dart';
 
 class StackedValueFormatter extends ValueFormatter {
   /// if true, all stack values of the stacked bar entry are drawn, else only top
-  bool _drawWholeStack;
+  late bool _drawWholeStack;
 
   /// a string that should be appended behind the value
-  String _suffix;
+  late String _suffix;
 
-  NumberFormat _format;
+  late NumberFormat _format;
 
   /// Constructor.
   ///
   /// @param drawWholeStack if true, all stack values of the stacked bar entry are drawn, else only top
   /// @param suffix         a string that should be appended behind the value
   /// @param decimals       the number of decimal digits to use
-  StackedValueFormatter(bool drawWholeStack, String suffix, int decimals) {
+  StackedValueFormatter(
+    bool drawWholeStack,
+    String suffix,
+    int decimals,
+  ) {
     this._drawWholeStack = drawWholeStack;
     this._suffix = suffix;
 
@@ -32,7 +36,7 @@ class StackedValueFormatter extends ValueFormatter {
   @override
   String getBarStackedLabel(double value, BarEntry entry) {
     if (!_drawWholeStack) {
-      List<double> vals = entry.yVals;
+      List<double>? vals = entry.yVals;
 
       if (vals != null) {
         // find out if we are on top of the stack

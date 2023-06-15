@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:example/demo/action_state.dart';
 import 'package:flutter/material.dart';
 import 'package:mp_chart/mp/chart/line_chart.dart';
 import 'package:mp_chart/mp/controller/line_chart_controller.dart';
@@ -9,7 +10,6 @@ import 'package:mp_chart/mp/core/description.dart';
 import 'package:mp_chart/mp/core/entry/entry.dart';
 import 'package:mp_chart/mp/core/enums/mode.dart';
 import 'package:mp_chart/mp/core/utils/color_utils.dart';
-import 'package:example/demo/action_state.dart';
 
 class LineChartPerformance extends StatefulWidget {
   @override
@@ -20,7 +20,7 @@ class LineChartPerformance extends StatefulWidget {
 
 class LineChartPerformanceState
     extends SimpleActionState<LineChartPerformance> {
-  LineChartController _controller;
+  late LineChartController _controller;
   var random = Random(1);
   double _range = 100.0;
   int _count = 0;
@@ -117,7 +117,7 @@ class LineChartPerformanceState
   }
 
   void _initLineData(double range) {
-    List<Entry> values = List();
+    List<Entry> values = [];
 
     _count = (range + 1000).toInt();
 
@@ -137,7 +137,7 @@ class LineChartPerformanceState
     set1.setDrawFilled(false);
 
     // create a data object with the data sets
-    _controller.data = LineData.fromList(List()..add(set1));
+    _controller.data = LineData.fromList([]..add(set1));
 
     setState(() {});
   }

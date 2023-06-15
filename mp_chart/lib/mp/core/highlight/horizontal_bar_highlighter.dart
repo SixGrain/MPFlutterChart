@@ -12,15 +12,15 @@ class HorizontalBarHighlighter extends BarHighlighter {
   HorizontalBarHighlighter(BarDataProvider chart) : super(chart);
 
   @override
-  Highlight getHighlight(double x, double y) {
-    BarData barData = provider.getBarData();
+  Highlight? getHighlight(double x, double y) {
+    BarData barData = provider.getBarData()!;
 
     MPPointD pos = getValsForTouch(y, x);
 
-    Highlight high = getHighlightForX(pos.y, y, x);
+    Highlight? high = getHighlightForX(pos.y, y, x);
     if (high == null) return null;
 
-    IBarDataSet set = barData.getDataSetByIndex(high.dataSetIndex);
+    IBarDataSet set = barData.getDataSetByIndex(high.dataSetIndex)!;
     if (set.isStacked()) {
       return getStackedHighlight(high, set, pos.y, pos.x);
     }
@@ -33,13 +33,13 @@ class HorizontalBarHighlighter extends BarHighlighter {
   @override
   List<Highlight> buildHighlights(
       IDataSet set, int dataSetIndex, double xVal, Rounding rounding) {
-    List<Highlight> highlights = List();
+    List<Highlight> highlights = [];
 
     //noinspection unchecked
     List<Entry> entries = set.getEntriesForXValue(xVal);
     if (entries.length == 0) {
       // Try to find closest x-value and take all entries for that x-value
-      final Entry closest = set.getEntryForXValue1(xVal, double.nan, rounding);
+      final Entry? closest = set.getEntryForXValue1(xVal, double.nan, rounding);
       if (closest != null) {
         //noinspection unchecked
         entries = set.getEntriesForXValue(closest.x);
@@ -50,7 +50,7 @@ class HorizontalBarHighlighter extends BarHighlighter {
 
     for (Entry e in entries) {
       MPPointD pixels = provider
-          .getTransformer(set.getAxisDependency())
+          .getTransformer(set.getAxisDependency())!
           .getPixelForValues(e.y, e.x);
 
       highlights.add(Highlight(

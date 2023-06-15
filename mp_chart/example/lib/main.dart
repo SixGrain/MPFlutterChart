@@ -98,7 +98,7 @@ class MyApp extends StatelessWidget {
 }
 
 class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
+  MyHomePage({Key? key, required this.title}) : super(key: key);
 
   // This widget is the home page of your application. It is stateful, meaning
   // that it has a State object (defined below) that contains fields that affect
@@ -116,7 +116,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  PopupMenuItem _item(String text, String id) {
+  PopupMenuItem<String> _item(String text, String id) {
     return PopupMenuItem<String>(
         value: id,
         child: Container(
@@ -154,10 +154,10 @@ class _MyHomePageState extends State<MyHomePage> {
         actions: <Widget>[
           PopupMenuButton<String>(
             itemBuilder: (BuildContext context) => <PopupMenuItem<String>>[
-                  _item('View on GitHub', 'A'),
-                  _item('Problem Report', 'B'),
-                  _item('Developer Website', 'C'),
-                ],
+              _item('View on GitHub', 'A'),
+              _item('Problem Report', 'B'),
+              _item('Developer Website', 'C'),
+            ],
             onSelected: (String action) {
               _itemClick(action);
             },
@@ -193,8 +193,8 @@ class _MyHomePageState extends State<MyHomePage> {
                   ),
                 ),
                 InkWell(
-                    onTap: () =>
-                        Navigator.of(context).pushNamed('/line_chart/with_range'),
+                    onTap: () => Navigator.of(context)
+                        .pushNamed('/line_chart/with_range'),
                     child: Container(
                       padding: EdgeInsets.symmetric(horizontal: 15.0),
                       child: Container(

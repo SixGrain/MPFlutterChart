@@ -166,18 +166,16 @@ void main() {
     try {
       var len = d3.toString().split(".")[1].length;
       var value = "0.";
-      for(var i = 0; i < len; i++){
+      for (var i = 0; i < len; i++) {
         value += "0";
       }
       value += "1";
-      if(d3 >= 0){
+      if (d3 >= 0) {
         res = double.parse(value);
       } else {
         res = -double.parse(value);
       }
-    } catch (e) {
-
-    }
+    } catch (e) {}
     print(res);
   });
 }

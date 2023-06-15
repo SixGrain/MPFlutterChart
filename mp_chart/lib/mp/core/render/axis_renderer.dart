@@ -1,5 +1,4 @@
 import 'dart:math';
-import 'dart:ui';
 
 import 'package:flutter/painting.dart';
 import 'package:mp_chart/mp/core/axis/axis_base.dart';
@@ -13,26 +12,28 @@ import 'package:mp_chart/mp/core/view_port.dart';
 
 abstract class AxisRenderer extends Renderer {
   /// base axis this axis renderer works with */
-  AxisBase _axis;
+  late AxisBase _axis;
 
   /// transformer to transform values to screen pixels and return */
-  Transformer _trans;
+  late Transformer? _trans;
 
   /// paint object for the grid lines
-  Paint _gridPaint;
+  late Paint _gridPaint;
 
   /// paint for the x-label values
-  TextPainter _axisLabelPaint;
+  late TextPainter _axisLabelPaint;
 
   /// paint for the line surrounding the chart
-  Paint _axisLinePaint;
+  late Paint _axisLinePaint;
 
   /// paint used for the limit lines
-  Paint _limitLinePaint;
+  late Paint _limitLinePaint;
 
   AxisRenderer(
-      ViewPortHandler viewPortHandler, Transformer trans, AxisBase axis)
-      : super(viewPortHandler) {
+    ViewPortHandler viewPortHandler,
+    Transformer? trans,
+    AxisBase axis,
+  ) : super(viewPortHandler) {
     this._trans = trans;
     this._axis = axis;
     if (viewPortHandler != null) {
@@ -58,10 +59,10 @@ abstract class AxisRenderer extends Renderer {
   }
 
   // ignore: unnecessary_getters_setters
-  Transformer get trans => _trans;
+  Transformer? get trans => _trans;
 
   // ignore: unnecessary_getters_setters
-  set trans(Transformer value) {
+  set trans(Transformer? value) {
     _trans = value;
   }
 
@@ -107,9 +108,9 @@ abstract class AxisRenderer extends Renderer {
     if (viewPortHandler != null &&
         viewPortHandler.contentWidth() > 10 &&
         !viewPortHandler.isFullyZoomedOutY()) {
-      MPPointD p1 = _trans.getValuesByTouchPoint1(
+      MPPointD p1 = _trans!.getValuesByTouchPoint1(
           viewPortHandler.contentLeft(), viewPortHandler.contentTop());
-      MPPointD p2 = _trans.getValuesByTouchPoint1(
+      MPPointD p2 = _trans!.getValuesByTouchPoint1(
           viewPortHandler.contentLeft(), viewPortHandler.contentBottom());
 
       if (!inverted) {
@@ -138,8 +139,8 @@ abstract class AxisRenderer extends Renderer {
     double range = (yMax - yMin).abs();
 
     if (labelCount == 0 || range <= 0 || range.isInfinite) {
-      _axis.entries = List<double>();
-      _axis.centeredEntries = List<double>();
+      _axis.entries = [];
+      _axis.centeredEntries = [];
       _axis.entryCount = 0;
       return;
     }
@@ -155,8 +156,8 @@ abstract class AxisRenderer extends Renderer {
 
     // Normalize interval
     try {
-      double intervalMagnitude =
-          Utils.roundToNextSignificant(pow(10.0, log(interval) ~/ ln10));
+      double intervalMagnitude = Utils.roundToNextSignificant(
+          pow(10.0, log(interval) ~/ ln10).toDouble());
       int intervalSigDigit = interval ~/ intervalMagnitude;
       if (intervalSigDigit > 5) {
         // Use one order of magnitude higher, to avoid intervals like 0.9 or
@@ -176,7 +177,7 @@ abstract class AxisRenderer extends Renderer {
 
       if (_axis.entries.length < labelCount) {
         // Ensure stops contains at least numStops elements.
-        _axis.entries = List(labelCount);
+        _axis.entries = List.filled(labelCount, 0);
       }
 
       double v = min;
@@ -213,7 +214,7 @@ abstract class AxisRenderer extends Renderer {
 
       if (_axis.entries.length < num) {
         // Ensure stops contains at least numStops elements.
-        _axis.entries = List(num);
+        _axis.entries = List.filled(num, 0);
       }
 
       i = 0;
@@ -235,7 +236,7 @@ abstract class AxisRenderer extends Renderer {
 
     if (_axis.isCenterAxisLabelsEnabled()) {
       if (_axis.centeredEntries.length < num) {
-        _axis.centeredEntries = List(num);
+        _axis.centeredEntries = List.filled(num, 0);
       }
 
       int offset = interval ~/ 2;

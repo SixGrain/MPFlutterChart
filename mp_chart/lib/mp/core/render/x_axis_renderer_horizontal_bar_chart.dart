@@ -3,15 +3,15 @@ import 'package:mp_chart/mp/core/axis/x_axis.dart';
 import 'package:mp_chart/mp/core/enums/limit_label_postion.dart';
 import 'package:mp_chart/mp/core/enums/x_axis_position.dart';
 import 'package:mp_chart/mp/core/limit_line.dart';
+import 'package:mp_chart/mp/core/poolable/point.dart';
+import 'package:mp_chart/mp/core/poolable/size.dart';
 import 'package:mp_chart/mp/core/render/x_axis_renderer.dart';
 import 'package:mp_chart/mp/core/transformer/transformer.dart';
 import 'package:mp_chart/mp/core/utils/canvas_utils.dart';
 import 'package:mp_chart/mp/core/utils/color_utils.dart';
 import 'package:mp_chart/mp/core/utils/painter_utils.dart';
-import 'package:mp_chart/mp/core/view_port.dart';
-import 'package:mp_chart/mp/core/poolable/point.dart';
-import 'package:mp_chart/mp/core/poolable/size.dart';
 import 'package:mp_chart/mp/core/utils/utils.dart';
+import 'package:mp_chart/mp/core/view_port.dart';
 
 class XAxisRendererHorizontalBarChart extends XAxisRenderer {
   XAxisRendererHorizontalBarChart(
@@ -24,9 +24,9 @@ class XAxisRendererHorizontalBarChart extends XAxisRenderer {
     // zoom / contentrect bounds)
     if (viewPortHandler.contentWidth() > 10 &&
         !viewPortHandler.isFullyZoomedOutY()) {
-      MPPointD p1 = trans.getValuesByTouchPoint1(
+      MPPointD p1 = trans!.getValuesByTouchPoint1(
           viewPortHandler.contentLeft(), viewPortHandler.contentBottom());
-      MPPointD p2 = trans.getValuesByTouchPoint1(
+      MPPointD p2 = trans!.getValuesByTouchPoint1(
           viewPortHandler.contentLeft(), viewPortHandler.contentTop());
 
       if (inverted) {
@@ -49,9 +49,9 @@ class XAxisRendererHorizontalBarChart extends XAxisRenderer {
     axisLabelPaint = PainterUtils.create(
         axisLabelPaint,
         null,
-        axisLabelPaint.text.style.color == null
+        axisLabelPaint.text?.style?.color == null
             ? ColorUtils.HOLO_GREEN_DARK
-            : axisLabelPaint.text.style.color,
+            : axisLabelPaint.text!.style!.color,
         xAxis.textSize,
         fontWeight: xAxis.typeface?.fontWeight,
         fontFamily: xAxis.typeface?.fontFamily);
@@ -126,7 +126,7 @@ class XAxisRendererHorizontalBarChart extends XAxisRenderer {
     final double labelRotationAngleDegrees = xAxis.labelRotationAngle;
     bool centeringEnabled = xAxis.isCenterAxisLabelsEnabled();
 
-    List<double> positions = List(xAxis.entryCount * 2);
+    List<double> positions = List.filled(xAxis.entryCount * 2, 0);
 
     for (int i = 0; i < positions.length; i += 2) {
       // only fill x values
@@ -137,14 +137,14 @@ class XAxisRendererHorizontalBarChart extends XAxisRenderer {
       }
     }
 
-    trans.pointValuesToPixel(positions);
+    trans!.pointValuesToPixel(positions);
 
     for (int i = 0; i < positions.length; i += 2) {
       double y = positions[i + 1];
 
       if (viewPortHandler.isInBoundsY(y)) {
         String label = xAxis
-            .getValueFormatter()
+            .getValueFormatter()!
             .getAxisLabel(xAxis.entries[i ~/ 2], xAxis);
         Utils.drawXAxisValueHorizontal(c, label, pos, y, axisLabelPaint, anchor,
             labelRotationAngleDegrees, position);
@@ -211,7 +211,7 @@ class XAxisRendererHorizontalBarChart extends XAxisRenderer {
   /// @param c
   @override
   void renderLimitLines(Canvas c) {
-    List<LimitLine> limitLines = xAxis.getLimitLines();
+    List<LimitLine>? limitLines = xAxis.getLimitLines();
 
     if (limitLines == null || limitLines.length <= 0) return;
 
@@ -242,13 +242,13 @@ class XAxisRendererHorizontalBarChart extends XAxisRenderer {
 
       pts[1] = l.limit;
 
-      trans.pointValuesToPixel(pts);
+      trans!.pointValuesToPixel(pts);
 
       limitLinePath.moveTo(viewPortHandler.contentLeft(), pts[1]);
       limitLinePath.lineTo(viewPortHandler.contentRight(), pts[1]);
 
       if (l.dashPathEffect != null) {
-        limitLinePath = l.dashPathEffect.convert2DashPath(limitLinePath);
+        limitLinePath = l.dashPathEffect!.convert2DashPath(limitLinePath);
       }
       c.drawPath(limitLinePath, limitLinePaint);
       limitLinePath.reset();

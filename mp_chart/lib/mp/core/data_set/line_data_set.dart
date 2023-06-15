@@ -17,7 +17,7 @@ class LineDataSet extends LineRadarDataSet<Entry> implements ILineDataSet {
   Mode _mode = Mode.LINEAR;
 
   /// List representing all colors that are used for the circles
-  List<Color> _circleColors;
+  List<Color> _circleColors = [];
 
   /// the color of the inner circles
   Color _circleHoleColor = ColorUtils.WHITE;
@@ -32,7 +32,7 @@ class LineDataSet extends LineRadarDataSet<Entry> implements ILineDataSet {
   double _cubicIntensity = 0.2;
 
   /// the path effect of this DataSet that makes dashed lines possible
-  DashPathEffect _dashPathEffect;
+  DashPathEffect? _dashPathEffect;
 
   /// formatter for customizing the position of the fill-line
   IFillFormatter _fillFormatter = DefaultFillFormatter();
@@ -47,7 +47,7 @@ class LineDataSet extends LineRadarDataSet<Entry> implements ILineDataSet {
     // mLineWidth = Utils.convertDpToPixel(1f);
 
     if (_circleColors == null) {
-      _circleColors = List();
+      _circleColors = [];
     }
     _circleColors.clear();
 
@@ -173,7 +173,7 @@ class LineDataSet extends LineRadarDataSet<Entry> implements ILineDataSet {
   }
 
   @override
-  DashPathEffect getDashPathEffect() {
+  DashPathEffect? getDashPathEffect() {
     return _dashPathEffect;
   }
 
@@ -246,7 +246,7 @@ class LineDataSet extends LineRadarDataSet<Entry> implements ILineDataSet {
   /// resets the circle-colors array and creates a  one
   void resetCircleColors() {
     if (_circleColors == null) {
-      _circleColors = List();
+      _circleColors = [];
     }
     _circleColors.clear();
   }
@@ -293,7 +293,7 @@ class LineDataSet extends LineRadarDataSet<Entry> implements ILineDataSet {
 
   @override
   DataSet<Entry> copy1() {
-    List<Entry> entries = List();
+    List<Entry> entries = [];
     for (int i = 0; i < values.length; i++) {
       entries.add(Entry(
           x: values[i].x,

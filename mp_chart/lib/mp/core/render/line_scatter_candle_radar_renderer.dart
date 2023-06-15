@@ -35,7 +35,7 @@ abstract class LineScatterCandleRadarRenderer
 
       if (set.getDashPathEffectHighlight() != null) {
         _highlightLinePath = set
-            .getDashPathEffectHighlight()
+            .getDashPathEffectHighlight()!
             .convert2DashPath(_highlightLinePath);
       }
       c.drawPath(_highlightLinePath, highlightPaint);
@@ -50,7 +50,7 @@ abstract class LineScatterCandleRadarRenderer
 
       if (set.getDashPathEffectHighlight() != null) {
         _highlightLinePath = set
-            .getDashPathEffectHighlight()
+            .getDashPathEffectHighlight()!
             .convert2DashPath(_highlightLinePath);
       }
       c.drawPath(_highlightLinePath, highlightPaint);

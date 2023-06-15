@@ -6,7 +6,7 @@ import 'package:mp_chart/mp/core/data_provider/line_data_provider.dart';
 import 'package:mp_chart/mp/core/enums/axis_dependency.dart';
 
 mixin FilledLineDataProvider implements LineDataProvider {
-  FilledLineData getFilledLineData();
+  FilledLineData? getFilledLineData();
 
   YAxis getAxis(AxisDependency dependency);
 }

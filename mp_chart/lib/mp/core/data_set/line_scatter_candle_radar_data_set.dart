@@ -15,7 +15,7 @@ abstract class LineScatterCandleRadarDataSet<T extends Entry>
   double _highlightLineWidth = 0.5;
 
   /// the path effect for dashed highlight-lines
-  DashPathEffect _highlightDashPathEffect;
+  DashPathEffect? _highlightDashPathEffect;
 
   /// the path effect for dashed highlight-lines
 //   DashPathEffect mHighlightDashPathEffect = null;
@@ -89,7 +89,7 @@ abstract class LineScatterCandleRadarDataSet<T extends Entry>
   }
 
   @override
-  DashPathEffect getDashPathEffectHighlight() {
+  DashPathEffect? getDashPathEffectHighlight() {
     return _highlightDashPathEffect;
   }
 

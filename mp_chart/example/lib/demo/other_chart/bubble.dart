@@ -1,6 +1,8 @@
 import 'dart:math';
 import 'dart:ui' as ui;
 
+import 'package:example/demo/action_state.dart';
+import 'package:example/demo/util.dart';
 import 'package:flutter/material.dart';
 import 'package:mp_chart/mp/chart/bubble_chart.dart';
 import 'package:mp_chart/mp/controller/bubble_chart_controller.dart';
@@ -19,8 +21,6 @@ import 'package:mp_chart/mp/core/highlight/highlight.dart';
 import 'package:mp_chart/mp/core/image_loader.dart';
 import 'package:mp_chart/mp/core/poolable/point.dart';
 import 'package:mp_chart/mp/core/utils/color_utils.dart';
-import 'package:example/demo/action_state.dart';
-import 'package:example/demo/util.dart';
 
 class OtherChartBubble extends StatefulWidget {
   @override
@@ -168,13 +168,13 @@ class OtherChartBubbleState extends BubbleActionState<OtherChartBubble>
   }
 
   void _initBubbleData(int count, double range) async {
-    List<ui.Image> imgs = List(3);
-    imgs[0] = await ImageLoader.loadImage('assets/img/star.png');
-    imgs[1] = await ImageLoader.loadImage('assets/img/add.png');
-    imgs[2] = await ImageLoader.loadImage('assets/img/close.png');
-    List<BubbleEntry> values1 = List();
-    List<BubbleEntry> values2 = List();
-    List<BubbleEntry> values3 = List();
+    List<ui.Image> imgs = [];
+    imgs.add(await ImageLoader.loadImage('assets/img/star.png'));
+    imgs.add(await ImageLoader.loadImage('assets/img/add.png'));
+    imgs.add(await ImageLoader.loadImage('assets/img/close.png'));
+    List<BubbleEntry> values1 = [];
+    List<BubbleEntry> values2 = [];
+    List<BubbleEntry> values3 = [];
 
     for (int i = 0; i < count; i++) {
       values1.add(BubbleEntry(
@@ -210,14 +210,14 @@ class OtherChartBubbleState extends BubbleActionState<OtherChartBubble>
     set3.setColor3(ColorUtils.COLORFUL_COLORS[2], 130);
     set3.setDrawValues(true);
 
-    List<IBubbleDataSet> dataSets = List();
+    List<IBubbleDataSet> dataSets = [];
     dataSets.add(set1); // add the data sets
     dataSets.add(set2);
     dataSets.add(set3);
 
     // create a data object with the data sets
     controller.data = BubbleData.fromList(dataSets);
-    controller.data
+    controller.data!
       ..setDrawValues(false)
       ..setValueTypeface(Util.LIGHT)
       ..setValueTextSize(8)
@@ -231,5 +231,5 @@ class OtherChartBubbleState extends BubbleActionState<OtherChartBubble>
   void onNothingSelected() {}
 
   @override
-  void onValueSelected(Entry e, Highlight h) {}
+  void onValueSelected(Entry? e, Highlight? h) {}
 }

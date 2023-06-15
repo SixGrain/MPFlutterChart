@@ -1,147 +1,75 @@
 import 'dart:math';
-import 'dart:ui';
 
-import 'package:flutter/painting.dart';
 import 'package:flutter/rendering.dart';
-import 'package:mp_chart/mp/core/animator.dart';
-import 'package:mp_chart/mp/core/axis/x_axis.dart';
-import 'package:mp_chart/mp/core/axis/y_axis.dart';
-import 'package:mp_chart/mp/core/common_interfaces.dart';
-import 'package:mp_chart/mp/core/data/bar_data.dart';
 import 'package:mp_chart/mp/core/data_interfaces/i_bar_data_set.dart';
-import 'package:mp_chart/mp/core/description.dart';
 import 'package:mp_chart/mp/core/entry/bar_entry.dart';
 import 'package:mp_chart/mp/core/entry/entry.dart';
 import 'package:mp_chart/mp/core/enums/axis_dependency.dart';
 import 'package:mp_chart/mp/core/enums/x_axis_position.dart';
-import 'package:mp_chart/mp/core/functions.dart';
 import 'package:mp_chart/mp/core/highlight/highlight.dart';
 import 'package:mp_chart/mp/core/highlight/horizontal_bar_highlighter.dart';
-import 'package:mp_chart/mp/core/legend/legend.dart';
-import 'package:mp_chart/mp/core/marker/i_marker.dart';
 import 'package:mp_chart/mp/core/poolable/point.dart';
-import 'package:mp_chart/mp/core/range_chart_listener.dart';
 import 'package:mp_chart/mp/core/render/horizontal_bar_chart_renderer.dart';
-import 'package:mp_chart/mp/core/render/legend_renderer.dart';
-import 'package:mp_chart/mp/core/render/x_axis_renderer.dart';
-import 'package:mp_chart/mp/core/render/y_axis_renderer.dart';
-import 'package:mp_chart/mp/core/chart_trans_listener.dart';
-import 'package:mp_chart/mp/core/transformer/transformer.dart';
 import 'package:mp_chart/mp/core/utils/utils.dart';
-import 'package:mp_chart/mp/core/view_port.dart';
 import 'package:mp_chart/mp/painter/bar_chart_painter.dart';
 
 class HorizontalBarChartPainter extends BarChartPainter {
-  HorizontalBarChartPainter(
-      BarData data,
-      Animator animator,
-      ViewPortHandler viewPortHandler,
-      double maxHighlightDistance,
-      bool highLightPerTapEnabled,
-      double extraLeftOffset,
-      double extraTopOffset,
-      double extraRightOffset,
-      double extraBottomOffset,
-      IMarker marker,
-      Description desc,
-      bool drawMarkers,
-      Color infoBgColor,
-      TextPainter infoPainter,
-      TextPainter descPainter,
-      XAxis xAxis,
-      Legend legend,
-      LegendRenderer legendRenderer,
-      DataRendererSettingFunction rendererSettingFunction,
-      OnChartValueSelectedListener selectedListener,
-      int maxVisibleCount,
-      bool autoScaleMinMaxEnabled,
-      bool pinchZoomEnabled,
-      bool doubleTapToZoomEnabled,
-      bool highlightPerDragEnabled,
-      bool dragXEnabled,
-      bool dragYEnabled,
-      bool scaleXEnabled,
-      bool scaleYEnabled,
-      Paint gridBackgroundPaint,
-      Paint backgroundPaint,
-      Paint borderPaint,
-      Paint rangePaint,
-      bool drawGridBackground,
-      bool drawBorders,
-      bool clipValuesToContent,
-      double minOffset,
-      bool keepPositionOnRotation,
-      OnDrawListener drawListener,
-      YAxis axisLeft,
-      YAxis axisRight,
-      YAxisRenderer axisRendererLeft,
-      YAxisRenderer axisRendererRight,
-      Transformer leftAxisTransformer,
-      Transformer rightAxisTransformer,
-      XAxisRenderer xAxisRenderer,
-      Matrix4 zoomMatrixBuffer,
-      bool customViewPortEnabled,
-      bool highlightFullBarEnabled,
-      bool drawValueAboveBar,
-      bool drawBarShadow,
-      bool fitBars,
-      ChartPositionListener chartPositionListener,
-      ChartTransListener chartTransListener)
-      : super(
-            data,
-            animator,
-            viewPortHandler,
-            maxHighlightDistance,
-            highLightPerTapEnabled,
-            extraLeftOffset,
-            extraTopOffset,
-            extraRightOffset,
-            extraBottomOffset,
-            marker,
-            desc,
-            drawMarkers,
-            infoBgColor,
-            infoPainter,
-            descPainter,
-            xAxis,
-            legend,
-            legendRenderer,
-            rendererSettingFunction,
-            selectedListener,
-            maxVisibleCount,
-            autoScaleMinMaxEnabled,
-            pinchZoomEnabled,
-            doubleTapToZoomEnabled,
-            highlightPerDragEnabled,
-            dragXEnabled,
-            dragYEnabled,
-            scaleXEnabled,
-            scaleYEnabled,
-            gridBackgroundPaint,
-            backgroundPaint,
-            rangePaint,
-            borderPaint,
-            drawGridBackground,
-            drawBorders,
-            clipValuesToContent,
-            minOffset,
-            keepPositionOnRotation,
-            drawListener,
-            axisLeft,
-            axisRight,
-            axisRendererLeft,
-            axisRendererRight,
-            leftAxisTransformer,
-            rightAxisTransformer,
-            xAxisRenderer,
-            zoomMatrixBuffer,
-            customViewPortEnabled,
-            highlightFullBarEnabled,
-            drawValueAboveBar,
-            drawBarShadow,
-            fitBars,
-      chartPositionListener,
-            chartTransListener);
+  HorizontalBarChartPainter({
+    required super.data,
+    required super.animator,
+    required super.viewPortHandler,
+    required super.maxHighlightDistance,
+    required super.highLightPerTapEnabled,
+    required super.extraLeftOffset,
+    required super.extraTopOffset,
+    required super.extraRightOffset,
+    required super.extraBottomOffset,
+    required super.marker,
+    required super.description,
+    required super.drawMarkers,
+    required super.infoBgColor,
+    required super.infoPainter,
+    required super.descPainter,
+    required super.xAxis,
+    required super.legend,
+    required super.legendRenderer,
+    required super.rendererSettingFunction,
+    required super.selectedListener,
+    required super.maxVisibleCount,
+    required super.autoScaleMinMaxEnabled,
+    required super.pinchZoomEnabled,
+    required super.doubleTapToZoomEnabled,
+    required super.highlightPerDragEnabled,
+    required super.dragXEnabled,
+    required super.dragYEnabled,
+    required super.scaleXEnabled,
+    required super.scaleYEnabled,
+    required super.gridBackgroundPaint,
+    required super.borderPaint,
+    required super.drawGridBackground,
+    required super.drawBorders,
+    required super.clipValuesToContent,
+    required super.minOffset,
+    required super.keepPositionOnRotation,
+    required super.drawListener,
+    required super.axisLeft,
+    required super.axisRight,
+    required super.axisRendererLeft,
+    required super.axisRendererRight,
+    required super.leftAxisTransformer,
+    required super.rightAxisTransformer,
+    required super.xAxisRenderer,
+    required super.zoomMatrixBuffer,
+    required super.customViewPortEnabled,
+    required super.backgroundPaint,
+    required super.rangePaint,
+    required super.chartTransListener,
+    required super.chartPositionListener,
+    required super.highlightFullBarEnabled,
+    required super.drawValueAboveBar,
+    required super.drawBarShadow,
+    required super.fitBars,
+  });
 
   @override
   void initDefaultWithData() {
@@ -154,7 +82,7 @@ class HorizontalBarChartPainter extends BarChartPainter {
 
   @override
   void calculateOffsets() {
-    if (legend != null) legendRenderer.computeLegend(getBarData());
+    legendRenderer.computeLegend(getBarData()!);
     renderer?.initBuffers();
     calcMinMax();
 
@@ -219,13 +147,15 @@ class HorizontalBarChartPainter extends BarChartPainter {
 
   @override
   List<double> getMarkerPosition(Highlight high) {
-    return new List()..add(high.drawY)..add(high.drawX);
+    return []
+      ..add(high.drawY)
+      ..add(high.drawX);
   }
 
   @override
   Rect getBarBounds(BarEntry e) {
     Rect bounds = Rect.zero;
-    IBarDataSet set = getBarData().getDataSetForEntry(e);
+    IBarDataSet? set = getBarData()?.getDataSetForEntry(e);
 
     if (set == null) {
       bounds = Rect.fromLTRB(double.minPositive, double.minPositive,
@@ -236,7 +166,7 @@ class HorizontalBarChartPainter extends BarChartPainter {
     double y = e.y;
     double x = e.x;
 
-    double barWidth = getBarData().barWidth;
+    double barWidth = getBarData()!.barWidth;
 
     double top = x - barWidth / 2;
     double bottom = x + barWidth / 2;
@@ -245,10 +175,10 @@ class HorizontalBarChartPainter extends BarChartPainter {
 
     bounds = Rect.fromLTRB(left, top, right, bottom);
 
-    return getTransformer(set.getAxisDependency()).rectValueToPixel(bounds);
+    return getTransformer(set.getAxisDependency())!.rectValueToPixel(bounds);
   }
 
-  List<double> mGetPositionBuffer = List(2);
+  List<double> mGetPositionBuffer = List.filled(2, 0);
 
   /// Returns a recyclable MPPointF instance.
   ///
@@ -256,14 +186,14 @@ class HorizontalBarChartPainter extends BarChartPainter {
   /// @param axis
   /// @return
   @override
-  MPPointF getPosition(Entry e, AxisDependency axis) {
+  MPPointF? getPosition(Entry? e, AxisDependency axis) {
     if (e == null) return null;
 
     List<double> vals = mGetPositionBuffer;
     vals[0] = e.y;
     vals[1] = e.x;
 
-    getTransformer(axis).pointValuesToPixel(vals);
+    getTransformer(axis)!.pointValuesToPixel(vals);
 
     return MPPointF.getInstance1(vals[0], vals[1]);
   }
@@ -275,16 +205,16 @@ class HorizontalBarChartPainter extends BarChartPainter {
   /// @param y
   /// @return
   @override
-  Highlight getHighlightByTouchPoint(double x, double y) {
+  Highlight? getHighlightByTouchPoint(double x, double y) {
     if (getBarData() != null) {
-      return highlighter.getHighlight(y, x); // switch x and y
+      return highlighter?.getHighlight(y, x); // switch x and y
     }
     return null;
   }
 
   @override
   double getLowestVisibleX() {
-    getTransformer(AxisDependency.LEFT).getValuesByTouchPoint2(
+    getTransformer(AxisDependency.LEFT)!.getValuesByTouchPoint2(
         viewPortHandler.contentLeft(),
         viewPortHandler.contentBottom(),
         posForGetLowestVisibleX);
@@ -294,7 +224,7 @@ class HorizontalBarChartPainter extends BarChartPainter {
 
   @override
   double getHighestVisibleX() {
-    getTransformer(AxisDependency.LEFT).getValuesByTouchPoint2(
+    getTransformer(AxisDependency.LEFT)!.getValuesByTouchPoint2(
         viewPortHandler.contentLeft(),
         viewPortHandler.contentTop(),
         posForGetHighestVisibleX);

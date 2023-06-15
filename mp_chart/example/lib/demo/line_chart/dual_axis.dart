@@ -1,6 +1,8 @@
 import 'dart:math';
 import 'dart:ui' as ui;
 
+import 'package:example/demo/action_state.dart';
+import 'package:example/demo/util.dart';
 import 'package:flutter/material.dart';
 import 'package:mp_chart/mp/chart/line_chart.dart';
 import 'package:mp_chart/mp/controller/line_chart_controller.dart';
@@ -17,8 +19,6 @@ import 'package:mp_chart/mp/core/enums/legend_vertical_alignment.dart';
 import 'package:mp_chart/mp/core/highlight/highlight.dart';
 import 'package:mp_chart/mp/core/image_loader.dart';
 import 'package:mp_chart/mp/core/utils/color_utils.dart';
-import 'package:example/demo/action_state.dart';
-import 'package:example/demo/util.dart';
 
 class LineChartDualAxis extends StatefulWidget {
   @override
@@ -133,11 +133,14 @@ class LineChartDualAxisState extends LineActionState<LineChartDualAxis>
   void onNothingSelected() {}
 
   @override
-  void onValueSelected(Entry e, Highlight h) {
+  void onValueSelected(Entry? e, Highlight? h) {
+    if (e == null || h == null) {
+      return;
+    }
     controller?.centerViewToAnimated(
         e.x,
         e.y,
-        controller.data.getDataSetByIndex(h.dataSetIndex).getAxisDependency(),
+        controller.data!.getDataSetByIndex(h.dataSetIndex)!.getAxisDependency(),
         500);
   }
 
@@ -197,25 +200,25 @@ class LineChartDualAxisState extends LineActionState<LineChartDualAxis>
   }
 
   void _initLineData(int count, double range) async {
-    List<ui.Image> imgs = List(3);
-    imgs[0] = await ImageLoader.loadImage('assets/img/star.png');
-    imgs[1] = await ImageLoader.loadImage('assets/img/add.png');
-    imgs[2] = await ImageLoader.loadImage('assets/img/close.png');
-    List<Entry> values1 = List();
+    List<ui.Image> imgs = [];
+    imgs.add(await ImageLoader.loadImage('assets/img/star.png'));
+    imgs.add(await ImageLoader.loadImage('assets/img/add.png'));
+    imgs.add(await ImageLoader.loadImage('assets/img/close.png'));
+    List<Entry> values1 = [];
 
     for (int i = 0; i < count; i++) {
       double val = (random.nextDouble() * (range / 2.0)) + 50;
       values1.add(Entry(x: i.toDouble(), y: val, icon: imgs[0]));
     }
 
-    List<Entry> values2 = List();
+    List<Entry> values2 = [];
 
     for (int i = 0; i < count; i++) {
       double val = (random.nextDouble() * range) + 450;
       values2.add(new Entry(x: i.toDouble(), y: val, icon: imgs[1]));
     }
 
-    List<Entry> values3 = List();
+    List<Entry> values3 = [];
 
     for (int i = 0; i < count; i++) {
       double val = (random.nextDouble() * range) + 500;
@@ -267,9 +270,11 @@ class LineChartDualAxisState extends LineActionState<LineChartDualAxis>
     set3.setHighLightColor(Color.fromARGB(255, 244, 117, 117));
 
     // create a data object with the data sets
-    controller.data =
-        LineData.fromList(List()..add(set1)..add(set2)..add(set3));
-    controller.data
+    controller.data = LineData.fromList([]
+      ..add(set1)
+      ..add(set2)
+      ..add(set3));
+    controller.data!
       ..setValueTextColor(ColorUtils.WHITE)
       ..setValueTextSize(9);
 

@@ -1,5 +1,4 @@
 import 'package:mp_chart/mp/core/entry/entry.dart';
-import 'dart:ui' as ui;
 
 class CandleEntry extends Entry {
   /// shadow-high value
@@ -14,15 +13,15 @@ class CandleEntry extends Entry {
   /// open value
   double _open = 0;
 
-  CandleEntry(
-      {double x,
-      double shadowH,
-      double shadowL,
-      double open,
-      double close,
-      ui.Image icon,
-      Object data})
-      : super(x: x, y: (shadowH + shadowL) / 2, icon: icon, data: data) {
+  CandleEntry({
+    double shadowH = 0,
+    double shadowL = 0,
+    double open = 0,
+    double close = 0,
+    required super.x,
+    super.data,
+    super.icon,
+  }) : super(y: (shadowH + shadowL) / 2) {
     this._shadowHigh = shadowH;
     this._shadowLow = shadowL;
     this._open = open;

@@ -2,10 +2,7 @@ import 'package:flutter/painting.dart';
 import 'package:mp_chart/mp/chart/pie_chart.dart';
 import 'package:mp_chart/mp/controller/pie_radar_controller.dart';
 import 'package:mp_chart/mp/core/adapter_android_mp.dart';
-import 'package:mp_chart/mp/core/common_interfaces.dart';
 import 'package:mp_chart/mp/core/data/pie_data.dart';
-import 'package:mp_chart/mp/core/description.dart';
-import 'package:mp_chart/mp/core/functions.dart';
 import 'package:mp_chart/mp/core/marker/bar_chart_marker.dart';
 import 'package:mp_chart/mp/core/marker/i_marker.dart';
 import 'package:mp_chart/mp/core/utils/color_utils.dart';
@@ -26,9 +23,9 @@ class PieChartController extends PieRadarController<PieChartPainter> {
   double minAngleForSlices; // = 0
   double centerTextOffsetX;
   double centerTextOffsetY;
-  TypeFace centerTextTypeface;
-  TypeFace entryLabelTypeface;
-  Color backgroundColor;
+  TypeFace? centerTextTypeface;
+  TypeFace? entryLabelTypeface;
+  Color? backgroundColor;
   Color holeColor;
 
   PieChartController({
@@ -50,113 +47,95 @@ class PieChartController extends PieRadarController<PieChartPainter> {
     this.entryLabelTypeface,
     this.backgroundColor,
     this.holeColor = ColorUtils.WHITE,
-    IMarker marker,
-    Description description,
-    XAxisSettingFunction xAxisSettingFunction,
-    LegendSettingFunction legendSettingFunction,
-    DataRendererSettingFunction rendererSettingFunction,
-    OnChartValueSelectedListener selectionListener,
-    double rotationAngle = 270,
-    double rawRotationAngle = 270,
-    bool rotateEnabled = true,
-    double minOffset = 30.0,
-    String noDataText = "No chart data available.",
-    double maxHighlightDistance = 100.0,
-    bool highLightPerTapEnabled = true,
-    double extraTopOffset = 0.0,
-    double extraRightOffset = 0.0,
-    double extraBottomOffset = 0.0,
-    double extraLeftOffset = 0.0,
-    bool drawMarkers = true,
-    bool resolveGestureHorizontalConflict = false,
-    bool resolveGestureVerticalConflict = false,
-    double descTextSize = 12,
-    double infoTextSize = 12,
-    Color descTextColor,
-    Color infoTextColor,
-    Color infoBgColor,
-  }) : super(
-            marker: marker,
-            noDataText: noDataText,
-            xAxisSettingFunction: xAxisSettingFunction,
-            legendSettingFunction: legendSettingFunction,
-            rendererSettingFunction: rendererSettingFunction,
-            description: description,
-            selectionListener: selectionListener,
-            maxHighlightDistance: maxHighlightDistance,
-            highLightPerTapEnabled: highLightPerTapEnabled,
-            extraTopOffset: extraTopOffset,
-            extraRightOffset: extraRightOffset,
-            extraBottomOffset: extraBottomOffset,
-            extraLeftOffset: extraLeftOffset,
-            drawMarkers: drawMarkers,
-            resolveGestureHorizontalConflict: resolveGestureHorizontalConflict,
-            resolveGestureVerticalConflict: resolveGestureVerticalConflict,
-            descTextSize: descTextSize,
-            infoTextSize: infoTextSize,
-            descTextColor: descTextColor,
-            infoTextColor: infoTextColor,
-            infoBgColor: infoBgColor,
-            rotationAngle: rotationAngle,
-            rawRotationAngle: rawRotationAngle,
-            rotateEnabled: rotateEnabled,
-            minOffset: minOffset);
+    super.rotationAngle = 270,
+    super.rawRotationAngle = 270,
+    super.rotateEnabled = true,
+    super.minOffset = 30,
+    super.marker,
+    super.description,
+    super.noDataText,
+    super.xAxisSettingFunction,
+    super.legendSettingFunction,
+    super.rendererSettingFunction,
+    super.selectionListener,
+    super.maxHighlightDistance,
+    super.highLightPerTapEnabled,
+    super.extraTopOffset,
+    super.extraRightOffset,
+    super.extraBottomOffset,
+    super.extraLeftOffset,
+    super.drawMarkers,
+    super.resolveGestureHorizontalConflict,
+    super.resolveGestureVerticalConflict,
+    super.descTextSize,
+    super.infoTextSize,
+    super.descTextColor,
+    super.infoTextColor,
+    super.infoBgColor,
+    super.viewPortHandler,
+    super.xAxis,
+    super.legend,
+    super.legendRenderer,
+    super.descPainter,
+    super.infoPainter,
+    super.horizontalConflictResolveFunc,
+    super.verticalConflictResolveFunc,
+  });
 
   @override
   IMarker initMarker() => BarChartMarker();
 
-  PieData get data => super.data;
+  PieData? get data => super.data as PieData?;
 
-  PieChartPainter get painter => super.painter;
+  PieChartPainter? get painter => super.painter;
 
-  PieChartState get state => super.state;
+  PieChartState? get state => super.state as PieChartState?;
 
   @override
   void initialPainter() {
     painter = PieChartPainter(
-      data,
-      animator,
-      viewPortHandler,
-      maxHighlightDistance,
-      highLightPerTapEnabled,
-      extraLeftOffset,
-      extraTopOffset,
-      extraRightOffset,
-      extraBottomOffset,
-      marker,
-      description,
-      drawMarkers,
-      infoBgColor,
-      infoPaint,
-      descPaint,
-      xAxis,
-      legend,
-      legendRenderer,
-      rendererSettingFunction,
-      selectionListener,
-      rotationAngle,
-      rawRotationAngle,
-      rotateEnabled,
-      minOffset,
-      drawEntryLabels,
-      drawHole,
-      drawSlicesUnderHole,
-      usePercentValues,
-      drawRoundedSlices,
-      centerText,
-      centerTextOffsetX,
-      centerTextOffsetY,
-      entryLabelTypeface,
-      centerTextTypeface,
-      holeRadiusPercent,
-      transparentCircleRadiusPercent,
-      drawCenterText,
-      centerTextRadiusPercent,
-      maxAngle,
-      minAngleForSlices,
-      backgroundColor,
-      holeColor,
-    );
+        data: data,
+        animator: animator,
+        viewPortHandler: viewPortHandler,
+        maxHighlightDistance: maxHighlightDistance,
+        highLightPerTapEnabled: highLightPerTapEnabled,
+        extraLeftOffset: extraLeftOffset,
+        extraTopOffset: extraTopOffset,
+        extraRightOffset: extraRightOffset,
+        extraBottomOffset: extraBottomOffset,
+        marker: marker,
+        description: description,
+        drawMarkers: drawMarkers,
+        infoBgColor: infoBgColor,
+        infoPainter: infoPainter,
+        descPainter: descPainter,
+        xAxis: xAxis,
+        legend: legend,
+        legendRenderer: legendRenderer,
+        rendererSettingFunction: rendererSettingFunction,
+        selectedListener: selectedListener,
+        rotationAngle: rotationAngle,
+        rawRotationAngle: rawRotationAngle,
+        rotateEnabled: rotateEnabled,
+        minOffset: minOffset,
+        backgroundColor: backgroundColor,
+        drawEntryLabels: drawEntryLabels,
+        drawHole: drawHole,
+        drawSlicesUnderHole: drawSlicesUnderHole,
+        usePercentValues: usePercentValues,
+        drawRoundedSlices: drawRoundedSlices,
+        centerText: centerText,
+        centerTextOffsetX: centerTextOffsetX,
+        centerTextOffsetY: centerTextOffsetY,
+        entryLabelTypeface: entryLabelTypeface,
+        centerTextTypeface: centerTextTypeface,
+        holeRadiusPercent: holeRadiusPercent,
+        transparentCircleRadiusPercent: transparentCircleRadiusPercent,
+        drawCenterText: drawCenterText,
+        centerTextRadiusPercent: centerTextRadiusPercent,
+        maxAngle: maxAngle,
+        minAngleForSlices: minAngleForSlices,
+        holeColor: holeColor);
   }
 
   @override

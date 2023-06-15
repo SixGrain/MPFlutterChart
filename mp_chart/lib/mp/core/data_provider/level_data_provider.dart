@@ -6,7 +6,7 @@ import 'bar_line_scatter_candle_bubble_data_provider.dart';
 import 'line_data_provider.dart';
 
 mixin LevelDataProvider implements BarLineScatterCandleBubbleDataProvider {
-  LineData getLevelData();
+  LineData? getLevelData();
 
   YAxis getAxis(AxisDependency dependency);
 }

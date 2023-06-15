@@ -11,16 +11,16 @@ import 'package:mp_chart/mp/core/enums/legend_vertical_alignment.dart';
 import 'package:mp_chart/mp/core/legend/legend_entry.dart';
 import 'package:mp_chart/mp/core/poolable/size.dart';
 import 'package:mp_chart/mp/core/utils/color_utils.dart';
-import 'package:mp_chart/mp/core/view_port.dart';
 import 'package:mp_chart/mp/core/utils/utils.dart';
+import 'package:mp_chart/mp/core/view_port.dart';
 
 class Legend extends ComponentBase {
   /// The legend entries array
-  List<LegendEntry> _entries = List();
+  List<LegendEntry> _entries = [];
 
   /// Entries that will be appended to the end of the auto calculated entries after calculating the legend.
   /// (if the legend has already been calculated, you will need to call notifyDataSetChanged() to let the changes take effect)
-  List<LegendEntry> _extraEntries;
+  List<LegendEntry>? _extraEntries;
 
   /// Are the legend labels/colors a custom value or auto calculated? If false,
   /// then it's auto, if true, then custom. default false (automatic legend)
@@ -45,7 +45,7 @@ class Legend extends ComponentBase {
   double _formLineWidth = 3;
 
   /// Line dash path effect used for shapes that consist of lines.
-  DashPathEffect _formLineDashEffect;
+  DashPathEffect? _formLineDashEffect;
 
   /// the space between the legend entries on a horizontal axis, default 6f
   double _xEntrySpace = 6;
@@ -77,9 +77,9 @@ class Legend extends ComponentBase {
   /// flag that indicates if word wrapping is enabled
   bool _wordWrapEnabled = false;
 
-  List<FSize> _calculatedLabelSizes = List(16);
-  List<bool> _calculatedLabelBreakPoints = List(16);
-  List<FSize> _calculatedLineSizes = List(16);
+  List<FSize?> _calculatedLabelSizes = List.filled(16, null);
+  List<bool> _calculatedLabelBreakPoints = List.filled(16, false);
+  List<FSize?> _calculatedLineSizes = List.filled(16, null);
 
   /// default constructor
   Legend() {
@@ -124,7 +124,7 @@ class Legend extends ComponentBase {
           double.nan == entry.formSize ? _formSize : entry.formSize);
       if (formSize > maxFormSize) maxFormSize = formSize;
 
-      String label = entry.label;
+      String? label = entry.label;
       if (label == null) continue;
 
       double length = Utils.calcTextWidth(p, label).toDouble();
@@ -142,7 +142,7 @@ class Legend extends ComponentBase {
   double getMaximumEntryHeight(TextPainter p) {
     double max = 0;
     for (LegendEntry entry in _entries) {
-      String label = entry.label;
+      String? label = entry.label;
       if (label == null) continue;
 
       double length = Utils.calcTextHeight(p, label).toDouble();
@@ -153,7 +153,7 @@ class Legend extends ComponentBase {
     return max;
   }
 
-  List<LegendEntry> get extraEntries => _extraEntries;
+  List<LegendEntry>? get extraEntries => _extraEntries;
 
   void setExtra1(List<LegendEntry> entries) {
     _extraEntries = entries;
@@ -164,7 +164,7 @@ class Legend extends ComponentBase {
   /// (if the legend has already been calculated, you will need to call notifyDataSetChanged()
   ///   to let the changes take effect)
   void setExtra2(List<Color> colors, List<String> labels) {
-    List<LegendEntry> entries = List();
+    List<LegendEntry> entries = [];
     for (int i = 0; i < min(colors.length, labels.length); i++) {
       final LegendEntry entry = LegendEntry.empty();
       entry.formColor = colors[i];
@@ -277,7 +277,7 @@ class Legend extends ComponentBase {
   }
 
   /// @return The line dash path effect used for shapes that consist of lines.
-  DashPathEffect getFormLineDashEffect() {
+  DashPathEffect? getFormLineDashEffect() {
     return _formLineDashEffect;
   }
 
@@ -333,9 +333,9 @@ class Legend extends ComponentBase {
 
   double get neededHeight => _neededHeight;
 
-  List<FSize> get calculatedLineSizes => _calculatedLineSizes;
+  List<FSize?> get calculatedLineSizes => _calculatedLineSizes;
 
-  List<FSize> get calculatedLabelSizes => _calculatedLabelSizes;
+  List<FSize?> get calculatedLabelSizes => _calculatedLabelSizes;
 
   List<bool> get calculatedLabelBreakPoints => _calculatedLabelBreakPoints;
 
@@ -371,7 +371,7 @@ class Legend extends ComponentBase {
             double formSize = e.formSize.isNaN
                 ? defaultFormSize
                 : Utils.convertDpToPixel(e.formSize);
-            String label = e.label;
+            String? label = e.label;
 
             if (!wasStacked) width = 0;
 
@@ -423,9 +423,9 @@ class Legend extends ComponentBase {
           double requiredWidth = 0;
           int stackedStartIndex = -1;
 
-          _calculatedLabelBreakPoints = List();
-          _calculatedLabelSizes = List();
-          _calculatedLineSizes = List();
+          _calculatedLabelBreakPoints = [];
+          _calculatedLabelSizes = [];
+          _calculatedLineSizes = [];
 
           for (int i = 0; i < entryCount; i++) {
             LegendEntry e = entries[i];
@@ -433,7 +433,7 @@ class Legend extends ComponentBase {
             double formSize = e.formSize.isNaN
                 ? defaultFormSize
                 : Utils.convertDpToPixel(e.formSize);
-            String label = e.label;
+            String? label = e.label;
 
             _calculatedLabelBreakPoints.add(false);
 
@@ -451,7 +451,7 @@ class Legend extends ComponentBase {
               _calculatedLabelSizes
                   .add(Utils.calcTextSize1(labelpainter, label));
               requiredWidth += drawingForm ? formToTextSpace + formSize : 0;
-              requiredWidth += _calculatedLabelSizes[i].width;
+              requiredWidth += _calculatedLabelSizes[i]?.width ?? 0;
             } else {
               _calculatedLabelSizes.add(FSize.getInstance(0, 0));
               requiredWidth += drawingForm ? formSize : 0;

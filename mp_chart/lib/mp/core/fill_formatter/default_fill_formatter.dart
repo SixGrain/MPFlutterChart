@@ -11,7 +11,7 @@ class DefaultFillFormatter implements IFillFormatter {
     double chartMaxY = dataProvider.getYChartMax();
     double chartMinY = dataProvider.getYChartMin();
 
-    LineData data = dataProvider.getLineData();
+    LineData data = dataProvider.getLineData()!;
 
     if (dataSet.getYMax() > 0 && dataSet.getYMin() < 0) {
       fillMin = 0;

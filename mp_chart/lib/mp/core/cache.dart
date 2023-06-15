@@ -2,13 +2,12 @@ import 'dart:typed_data';
 import 'dart:ui' as ui;
 import 'dart:ui';
 
-import 'package:flutter/painting.dart';
 import 'package:mp_chart/mp/core/data_interfaces/i_line_data_set.dart';
 
 class DataSetImageCache {
   Path _circlePathBuffer = Path();
 
-  List<ByteData> _circleBitmaps;
+  List<ByteData?>? _circleBitmaps;
 
   /// Sets up the cache, returns true if a change of cache was required.
   ///
@@ -19,10 +18,10 @@ class DataSetImageCache {
     bool changeRequired = false;
 
     if (_circleBitmaps == null) {
-      _circleBitmaps = List(size);
+      _circleBitmaps = List.filled(size, null);
       changeRequired = true;
-    } else if (_circleBitmaps.length != size) {
-      _circleBitmaps = List(size);
+    } else if (_circleBitmaps!.length != size) {
+      _circleBitmaps = List.filled(size, null);
       changeRequired = true;
     }
 
@@ -88,7 +87,7 @@ class DataSetImageCache {
           (drawCircleHole ? circleHoleRadius * 2 : circleRadius * 2).toInt();
       recorder.endRecording().toImage(length, length).then((image) {
         image.toByteData(format: ImageByteFormat.rawRgba).then((data) {
-          _circleBitmaps[i] = data;
+          _circleBitmaps?[i] = data;
           if (finishCount >= colorCount - 1) {
             callback();
           }
@@ -98,7 +97,7 @@ class DataSetImageCache {
     }
   }
 
-  ByteData getBitmap(int index) {
-    return _circleBitmaps[index % _circleBitmaps.length];
+  ByteData? getBitmap(int index) {
+    return _circleBitmaps?[index % _circleBitmaps!.length];
   }
 }

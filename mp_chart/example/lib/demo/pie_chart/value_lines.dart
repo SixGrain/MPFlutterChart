@@ -1,5 +1,7 @@
 import 'dart:math';
 
+import 'package:example/demo/action_state.dart';
+import 'package:example/demo/util.dart';
 import 'package:flutter/material.dart';
 import 'package:mp_chart/mp/chart/pie_chart.dart';
 import 'package:mp_chart/mp/controller/pie_chart_controller.dart';
@@ -19,8 +21,6 @@ import 'package:mp_chart/mp/core/image_loader.dart';
 import 'package:mp_chart/mp/core/render/pie_chart_renderer.dart';
 import 'package:mp_chart/mp/core/utils/color_utils.dart';
 import 'package:mp_chart/mp/core/value_formatter/percent_formatter.dart';
-import 'package:example/demo/action_state.dart';
-import 'package:example/demo/util.dart';
 
 class PieChartValueLines extends StatefulWidget {
   @override
@@ -132,7 +132,7 @@ class PieChartValueLinesState extends PieActionState<PieChartValueLines>
   }
 
   // ignore: non_constant_identifier_names
-  final List<String> PARTIES = List()
+  final List<String> PARTIES = []
     ..add("Party A")
     ..add("Party B")
     ..add("Party C")
@@ -164,7 +164,7 @@ class PieChartValueLinesState extends PieActionState<PieChartValueLines>
     var desc = Description()..enabled = false;
     controller = PieChartController(
         legendSettingFunction: (legend, controller) {
-          _formatter.setPieChartPainter(controller);
+          _formatter.setPieChartPainter(controller as PieChartController);
           legend
             ..verticalAlignment = (LegendVerticalAlignment.TOP)
             ..horizontalAlignment = (LegendHorizontalAlignment.RIGHT)
@@ -199,7 +199,7 @@ class PieChartValueLinesState extends PieActionState<PieChartValueLines>
 
   void _initPieData(int count, double range) async {
     var img = await ImageLoader.loadImage('assets/img/star.png');
-    List<PieEntry> entries = List();
+    List<PieEntry> entries = [];
 
     // NOTE: The order of the entries when being added to the entries array determines their position around the center of
     // the chart.
@@ -217,7 +217,7 @@ class PieChartValueLinesState extends PieActionState<PieChartValueLines>
     dataSet.setSelectionShift(5);
 
     // add a lot of colors
-    List<Color> colors = List();
+    List<Color> colors = [];
     for (Color c in ColorUtils.VORDIPLOM_COLORS) colors.add(c);
     for (Color c in ColorUtils.JOYFUL_COLORS) colors.add(c);
     for (Color c in ColorUtils.COLORFUL_COLORS) colors.add(c);
@@ -254,5 +254,5 @@ class PieChartValueLinesState extends PieActionState<PieChartValueLines>
   void onNothingSelected() {}
 
   @override
-  void onValueSelected(Entry e, Highlight h) {}
+  void onValueSelected(Entry? e, Highlight? h) {}
 }

@@ -7,7 +7,7 @@ import 'package:mp_chart/mp/core/limit_line.dart';
 abstract class CanvasUtils {
   static void drawLines(
       ui.Canvas canvas, List<double> pts, int offset, int count, ui.Paint paint,
-      {DashPathEffect effect}) {
+      {DashPathEffect? effect}) {
     if (effect == null) {
       for (int i = offset; i < count; i += 4) {
         canvas.drawLine(ui.Offset(pts[i], pts[i + 1]),

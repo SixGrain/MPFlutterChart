@@ -1,6 +1,7 @@
 import 'package:flutter/painting.dart';
 import 'package:mp_chart/mp/core/adapter_android_mp.dart';
 import 'package:mp_chart/mp/core/animator.dart';
+import 'package:mp_chart/mp/core/data/bar_line_scatter_candle_bubble_data.dart';
 import 'package:mp_chart/mp/core/data/chart_data.dart';
 import 'package:mp_chart/mp/core/data/combined_data.dart';
 import 'package:mp_chart/mp/core/highlight/highlight.dart';
@@ -16,14 +17,13 @@ import 'package:mp_chart/mp/core/view_port.dart';
 import 'package:mp_chart/mp/painter/combined_chart_painter.dart';
 import 'package:mp_chart/mp/painter/painter.dart';
 
-
 class CombinedChartRenderer extends DataRenderer {
   /// all rederers for the different kinds of data this combined-renderer can draw
-  List<DataRenderer> _renderers = List<DataRenderer>();
+  List<DataRenderer> _renderers = <DataRenderer>[];
 
-  ChartPainter _painter;
+  late ChartPainter? _painter;
 
-  CombinedChartRenderer(CombinedChartPainter chart, Animator animator,
+  CombinedChartRenderer(CombinedChartPainter? chart, Animator animator,
       ViewPortHandler viewPortHandler)
       : super(animator, viewPortHandler) {
     _painter = chart;
@@ -35,7 +35,7 @@ class CombinedChartRenderer extends DataRenderer {
   void createRenderers() {
     _renderers.clear();
 
-    CombinedChartPainter chart = (_painter as CombinedChartPainter);
+    CombinedChartPainter? chart = (_painter as CombinedChartPainter?);
     if (chart == null) return;
 
     List<DrawOrder> orders = chart.getDrawOrder();
@@ -44,7 +44,8 @@ class CombinedChartRenderer extends DataRenderer {
       switch (order) {
         case DrawOrder.FILLED_LINE:
           if (chart.getFilledLineData() != null)
-            _renderers.add(FilledLineChartRenderer(chart, animator, viewPortHandler));
+            _renderers
+                .add(FilledLineChartRenderer(chart, animator, viewPortHandler));
           break;
         case DrawOrder.BAR:
           if (chart.getBarData() != null)
@@ -61,7 +62,8 @@ class CombinedChartRenderer extends DataRenderer {
           break;
         case DrawOrder.LEVEL:
           if (chart.getLevelData() != null)
-            _renderers.add(LevelChartRenderer(chart, animator, viewPortHandler));
+            _renderers
+                .add(LevelChartRenderer(chart, animator, viewPortHandler));
           break;
 
         case DrawOrder.CANDLE:
@@ -102,15 +104,15 @@ class CombinedChartRenderer extends DataRenderer {
     for (DataRenderer renderer in _renderers) renderer.drawExtras(c);
   }
 
-  List<Highlight> mHighlightBuffer = List<Highlight>();
+  List<Highlight> mHighlightBuffer = <Highlight>[];
 
   @override
   void drawHighlighted(Canvas c, List<Highlight> indices) {
-    ChartPainter chart = _painter;
+    ChartPainter? chart = _painter;
     if (chart == null) return;
 
     for (DataRenderer renderer in _renderers) {
-      ChartData data;
+      ChartData? data;
 
       if (renderer is BarChartRenderer)
         data = renderer.provider.getBarData();
@@ -125,7 +127,9 @@ class CombinedChartRenderer extends DataRenderer {
 
       int dataIndex = data == null
           ? -1
-          : (chart.getData() as CombinedData).getAllData().indexOf(data);
+          : (chart.getData() as CombinedData)
+              .getAllData()
+              .indexOf(data as BarLineScatterCandleBubbleData);
 
       mHighlightBuffer.clear();
 
@@ -142,7 +146,7 @@ class CombinedChartRenderer extends DataRenderer {
   ///
   /// @param index
   /// @return
-  DataRenderer getSubRenderer(int index) {
+  DataRenderer? getSubRenderer(int index) {
     if (index >= _renderers.length || index < 0)
       return null;
     else

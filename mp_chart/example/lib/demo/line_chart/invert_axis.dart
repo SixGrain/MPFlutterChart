@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:example/demo/action_state.dart';
 import 'package:flutter/material.dart';
 import 'package:mp_chart/mp/chart/line_chart.dart';
 import 'package:mp_chart/mp/controller/line_chart_controller.dart';
@@ -12,7 +13,6 @@ import 'package:mp_chart/mp/core/enums/legend_form.dart';
 import 'package:mp_chart/mp/core/highlight/highlight.dart';
 import 'package:mp_chart/mp/core/image_loader.dart';
 import 'package:mp_chart/mp/core/utils/color_utils.dart';
-import 'package:example/demo/action_state.dart';
 
 class LineChartInvertAxis extends StatefulWidget {
   @override
@@ -126,7 +126,7 @@ class LineChartInvertAxisState extends LineActionState<LineChartInvertAxis>
   void onNothingSelected() {}
 
   @override
-  void onValueSelected(Entry e, Highlight h) {}
+  void onValueSelected(Entry? e, Highlight? h) {}
 
   void _initController() {
     var desc = Description()..enabled = false;
@@ -159,7 +159,7 @@ class LineChartInvertAxisState extends LineActionState<LineChartInvertAxis>
 
   void _initLineData(int count, double range) async {
     var img = await ImageLoader.loadImage('assets/img/star.png');
-    List<Entry> entries = List();
+    List<Entry> entries = [];
 
     for (int i = 0; i < count; i++) {
       double xVal = (random.nextDouble() * range);
@@ -187,7 +187,7 @@ class LineChartInvertAxisState extends LineActionState<LineChartInvertAxis>
     set1.setCircleRadius(4);
 
     // create a data object with the data sets
-    controller.data = LineData.fromList(List()..add(set1));
+    controller.data = LineData.fromList([]..add(set1));
 
     setState(() {});
   }

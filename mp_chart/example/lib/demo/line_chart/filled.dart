@@ -1,24 +1,21 @@
 import 'dart:math';
 
+import 'package:example/demo/action_state.dart';
 import 'package:flutter/material.dart';
 import 'package:mp_chart/mp/chart/combined_chart.dart';
-import 'package:mp_chart/mp/chart/line_chart.dart';
 import 'package:mp_chart/mp/controller/combined_chart_controller.dart';
 import 'package:mp_chart/mp/controller/line_chart_controller.dart';
 import 'package:mp_chart/mp/core/data/combined_data.dart';
-import 'package:mp_chart/mp/core/data/line_data.dart';
+import 'package:mp_chart/mp/core/data/filled_line_data.dart';
 import 'package:mp_chart/mp/core/data_interfaces/i_line_data_set.dart';
 import 'package:mp_chart/mp/core/data_provider/line_data_provider.dart';
 import 'package:mp_chart/mp/core/data_set/filled_line_data_set.dart';
-import 'package:mp_chart/mp/core/data_set/line_data_set.dart';
 import 'package:mp_chart/mp/core/description.dart';
 import 'package:mp_chart/mp/core/entry/entry.dart';
 import 'package:mp_chart/mp/core/enums/axis_dependency.dart';
 import 'package:mp_chart/mp/core/enums/mode.dart';
 import 'package:mp_chart/mp/core/fill_formatter/i_fill_formatter.dart';
 import 'package:mp_chart/mp/core/utils/color_utils.dart';
-import 'package:example/demo/action_state.dart';
-import 'package:mp_chart/mp/core/data/filled_line_data.dart';
 
 class LineChartFilled extends StatefulWidget {
   @override
@@ -28,7 +25,7 @@ class LineChartFilled extends StatefulWidget {
 }
 
 class LineChartFilledState extends SimpleActionState<LineChartFilled> {
-  CombinedChartController _controller;
+  late CombinedChartController _controller;
   var random = Random(1);
   int _count = 45;
   double _range = 100.0;
@@ -176,21 +173,21 @@ class LineChartFilledState extends SimpleActionState<LineChartFilled> {
   }
 
   void _initLineData(int count, double range) {
-    List<Entry> values1 = new List();
+    List<Entry> values1 = [];
 
     for (int i = 0; i < count; i++) {
       double val = (random.nextDouble() * range) + 50;
       values1.add(new Entry(x: i.toDouble(), y: val));
     }
 
-    List<Entry> values2 = new List();
+    List<Entry> values2 = [];
 
     for (int i = 0; i < count; i++) {
       double val = (random.nextDouble() * range) + 450;
       values2.add(new Entry(x: i.toDouble(), y: val));
     }
 
-    FilledLineDataSet set1;//, set2;
+    FilledLineDataSet set1; //, set2;
 
     // create a dataset and give it a type
     set1 = new FilledLineDataSet(values2, values1, "DataSet 1");
@@ -224,8 +221,8 @@ class LineChartFilledState extends SimpleActionState<LineChartFilled> {
 //    set2.setMode(Mode.CUBIC_BEZIER);
     _controller.data = CombinedData();
     // create a data object with the data sets
-    _controller.data.setData6(FilledLineData.fromList([set1]));//..add(set2));
-    _controller.data.setDrawValues(false);
+    _controller.data!.setData6(FilledLineData.fromList([set1])); //..add(set2));
+    _controller.data!.setDrawValues(false);
 
     setState(() {});
   }
@@ -234,7 +231,7 @@ class LineChartFilledState extends SimpleActionState<LineChartFilled> {
 }
 
 class A implements IFillFormatter {
-  LineChartController _controller;
+  LineChartController? _controller;
 
   void setPainter(LineChartController controller) {
     _controller = controller;
@@ -243,12 +240,12 @@ class A implements IFillFormatter {
   @override
   double getFillLinePosition(
       ILineDataSet dataSet, LineDataProvider dataProvider) {
-    return _controller?.painter?.axisLeft?.axisMinimum;
+    return _controller?.painter?.axisLeft?.axisMinimum ?? 0;
   }
 }
 
 class B implements IFillFormatter {
-  LineChartController _controller;
+  LineChartController? _controller;
 
   void setPainter(LineChartController controller) {
     _controller = controller;
@@ -257,6 +254,6 @@ class B implements IFillFormatter {
   @override
   double getFillLinePosition(
       ILineDataSet dataSet, LineDataProvider dataProvider) {
-    return _controller?.painter?.axisLeft?.axisMaximum;
+    return _controller?.painter?.axisLeft?.axisMaximum ?? 0;
   }
 }

@@ -1,9 +1,4 @@
-import 'package:flutter/painting.dart';
 import 'package:mp_chart/mp/controller/controller.dart';
-import 'package:mp_chart/mp/core/common_interfaces.dart';
-import 'package:mp_chart/mp/core/description.dart';
-import 'package:mp_chart/mp/core/functions.dart';
-import 'package:mp_chart/mp/core/marker/i_marker.dart';
 import 'package:mp_chart/mp/core/utils/utils.dart';
 import 'package:mp_chart/mp/painter/pie_redar_chart_painter.dart';
 
@@ -14,61 +9,48 @@ abstract class PieRadarController<P extends PieRadarChartPainter>
   bool rotateEnabled;
   double minOffset;
 
-  PieRadarController(
-      {this.rotationAngle = 270,
-      this.rawRotationAngle = 270,
-      this.rotateEnabled = true,
-      this.minOffset = 30,
-      IMarker marker,
-      Description description,
-      OnChartValueSelectedListener selectionListener,
-      double maxHighlightDistance = 100.0,
-      bool highLightPerTapEnabled = true,
-      double extraTopOffset = 0.0,
-      double extraRightOffset = 0.0,
-      double extraBottomOffset = 0.0,
-      double extraLeftOffset = 0.0,
-      bool drawMarkers = true,
-      bool resolveGestureHorizontalConflict = false,
-      bool resolveGestureVerticalConflict = false,
-      double descTextSize = 12,
-      double infoTextSize = 12,
-      Color descTextColor,
-      Color infoTextColor,
-      Color infoBgColor,
-      String noDataText = "No chart data available.",
-      XAxisSettingFunction xAxisSettingFunction,
-      LegendSettingFunction legendSettingFunction,
-      DataRendererSettingFunction rendererSettingFunction})
-      : super(
-            marker: marker,
-            noDataText: noDataText,
-            xAxisSettingFunction: xAxisSettingFunction,
-            legendSettingFunction: legendSettingFunction,
-            rendererSettingFunction: rendererSettingFunction,
-            description: description,
-            selectionListener: selectionListener,
-            maxHighlightDistance: maxHighlightDistance,
-            highLightPerTapEnabled: highLightPerTapEnabled,
-            extraTopOffset: extraTopOffset,
-            extraRightOffset: extraRightOffset,
-            extraBottomOffset: extraBottomOffset,
-            extraLeftOffset: extraLeftOffset,
-            drawMarkers: drawMarkers,
-            resolveGestureHorizontalConflict: resolveGestureHorizontalConflict,
-            resolveGestureVerticalConflict: resolveGestureVerticalConflict,
-            descTextSize: descTextSize,
-            infoTextSize: infoTextSize,
-            descTextColor: descTextColor,
-            infoBgColor: infoBgColor,
-            infoTextColor: infoTextColor);
+  PieRadarController({
+    this.rotationAngle = 270,
+    this.rawRotationAngle = 270,
+    this.rotateEnabled = true,
+    this.minOffset = 30,
+    super.marker,
+    super.description,
+    super.noDataText,
+    super.xAxisSettingFunction,
+    super.legendSettingFunction,
+    super.rendererSettingFunction,
+    super.selectionListener,
+    super.maxHighlightDistance,
+    super.highLightPerTapEnabled,
+    super.extraTopOffset,
+    super.extraRightOffset,
+    super.extraBottomOffset,
+    super.extraLeftOffset,
+    super.drawMarkers,
+    super.resolveGestureHorizontalConflict,
+    super.resolveGestureVerticalConflict,
+    super.descTextSize,
+    super.infoTextSize,
+    super.descTextColor,
+    super.infoTextColor,
+    super.infoBgColor,
+    super.viewPortHandler,
+    super.xAxis,
+    super.legend,
+    super.legendRenderer,
+    super.descPainter,
+    super.infoPainter,
+    super.horizontalConflictResolveFunc,
+    super.verticalConflictResolveFunc,
+  });
 
   @override
   void onRotateUpdate(double angle) {
     rawRotationAngle = angle;
     rotationAngle = Utils.getNormalizedAngle(rawRotationAngle);
-    state.setStateIfNotDispose();
+    state?.setStateIfNotDispose();
   }
 
-  P get painter => super.painter;
+  P? get painter => super.painter;
 }

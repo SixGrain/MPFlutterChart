@@ -4,9 +4,9 @@ import 'package:mp_chart/mp/core/entry/pie_entry.dart';
 import 'package:mp_chart/mp/core/value_formatter/value_formatter.dart';
 
 class PercentFormatter extends ValueFormatter {
-  NumberFormat _format;
-  PieChartController _controller;
-  bool _percentSignSeparated;
+  late NumberFormat _format;
+  PieChartController? _controller;
+  late bool _percentSignSeparated;
 
   PercentFormatter() {
     _format = NumberFormat("###,###,##0.0");
@@ -24,9 +24,7 @@ class PercentFormatter extends ValueFormatter {
 
   @override
   String getPieLabel(double value, PieEntry pieEntry) {
-    if (_controller != null &&
-        _controller.painter != null &&
-        _controller.painter.isUsePercentValuesEnabled()) {
+    if (_controller?.painter?.isUsePercentValuesEnabled() == true) {
       // Converted to percent
       return getFormattedValue1(value);
     } else {

@@ -23,11 +23,10 @@ import 'package:mp_chart/mp/core/value_formatter/value_formatter.dart';
 import 'package:mp_chart/mp/core/view_port.dart';
 
 abstract class ChartPainter<T extends ChartData<IDataSet<Entry>>>
-    extends CustomPainter
-    implements ChartInterface {
+    extends CustomPainter implements ChartInterface {
   /// object that holds all data that was originally set for the chart, before
   /// it was modified or any filtering algorithms had been applied
-  final T _data;
+  final T? _data;
 
   /// object responsible for animations
   final Animator _animator;
@@ -47,10 +46,10 @@ abstract class ChartPainter<T extends ChartData<IDataSet<Entry>>>
       _extraLeftOffset;
 
   /// the view that represents the marker
-  final IMarker _marker;
+  final IMarker? _marker;
 
   /// the object responsible for representing the description text
-  final Description _description;
+  final Description? _description;
 
   /// if set to true, the marker view is drawn when a value is clicked
   final bool _drawMarkers;
@@ -72,20 +71,19 @@ abstract class ChartPainter<T extends ChartData<IDataSet<Entry>>>
   final Legend _legend;
   final LegendRenderer _legendRenderer;
 
-  final OnChartValueSelectedListener _selectionListener;
-
-  final DataRendererSettingFunction _rendererSettingFunction;
+  final OnChartValueSelectedListener? _selectionListener;
+  final DataRendererSettingFunction? _rendererSettingFunction;
 
   ///////////////////////////////////////////////////
   /// object responsible for rendering the data
-  DataRenderer renderer;
-  IHighlighter highlighter;
+  DataRenderer? renderer;
+  IHighlighter? highlighter;
 
   /// array of Highlight objects that reference the highlighted slices in the
   /// chart
-  List<Highlight> _indicesToHighlight;
+  List<Highlight>? _indicesToHighlight;
 
-  Size _size;
+  Size? _size;
 
   /// flag that indicates if offsets calculation has already been done or not
   bool _offsetsCalculated = false;
@@ -111,39 +109,40 @@ abstract class ChartPainter<T extends ChartData<IDataSet<Entry>>>
 
   double get extraBottomOffset => _extraBottomOffset;
 
-  IMarker get marker => _marker;
+  IMarker? get marker => _marker;
 
   bool get isDrawMarkers => _drawMarkers;
 
   Animator get animator => _animator;
 
-  Size get size => _size;
+  Size? get size => _size;
 
-  List<Highlight> get indicesToHighlight => _indicesToHighlight;
+  List<Highlight>? get indicesToHighlight => _indicesToHighlight;
 
   bool get highLightPerTapEnabled => _highLightPerTapEnabled;
 
-  ChartPainter(T data,
-      Animator animator,
-      ViewPortHandler viewPortHandler,
-      double maxHighlightDistance,
-      bool highLightPerTapEnabled,
-      double extraLeftOffset,
-      double extraTopOffset,
-      double extraRightOffset,
-      double extraBottomOffset,
-      IMarker marker,
-      Description desc,
-      bool drawMarkers,
-      Color infoBgColor,
-      TextPainter infoPainter,
-      TextPainter descPainter,
-      XAxis xAxis,
-      Legend legend,
-      LegendRenderer legendRenderer,
-      DataRendererSettingFunction rendererSettingFunction,
-      OnChartValueSelectedListener selectedListener)
-      : _data = data,
+  ChartPainter({
+    required T? data,
+    required Animator animator,
+    required ViewPortHandler viewPortHandler,
+    required double maxHighlightDistance,
+    required bool highLightPerTapEnabled,
+    required double extraLeftOffset,
+    required double extraTopOffset,
+    required double extraRightOffset,
+    required double extraBottomOffset,
+    required IMarker? marker,
+    required Description description,
+    required bool drawMarkers,
+    required Color infoBgColor,
+    required TextPainter infoPainter,
+    required TextPainter descPainter,
+    required XAxis xAxis,
+    required Legend legend,
+    required LegendRenderer legendRenderer,
+    required DataRendererSettingFunction? rendererSettingFunction,
+    required OnChartValueSelectedListener? selectedListener,
+  })  : _data = data,
         _viewPortHandler = viewPortHandler,
         _animator = animator,
         _maxHighlightDistance = maxHighlightDistance,
@@ -153,7 +152,7 @@ abstract class ChartPainter<T extends ChartData<IDataSet<Entry>>>
         _extraRightOffset = extraRightOffset,
         _extraBottomOffset = extraBottomOffset,
         _marker = marker,
-        _description = desc,
+        _description = description,
         _drawMarkers = drawMarkers,
         _infoBackgroundColor = infoBgColor,
         _infoPaint = infoPainter,
@@ -165,12 +164,12 @@ abstract class ChartPainter<T extends ChartData<IDataSet<Entry>>>
         _selectionListener = selectedListener,
         super() {
     initDefaultNormal();
-    if (data == null || data.dataSets == null || data.dataSets.length == 0) {
+    if (data == null || data.dataSets.length == 0) {
       return;
     }
     initDefaultWithData();
     if (_rendererSettingFunction != null && renderer != null) {
-      _rendererSettingFunction(renderer);
+      _rendererSettingFunction!(renderer!);
     }
     init();
     _isInit = true;
@@ -178,9 +177,9 @@ abstract class ChartPainter<T extends ChartData<IDataSet<Entry>>>
 
   void initDefaultWithData() {
     // calculate how many digits are needed
-    _setupDefaultFormatter(_data.getYMin1(), _data.getYMax1());
+    _setupDefaultFormatter(_data!.getYMin1(), _data!.getYMax1());
 
-    for (IDataSet set in _data.dataSets) {
+    for (IDataSet set in _data!.dataSets) {
       if (set.needsFormatter() ||
           set.getValueFormatter() == _defaultValueFormatter)
         set.setValueFormatter(_defaultValueFormatter);
@@ -204,7 +203,7 @@ abstract class ChartPainter<T extends ChartData<IDataSet<Entry>>>
   void _setupDefaultFormatter(double min1, double max1) {
     double reference = 0;
 
-    if (_data == null || _data.getEntryCount() < 2) {
+    if (_data == null || _data!.getEntryCount() < 2) {
       reference = max(min1.abs(), max1.abs());
     } else {
       reference = (max1 - min1).abs();
@@ -217,11 +216,11 @@ abstract class ChartPainter<T extends ChartData<IDataSet<Entry>>>
   }
 
   double getMeasuredHeight() {
-    return _size == null ? 0.0 : _size.height;
+    return _size == null ? 0.0 : _size!.height;
   }
 
   double getMeasuredWidth() {
-    return _size == null ? 0.0 : _size.width;
+    return _size == null ? 0.0 : _size!.width;
   }
 
   @override
@@ -230,8 +229,7 @@ abstract class ChartPainter<T extends ChartData<IDataSet<Entry>>>
 
     if (!_isInit) {
       canvas.drawRect(Rect.fromLTRB(0, 0, size.width, size.height),
-          Paint()
-            ..color = _infoBackgroundColor);
+          Paint()..color = _infoBackgroundColor);
       MPPointF c = getCenter(size);
       _infoPaint.layout();
       _infoPaint.paint(canvas,
@@ -254,8 +252,10 @@ abstract class ChartPainter<T extends ChartData<IDataSet<Entry>>>
   /// Draws the description text in the bottom right corner of the chart (per default)
   void drawDescription(Canvas c, Size size) {
     // check if description should be drawn
+    final _description = this._description;
+
     if (_description != null && _description.enabled) {
-      MPPointF position = _description.position;
+      MPPointF? position = _description.position;
       double x, y;
       // if no position specified, draw on default position
       if (position == null) {
@@ -278,9 +278,11 @@ abstract class ChartPainter<T extends ChartData<IDataSet<Entry>>>
   ///
   /// @return
   bool valuesToHighlight() {
+    final _indicesToHighlight = this._indicesToHighlight;
+
     var res = _indicesToHighlight == null ||
-        _indicesToHighlight.length <= 0 ||
-        _indicesToHighlight[0] == null
+            _indicesToHighlight.length <= 0 ||
+            _indicesToHighlight[0] == null
         ? false
         : true;
     return res;
@@ -331,9 +333,9 @@ abstract class ChartPainter<T extends ChartData<IDataSet<Entry>>>
   /// @param y The y-value to highlight. Supply `NaN` for "any"
   /// @param dataSetIndex The dataset index to search in
   /// @param callListener Should the listener be called for this change
-  void highlightValue4(double x, double y, int dataSetIndex,
-      bool callListener) {
-    if (dataSetIndex < 0 || dataSetIndex >= _data.getDataSetCount()) {
+  void highlightValue4(
+      double x, double y, int dataSetIndex, bool callListener) {
+    if (dataSetIndex < 0 || dataSetIndex >= _data!.getDataSetCount()) {
       highlightValue6(null, callListener);
     } else {
       highlightValue6(
@@ -355,20 +357,19 @@ abstract class ChartPainter<T extends ChartData<IDataSet<Entry>>>
   ///
   /// @param high         - the highlight object
   /// @param callListener - call the listener
-  void highlightValue6(Highlight high, bool callListener) {
-    Entry e;
+  void highlightValue6(Highlight? high, bool callListener) {
+    Entry? e;
 
     if (high == null) {
       _indicesToHighlight = null;
     } else {
-      e = _data.getEntryForHighlight(high);
+      e = _data?.getEntryForHighlight(high);
       if (e == null) {
         _indicesToHighlight = null;
         high = null;
       } else {
         // set the indices to highlight
-        _indicesToHighlight = List()
-          ..add(high);
+        _indicesToHighlight = []..add(high);
       }
     }
 
@@ -383,7 +384,7 @@ abstract class ChartPainter<T extends ChartData<IDataSet<Entry>>>
   }
 
   void selectedValue(Highlight high) {
-    Entry e = _data.getEntryForHighlight(high);
+    Entry? e = _data?.getEntryForHighlight(high);
     _selectionListener?.onValueSelected(e, null);
   }
 
@@ -394,24 +395,32 @@ abstract class ChartPainter<T extends ChartData<IDataSet<Entry>>>
   /// @param x
   /// @param y
   /// @return
-  Highlight getHighlightByTouchPoint(double x, double y) {
+  Highlight? getHighlightByTouchPoint(double x, double y) {
     if (_data == null) {
       return null;
     } else {
-      return highlighter.getHighlight(x, y);
+      return highlighter?.getHighlight(x, y);
     }
   }
 
   /// draws all MarkerViews on the highlighted positions
   void drawMarkers(Canvas canvas) {
-    if (_marker == null || !_drawMarkers || !valuesToHighlight()) return;
+    final _indicesToHighlight = this._indicesToHighlight;
+    final _marker = this._marker;
+    final _data = this._data;
+
+    if (_data == null ||
+        _marker == null ||
+        _indicesToHighlight == null ||
+        !_drawMarkers ||
+        !valuesToHighlight()) return;
 
     for (int i = 0; i < _indicesToHighlight.length; i++) {
       Highlight highlight = _indicesToHighlight[i];
 
-      IDataSet set = _data.getDataSetByIndex(highlight.dataSetIndex);
+      IDataSet set = _data.getDataSetByIndex(highlight.dataSetIndex)!;
 
-      Entry e = _data.getEntryForHighlight(_indicesToHighlight[i]);
+      Entry? e = _data.getEntryForHighlight(_indicesToHighlight[i]);
       int entryIndex = set.getEntryIndex2(e);
       // make sure entry not null
       if (e == null || entryIndex > set.getEntryCount() * _animator.getPhaseX())
@@ -436,12 +445,13 @@ abstract class ChartPainter<T extends ChartData<IDataSet<Entry>>>
   /// @param high
   /// @return
   List<double> getMarkerPosition(Highlight high) {
-    return List<double>()
-      ..add(high.drawX)..add(high.drawY);
+    return []
+      ..add(high.drawX)
+      ..add(high.drawY);
   }
 
   @override
-  ChartData<IDataSet<Entry>> getData() {
+  ChartData<IDataSet<Entry>>? getData() {
     return _data;
   }
 

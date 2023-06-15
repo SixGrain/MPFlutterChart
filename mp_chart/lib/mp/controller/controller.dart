@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:mp_chart/gesture/gesture_dectetor.dart';
 import 'package:mp_chart/mp/chart/chart.dart';
 import 'package:mp_chart/mp/core/animator.dart';
 import 'package:mp_chart/mp/core/axis/x_axis.dart';
@@ -11,26 +12,29 @@ import 'package:mp_chart/mp/core/marker/i_marker.dart';
 import 'package:mp_chart/mp/core/render/legend_renderer.dart';
 import 'package:mp_chart/mp/core/utils/color_utils.dart';
 import 'package:mp_chart/mp/core/utils/painter_utils.dart';
-import 'package:mp_chart/mp/core/utils/utils.dart';
 import 'package:mp_chart/mp/core/view_port.dart';
 import 'package:mp_chart/mp/painter/painter.dart';
-import 'package:optimized_gesture_detector/gesture_dectetor.dart';
 
 abstract class Controller<P extends ChartPainter>
     implements AnimatorUpdateListener {
-  ChartState state;
-  ChartData data;
-  Animator animator;
-  P _painter;
+  ChartState? state;
+  ChartData? data;
+  P? _painter;
+
+  late Animator animator;
 
   ////// needed
-  IMarker marker;
-  Description description;
-  ViewPortHandler viewPortHandler;
-  XAxis xAxis;
-  Legend legend;
-  LegendRenderer legendRenderer;
-  OnChartValueSelectedListener selectionListener;
+  IMarker? marker;
+  late Description description;
+  late ViewPortHandler viewPortHandler;
+
+  late XAxis xAxis;
+  late Legend legend;
+  late LegendRenderer legendRenderer;
+
+  XAxis? _xAxisTemp;
+  Legend? _legendTemp;
+  LegendRenderer? _legendRendererTemp;
 
   ////// option
   double maxHighlightDistance;
@@ -40,77 +44,80 @@ abstract class Controller<P extends ChartPainter>
 
   ////// split child property
   Color infoBgColor;
-  TextPainter descPaint;
-  TextPainter infoPaint;
+  TextPainter descPainter;
+  TextPainter infoPainter;
 
-  XAxisSettingFunction xAxisSettingFunction;
-  LegendSettingFunction legendSettingFunction;
-  DataRendererSettingFunction rendererSettingFunction;
+  OnChartValueSelectedListener? selectedListener;
 
-  CanDragDownFunction horizontalConflictResolveFunc;
-  CanDragDownFunction verticalConflictResolveFunc;
+  XAxisSettingFunction? xAxisSettingFunction;
+  LegendSettingFunction? legendSettingFunction;
 
-  Controller(
-      {this.marker,
-      this.description,
-      this.viewPortHandler,
-      this.xAxis,
-      this.legend,
-      this.legendRenderer,
-      this.selectionListener,
-      this.maxHighlightDistance = 100.0,
-      this.highLightPerTapEnabled = true,
-      this.extraTopOffset = 0.0,
-      this.extraRightOffset = 0.0,
-      this.extraBottomOffset = 0.0,
-      this.extraLeftOffset = 0.0,
-      this.drawMarkers = true,
-      bool resolveGestureHorizontalConflict = false,
-      bool resolveGestureVerticalConflict = false,
-      double descTextSize = 12,
-      double infoTextSize = 12,
-      Color descTextColor,
-      Color infoTextColor,
-      this.infoBgColor,
-      this.descPaint,
-      this.infoPaint,
-      String noDataText = "No chart data available.",
-      this.xAxisSettingFunction,
-      this.legendSettingFunction,
-      this.rendererSettingFunction}) {
-    animator = ChartAnimatorBySys(this);
-    if (descTextColor == null) {
-      descTextColor = ColorUtils.BLACK;
-    }
-    descPaint = PainterUtils.create(null, null, descTextColor, descTextSize,
-        fontFamily: description?.typeface?.fontFamily,
-        fontWeight: description?.typeface?.fontWeight);
-    if (infoTextColor == null) {
-      infoTextColor = ColorUtils.BLACK;
-    }
-    infoPaint =
-        PainterUtils.create(null, noDataText, infoTextColor, infoTextSize);
-    infoBgColor ??= ColorUtils.WHITE;
+  DataRendererSettingFunction? rendererSettingFunction;
+  CanDragDownFunction? horizontalConflictResolveFunc;
+  CanDragDownFunction? verticalConflictResolveFunc;
 
-    if (maxHighlightDistance == 0.0) {
-      maxHighlightDistance = Utils.convertDpToPixel(500);
-    }
+  Controller({
+    this.maxHighlightDistance = 100,
+    this.highLightPerTapEnabled = true,
+    this.extraTopOffset = 0,
+    this.extraRightOffset = 0,
+    this.extraBottomOffset = 0,
+    this.extraLeftOffset = 0,
+    this.drawMarkers = true,
+    IMarker? marker,
+    Description? description,
+    ViewPortHandler? viewPortHandler,
+    XAxis? xAxis,
+    Legend? legend,
+    LegendRenderer? legendRenderer,
+    OnChartValueSelectedListener? selectionListener,
+    bool? resolveGestureHorizontalConflict,
+    bool? resolveGestureVerticalConflict,
+    double? descTextSize,
+    double? infoTextSize,
+    Color? descTextColor,
+    Color? infoTextColor,
+    Color? infoBgColor,
+    TextPainter? descPainter,
+    TextPainter? infoPainter,
+    String? noDataText,
+    this.xAxisSettingFunction,
+    this.legendSettingFunction,
+    this.rendererSettingFunction,
+    this.horizontalConflictResolveFunc,
+    this.verticalConflictResolveFunc,
+  })  : _xAxisTemp = xAxis,
+        _legendTemp = legend,
+        _legendRendererTemp = legendRenderer,
+        this.descPainter = descPainter ??
+            PainterUtils.create(null, null, descTextColor ?? ColorUtils.BLACK,
+                descTextSize ?? 12,
+                fontFamily: description?.typeface?.fontFamily,
+                fontWeight: description?.typeface?.fontWeight),
+        this.infoPainter = infoPainter ??
+            PainterUtils.create(
+              null,
+              noDataText ?? "No chart data available.",
+              infoTextColor ?? ColorUtils.BLACK,
+              infoTextSize ?? 12,
+            ),
+        this.infoBgColor = infoBgColor ?? ColorUtils.WHITE {
+    this.animator = ChartAnimatorBySys(this);
+    this.viewPortHandler = viewPortHandler ?? initViewPortHandler();
+    this.marker = marker ?? initMarker();
+    this.description = description ?? initDescription();
+    this.selectedListener = selectionListener ?? initSelectionListener();
 
-    this.viewPortHandler ??= initViewPortHandler();
-    this.marker ??= initMarker();
-    this.description ??= initDescription();
-    this.selectionListener ??= initSelectionListener();
-
-    if (resolveGestureHorizontalConflict) {
+    if (resolveGestureHorizontalConflict == true) {
       horizontalConflictResolveFunc = () => true;
     }
 
-    if (resolveGestureVerticalConflict) {
+    if (resolveGestureVerticalConflict == true) {
       verticalConflictResolveFunc = () => true;
     }
   }
 
-  IMarker initMarker() => null;
+  IMarker? initMarker() => null;
 
   Description initDescription() => Description();
 
@@ -123,27 +130,19 @@ abstract class Controller<P extends ChartPainter>
   LegendRenderer initLegendRenderer() =>
       LegendRenderer(viewPortHandler, legend);
 
-  OnChartValueSelectedListener initSelectionListener() => null;
+  OnChartValueSelectedListener? initSelectionListener() => null;
 
-  ChartState createChartState() {
-    state = createRealState();
-    return state;
-  }
+  ChartState createChartState() => state = createRealState();
 
   ChartState createRealState();
 
   void doneBeforePainterInit() {
-    legend = initLegend();
-    legendRenderer = initLegendRenderer();
-    if (xAxis == null) {
-      xAxis = initXAxis();
-    }
-    if (legendSettingFunction != null) {
-      legendSettingFunction(legend, this);
-    }
-    if (xAxisSettingFunction != null) {
-      xAxisSettingFunction(xAxis, this);
-    }
+    this.legend = _legendTemp ?? initLegend();
+    this.legendRenderer = _legendRendererTemp ?? initLegendRenderer();
+    this.xAxis = _xAxisTemp ?? initXAxis();
+
+    legendSettingFunction?.call(this.legend, this);
+    xAxisSettingFunction?.call(this.xAxis, this);
   }
 
   void initialPainter();
@@ -157,10 +156,10 @@ abstract class Controller<P extends ChartPainter>
   void onRotateUpdate(double angle) {}
 
   // ignore: unnecessary_getters_setters
-  P get painter => _painter;
+  P? get painter => _painter;
 
   // ignore: unnecessary_getters_setters
-  set painter(P value) {
+  set painter(P? value) {
     _painter = value;
   }
 }

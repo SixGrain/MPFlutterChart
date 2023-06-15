@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:example/demo/action_state.dart';
 import 'package:flutter/material.dart';
 import 'package:mp_chart/mp/chart/bar_chart.dart';
 import 'package:mp_chart/mp/controller/bar_chart_controller.dart';
@@ -20,7 +21,6 @@ import 'package:mp_chart/mp/core/image_loader.dart';
 import 'package:mp_chart/mp/core/utils/color_utils.dart';
 import 'package:mp_chart/mp/core/value_formatter/my_value_formatter.dart';
 import 'package:mp_chart/mp/core/value_formatter/stacked_value_formatter.dart';
-import 'package:example/demo/action_state.dart';
 
 class BarChartStacked extends StatefulWidget {
   @override
@@ -133,7 +133,7 @@ class BarChartStackedState extends BarActionState<BarChartStacked>
 
   void _initBarData(int count, double range) async {
     var img = await ImageLoader.loadImage('assets/img/star.png');
-    List<BarEntry> values = List();
+    List<BarEntry> values = [];
 
     for (int i = 0; i < count; i++) {
       double mul = (range + 1);
@@ -143,7 +143,10 @@ class BarChartStackedState extends BarActionState<BarChartStacked>
 
       values.add(BarEntry.fromListYVals(
           x: i.toDouble(),
-          vals: List()..add(val1)..add(val2)..add(val3),
+          vals: []
+            ..add(val1)
+            ..add(val2)
+            ..add(val3),
           icon: img));
     }
 
@@ -152,14 +155,16 @@ class BarChartStackedState extends BarActionState<BarChartStacked>
     set1 = BarDataSet(values, "Statistics Vienna 2014");
     set1.setDrawIcons(false);
     set1.setColors1(_getColors());
-    set1.setStackLabels(
-        List()..add("Births")..add("Divorces")..add("Marriages"));
+    set1.setStackLabels([]
+      ..add("Births")
+      ..add("Divorces")
+      ..add("Marriages"));
 
-    List<IBarDataSet> dataSets = List();
+    List<IBarDataSet> dataSets = [];
     dataSets.add(set1);
 
     controller.data = BarData(dataSets);
-    controller.data
+    controller.data!
       ..setValueFormatter(StackedValueFormatter(false, "", 1))
       ..setValueTextColor(ColorUtils.WHITE);
 
@@ -167,7 +172,7 @@ class BarChartStackedState extends BarActionState<BarChartStacked>
   }
 
   List<Color> _getColors() {
-    return List()
+    return []
       ..add(ColorUtils.MATERIAL_COLORS[0])
       ..add(ColorUtils.MATERIAL_COLORS[1])
       ..add(ColorUtils.MATERIAL_COLORS[2]);
@@ -217,5 +222,5 @@ class BarChartStackedState extends BarActionState<BarChartStacked>
   void onNothingSelected() {}
 
   @override
-  void onValueSelected(Entry e, Highlight h) {}
+  void onValueSelected(Entry? e, Highlight? h) {}
 }

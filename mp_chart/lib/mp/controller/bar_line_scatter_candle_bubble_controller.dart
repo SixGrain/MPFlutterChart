@@ -2,17 +2,15 @@ import 'package:flutter/rendering.dart';
 import 'package:mp_chart/mp/controller/controller.dart';
 import 'package:mp_chart/mp/core/animator.dart';
 import 'package:mp_chart/mp/core/axis/y_axis.dart';
+import 'package:mp_chart/mp/core/chart_trans_listener.dart';
 import 'package:mp_chart/mp/core/common_interfaces.dart';
-import 'package:mp_chart/mp/core/description.dart';
 import 'package:mp_chart/mp/core/enums/axis_dependency.dart';
 import 'package:mp_chart/mp/core/functions.dart';
-import 'package:mp_chart/mp/core/marker/i_marker.dart';
 import 'package:mp_chart/mp/core/poolable/point.dart';
 import 'package:mp_chart/mp/core/range_chart_listener.dart';
 import 'package:mp_chart/mp/core/render/x_axis_renderer.dart';
 import 'package:mp_chart/mp/core/render/y_axis_renderer.dart';
 import 'package:mp_chart/mp/core/touch_listener.dart';
-import 'package:mp_chart/mp/core/chart_trans_listener.dart';
 import 'package:mp_chart/mp/core/transformer/transformer.dart';
 import 'package:mp_chart/mp/core/utils/color_utils.dart';
 import 'package:mp_chart/mp/core/utils/utils.dart';
@@ -33,40 +31,38 @@ abstract class BarLineScatterCandleBubbleController<
   bool drawBorders;
   bool clipValuesToContent;
   double minOffset;
-  OnDrawListener drawListener;
-  YAxis axisLeft;
-  YAxis axisRight;
-  YAxisRenderer axisRendererLeft;
-  YAxisRenderer axisRendererRight;
-  Transformer leftAxisTransformer;
-  Transformer rightAxisTransformer;
-  XAxisRenderer xAxisRenderer;
+  OnDrawListener? drawListener;
+  YAxis? axisLeft;
+  YAxis? axisRight;
+  YAxisRenderer? axisRendererLeft;
+  YAxisRenderer? axisRendererRight;
+  Transformer? leftAxisTransformer;
+  Transformer? rightAxisTransformer;
+  XAxisRenderer? xAxisRenderer;
   bool customViewPortEnabled;
-  Matrix4 zoomMatrixBuffer;
+  Matrix4? zoomMatrixBuffer;
   bool pinchZoomEnabled;
   bool keepPositionOnRotation;
 
-  Paint gridBackgroundPaint;
-  Paint borderPaint;
-  Paint rangePaint;
+  Paint? gridBackgroundPaint;
+  Paint? borderPaint;
+  Paint? rangePaint;
+  Paint? backgroundPaint;
 
-  Paint backgroundPaint;
-  Color gridBackColor;
-  Color borderColor;
-  Color rangeColor;
-  Color backgroundColor;
-  double borderStrokeWidth;
+  final Color? gridBackColor;
+  final Color? borderColor;
+  final Color? rangeColor;
+  final Color? backgroundColor;
+  final double borderStrokeWidth;
 
   /// this is used for user get touch event if they needed
-  OnTouchEventListener touchEventListener;
+  OnTouchEventListener? touchEventListener;
 
   /// this is used for have a callback when chart translate or scale
-  ChartTransListener chartTransListener;
-
-  ChartPositionListener chartPositionListener;
-
-  AxisLeftSettingFunction axisLeftSettingFunction;
-  AxisRightSettingFunction axisRightSettingFunction;
+  ChartTransListener? chartTransListener;
+  ChartPositionListener? chartPositionListener;
+  AxisLeftSettingFunction? axisLeftSettingFunction;
+  AxisRightSettingFunction? axisRightSettingFunction;
 
   MPPointF _decelerationVelocity = MPPointF.getInstance1(0, 0);
 
@@ -78,94 +74,78 @@ abstract class BarLineScatterCandleBubbleController<
 
   int _decelerationLastTime = 0;
 
-  BarLineScatterCandleBubbleController(
-      {
-        this.drawRange = false,
-        this.maxVisibleCount = 100,
-      this.autoScaleMinMaxEnabled = true,
-      this.doubleTapToZoomEnabled = true,
-      this.highlightPerDragEnabled = true,
-      this.dragXEnabled = true,
-      this.dragYEnabled = true,
-      this.scaleXEnabled = true,
-      this.scaleYEnabled = true,
-      this.drawGridBackground = false,
-      this.drawBorders = false,
-      this.clipValuesToContent = false,
-      this.minOffset = 30.0,
-      this.drawListener,
-      this.axisLeft,
-      this.axisRight,
-      this.axisRendererLeft,
-      this.axisRendererRight,
-      this.leftAxisTransformer,
-      this.rightAxisTransformer,
-      this.xAxisRenderer,
-      this.customViewPortEnabled = false,
-      this.zoomMatrixBuffer,
-      this.pinchZoomEnabled = true,
-      this.keepPositionOnRotation = false,
-      this.gridBackgroundPaint,
-      this.borderPaint,
-        this.rangePaint,
-      this.backgroundPaint,
-      this.gridBackColor,
-      this.borderColor,
-        this.rangeColor,
-      this.backgroundColor,
-      this.borderStrokeWidth = 1.0,
-      this.axisLeftSettingFunction,
-      this.axisRightSettingFunction,
-      this.touchEventListener,
-      this.chartTransListener,
-        this.chartPositionListener,
-      IMarker marker,
-      Description description,
-      String noDataText = "No chart data available.",
-      XAxisSettingFunction xAxisSettingFunction,
-      LegendSettingFunction legendSettingFunction,
-      DataRendererSettingFunction rendererSettingFunction,
-      OnChartValueSelectedListener selectionListener,
-      double maxHighlightDistance = 100.0,
-      bool highLightPerTapEnabled = true,
-      double extraTopOffset = 0.0,
-      double extraRightOffset = 0.0,
-      double extraBottomOffset = 0.0,
-      double extraLeftOffset = 0.0,
-      bool drawMarkers = true,
-      bool resolveGestureHorizontalConflict = false,
-      bool resolveGestureVerticalConflict = false,
-      double descTextSize = 12,
-      double infoTextSize = 12,
-      Color descTextColor,
-      Color infoTextColor,
-      Color infoBgColor})
-      : super(
-            marker: marker,
-            description: description,
-            noDataText: noDataText,
-            xAxisSettingFunction: xAxisSettingFunction,
-            legendSettingFunction: legendSettingFunction,
-            rendererSettingFunction: rendererSettingFunction,
-            selectionListener: selectionListener,
-            maxHighlightDistance: maxHighlightDistance,
-            highLightPerTapEnabled: highLightPerTapEnabled,
-            extraTopOffset: extraTopOffset,
-            extraRightOffset: extraRightOffset,
-            extraBottomOffset: extraBottomOffset,
-            extraLeftOffset: extraLeftOffset,
-            drawMarkers: drawMarkers,
-            resolveGestureHorizontalConflict: resolveGestureHorizontalConflict,
-            resolveGestureVerticalConflict: resolveGestureVerticalConflict,
-            descTextSize: descTextSize,
-            infoTextSize: infoTextSize,
-            descTextColor: descTextColor,
-            infoBgColor: infoBgColor,
-            infoTextColor: infoTextColor);
+  BarLineScatterCandleBubbleController({
+    this.drawRange = false,
+    this.maxVisibleCount = 100,
+    this.autoScaleMinMaxEnabled = true,
+    this.doubleTapToZoomEnabled = true,
+    this.highlightPerDragEnabled = true,
+    this.dragXEnabled = true,
+    this.dragYEnabled = true,
+    this.scaleXEnabled = true,
+    this.scaleYEnabled = true,
+    this.drawGridBackground = false,
+    this.drawBorders = false,
+    this.clipValuesToContent = false,
+    this.minOffset = 30.0,
+    this.customViewPortEnabled = false,
+    this.pinchZoomEnabled = true,
+    this.keepPositionOnRotation = false,
+    this.borderStrokeWidth = 1.0,
+    this.drawListener,
+    this.axisLeft,
+    this.axisRight,
+    this.axisRendererLeft,
+    this.axisRendererRight,
+    this.leftAxisTransformer,
+    this.rightAxisTransformer,
+    this.xAxisRenderer,
+    this.zoomMatrixBuffer,
+    this.gridBackgroundPaint,
+    this.borderPaint,
+    this.rangePaint,
+    this.backgroundPaint,
+    this.gridBackColor,
+    this.borderColor,
+    this.rangeColor,
+    this.backgroundColor,
+    this.axisLeftSettingFunction,
+    this.axisRightSettingFunction,
+    this.touchEventListener,
+    this.chartTransListener,
+    this.chartPositionListener,
+    super.marker,
+    super.description,
+    super.noDataText,
+    super.xAxisSettingFunction,
+    super.legendSettingFunction,
+    super.rendererSettingFunction,
+    super.selectionListener,
+    super.maxHighlightDistance,
+    super.highLightPerTapEnabled,
+    super.extraTopOffset,
+    super.extraRightOffset,
+    super.extraBottomOffset,
+    super.extraLeftOffset,
+    super.drawMarkers,
+    super.resolveGestureHorizontalConflict,
+    super.resolveGestureVerticalConflict,
+    super.descTextSize,
+    super.infoTextSize,
+    super.descTextColor,
+    super.infoTextColor,
+    super.infoBgColor,
+    super.viewPortHandler,
+    super.xAxis,
+    super.legend,
+    super.legendRenderer,
+    super.descPainter,
+    super.infoPainter,
+    super.horizontalConflictResolveFunc,
+    super.verticalConflictResolveFunc,
+  });
 
-  OnDrawListener initDrawListener() {
-    return null;
-  }
+  OnDrawListener? initDrawListener() => null;
 
   YAxis initAxisLeft() => YAxis(position: AxisDependency.LEFT);
 
@@ -176,57 +156,46 @@ abstract class BarLineScatterCandleBubbleController<
   Transformer initRightAxisTransformer() => Transformer(viewPortHandler);
 
   YAxisRenderer initAxisRendererLeft() =>
-      YAxisRenderer(viewPortHandler, axisLeft, leftAxisTransformer);
+      YAxisRenderer(viewPortHandler, axisLeft!, leftAxisTransformer!);
 
   YAxisRenderer initAxisRendererRight() =>
-      YAxisRenderer(viewPortHandler, axisRight, rightAxisTransformer);
+      YAxisRenderer(viewPortHandler, axisRight!, rightAxisTransformer!);
 
   XAxisRenderer initXAxisRenderer() =>
-      XAxisRenderer(viewPortHandler, xAxis, leftAxisTransformer);
+      XAxisRenderer(viewPortHandler, xAxis, leftAxisTransformer!);
 
   @override
   void doneBeforePainterInit() {
     super.doneBeforePainterInit();
     gridBackgroundPaint = Paint()
-      ..color = gridBackColor == null
-          ? Color.fromARGB(255, 240, 240, 240)
-          : gridBackColor
+      ..color = gridBackColor ?? Color.fromARGB(255, 240, 240, 240)
       ..style = PaintingStyle.fill;
 
     borderPaint = Paint()
-      ..color = borderColor == null ? ColorUtils.BLACK : borderColor
+      ..color = borderColor ?? ColorUtils.BLACK
       ..style = PaintingStyle.stroke
       ..strokeWidth = Utils.convertDpToPixel(borderStrokeWidth);
 
     rangePaint = Paint()
-      ..color = rangeColor == null ? ColorUtils.BLUE : rangeColor
+      ..color = rangeColor ?? ColorUtils.BLUE
       ..style = PaintingStyle.fill;
 
-    backgroundPaint = Paint()
-      ..color = backgroundColor == null ? ColorUtils.WHITE : backgroundColor;
+    backgroundPaint = Paint()..color = backgroundColor ?? ColorUtils.WHITE;
 
     drawListener ??= initDrawListener();
-    if (axisLeft == null) {
-      axisLeft = initAxisLeft();
-    }
-    if (axisRight == null) {
-      axisRight = initAxisRight();
-    }
+    axisLeft ??= initAxisLeft();
+    axisRight ??= initAxisRight();
     leftAxisTransformer ??= initLeftAxisTransformer();
     rightAxisTransformer ??= initRightAxisTransformer();
     zoomMatrixBuffer ??= initZoomMatrixBuffer();
-    axisRendererLeft = initAxisRendererLeft();
+    axisRendererLeft = axisRendererLeft ?? initAxisRendererLeft();
     axisRendererRight = initAxisRendererRight();
     xAxisRenderer = xAxisRenderer ?? initXAxisRenderer();
-    if (axisLeftSettingFunction != null) {
-      axisLeftSettingFunction(axisLeft, this);
-    }
-    if (axisRightSettingFunction != null) {
-      axisRightSettingFunction(axisRight, this);
-    }
+    axisLeftSettingFunction?.call(axisLeft!, this);
+    axisRightSettingFunction?.call(axisRight!, this);
   }
 
-  P get painter => super.painter;
+  P? get painter => super.painter;
 
   void setViewPortOffsets(final double left, final double top,
       final double right, final double bottom) {
@@ -251,7 +220,7 @@ abstract class BarLineScatterCandleBubbleController<
   ///
   /// @param xValue
   void moveViewToX(double xValue) {
-    List<double> pts = List();
+    List<double> pts = [];
     pts.add(xValue);
     pts.add(0.0);
 
@@ -266,7 +235,7 @@ abstract class BarLineScatterCandleBubbleController<
   /// @param axis   - which axis should be used as a reference for the y-axis
   void moveViewToY(double yValue, AxisDependency axis) {
     double yInView = getAxisRange(axis) / viewPortHandler.getScaleY();
-    List<double> pts = List();
+    List<double> pts = [];
     pts.add(0.0);
     pts.add(yValue + yInView / 2);
 
@@ -283,7 +252,7 @@ abstract class BarLineScatterCandleBubbleController<
   /// @param axis   - which axis should be used as a reference for the y-axis
   void moveViewTo(double xValue, double yValue, AxisDependency axis) {
     double yInView = getAxisRange(axis) / viewPortHandler.getScaleY();
-    List<double> pts = List();
+    List<double> pts = [];
     pts.add(xValue);
     pts.add(yValue + yInView / 2);
     painter?.getTransformer(axis)?.pointValuesToPixel(pts);
@@ -305,7 +274,7 @@ abstract class BarLineScatterCandleBubbleController<
     double yInView = getAxisRange(axis) / viewPortHandler.getScaleY();
 
     yValue = yValue + yInView / 2;
-    List<double> pts = List();
+    List<double> pts = [];
     pts.add(xValue);
     pts.add(yValue);
     double xOrigin = bounds.x;
@@ -328,7 +297,7 @@ abstract class BarLineScatterCandleBubbleController<
   /// @param axis   - which axis should be used as a reference for the y-axis
   void centerViewToY(double yValue, AxisDependency axis) {
     double valsInView = getAxisRange(axis) / viewPortHandler.getScaleY();
-    List<double> pts = List();
+    List<double> pts = [];
     pts.add(0.0);
     pts.add(yValue + valsInView / 2);
     painter?.getTransformer(axis)?.pointValuesToPixel(pts);
@@ -345,7 +314,7 @@ abstract class BarLineScatterCandleBubbleController<
   void centerViewTo(double xValue, double yValue, AxisDependency axis) {
     double yInView = getAxisRange(axis) / viewPortHandler.getScaleY();
     double xInView = xAxis.axisRange / viewPortHandler.getScaleX();
-    List<double> pts = List();
+    List<double> pts = [];
     pts.add(xValue - xInView / 2);
     pts.add(yValue + yInView / 2);
     painter?.getTransformer(axis)?.pointValuesToPixel(pts);
@@ -368,7 +337,7 @@ abstract class BarLineScatterCandleBubbleController<
 
     xValue = xValue - xInView / 2;
     yValue = yValue + yInView / 2;
-    List<double> pts = List();
+    List<double> pts = [];
     pts.add(xValue);
     pts.add(yValue);
     double xOrigin = bounds.x;
@@ -420,9 +389,9 @@ abstract class BarLineScatterCandleBubbleController<
 
   double getAxisRange(AxisDependency axis) {
     if (axis == AxisDependency.LEFT)
-      return axisLeft.axisRange;
+      return axisLeft!.axisRange;
     else
-      return axisRight.axisRange;
+      return axisRight!.axisRange;
   }
 
   MPPointD getValuesByTouchPoint(double x, double y, AxisDependency axis) {
@@ -499,20 +468,18 @@ abstract class BarLineScatterCandleBubbleController<
       double dragDistanceX = dragXEnabled ? distanceX : 0;
       double dragDistanceY = dragYEnabled ? distanceY : 0;
 
-      painter.translate(dragDistanceX, dragDistanceY);
+      painter!.translate(dragDistanceX, dragDistanceY);
 
       _decelerationLastTime = currentTime;
     }
 
     if (_decelerationVelocity.x.abs() >= 20 ||
         _decelerationVelocity.y.abs() >= 20) {
-      state.setStateIfNotDispose();
-      Future.delayed(Duration(milliseconds: 16), () {
-        computeScroll();
-      });
+      state!.setStateIfNotDispose();
+      Future.delayed(Duration(milliseconds: 16), computeScroll);
     } else {
-      painter.calculateOffsets();
-      state.setStateIfNotDispose();
+      painter!.calculateOffsets();
+      state!.setStateIfNotDispose();
       stopDeceleration();
     }
   }

@@ -9,7 +9,7 @@ import 'package:mp_chart/mp/core/value_formatter/value_formatter.dart';
 
 abstract class AxisBase extends ComponentBase {
   /// custom formatter that is used instead of the auto-formatter if set
-  ValueFormatter _axisValueFormatter;
+  ValueFormatter? _axisValueFormatter;
 
   Color _gridColor = ColorUtils.GRAY;
 
@@ -21,9 +21,9 @@ abstract class AxisBase extends ComponentBase {
 
   double _axisLineWidth = 1;
 
-  List<double> _entries = List();
+  List<double> _entries = [];
 
-  List<double> _centeredEntries = List();
+  List<double> _centeredEntries = [];
 
   /// the number of entries the legend contains
   int _entryCount = 0;
@@ -58,13 +58,13 @@ abstract class AxisBase extends ComponentBase {
   bool _centerAxisLabels = false;
 
   /// the path effect of the axis line that makes dashed lines possible
-  DashPathEffect _axisLineDashPathEffect;
+  DashPathEffect? _axisLineDashPathEffect;
 
   /// the path effect of the grid lines that makes dashed lines possible
-  DashPathEffect _gridDashPathEffect;
+  DashPathEffect? _gridDashPathEffect;
 
   /// array of limit lines that can be set for the axis
-  List<LimitLine> _limitLines;
+  List<LimitLine> _limitLines = [];
 
   /// flag indicating the limit lines layer depth
   bool _drawLimitLineBehindData = false;
@@ -97,14 +97,14 @@ abstract class AxisBase extends ComponentBase {
     textSize = 10;
     xOffset = 5;
     yOffset = 5;
-    this._limitLines = List<LimitLine>();
+    this._limitLines = <LimitLine>[];
   }
 
   // ignore: unnecessary_getters_setters
-  ValueFormatter get axisValueFormatter => _axisValueFormatter;
+  ValueFormatter? get axisValueFormatter => _axisValueFormatter;
 
   // ignore: unnecessary_getters_setters
-  set axisValueFormatter(ValueFormatter value) {
+  set axisValueFormatter(ValueFormatter? value) {
     _axisValueFormatter = value;
   }
 
@@ -261,7 +261,7 @@ abstract class AxisBase extends ComponentBase {
   /// Returns the LimitLines of this axis.
   ///
   /// @return
-  List<LimitLine> getLimitLines() {
+  List<LimitLine>? getLimitLines() {
     return _limitLines;
   }
 
@@ -289,7 +289,7 @@ abstract class AxisBase extends ComponentBase {
     String longest = "";
 
     for (int i = 0; i < _entries.length; i++) {
-      String text = getFormattedLabel(i);
+      String? text = getFormattedLabel(i);
 
       if (text != null && longest.length < text.length) longest = text;
     }
@@ -297,11 +297,11 @@ abstract class AxisBase extends ComponentBase {
     return longest;
   }
 
-  String getFormattedLabel(int index) {
+  String? getFormattedLabel(int index) {
     if (index < 0 || index >= _entries.length)
       return "";
     else
-      return getValueFormatter().getAxisLabel(_entries[index], this);
+      return getValueFormatter()?.getAxisLabel(_entries[index], this);
   }
 
   /// Sets the formatter to be used for formatting the axis labels. If no formatter is set, the
@@ -311,7 +311,7 @@ abstract class AxisBase extends ComponentBase {
   /// the chart. Use chart.getDefaultValueFormatter() to use the formatter calculated by the chart.
   ///
   /// @param f
-  void setValueFormatter(ValueFormatter f) {
+  void setValueFormatter(ValueFormatter? f) {
     if (f == null)
       _axisValueFormatter = DefaultAxisValueFormatter(_decimals);
     else
@@ -321,7 +321,7 @@ abstract class AxisBase extends ComponentBase {
   /// Returns the formatter used for formatting the axis labels.
   ///
   /// @return
-  ValueFormatter getValueFormatter() {
+  ValueFormatter? getValueFormatter() {
     if (_axisValueFormatter == null ||
         (_axisValueFormatter is DefaultAxisValueFormatter &&
             (_axisValueFormatter as DefaultAxisValueFormatter).digits !=
@@ -344,10 +344,10 @@ abstract class AxisBase extends ComponentBase {
   }
 
   // ignore: unnecessary_getters_setters
-  DashPathEffect get gridDashPathEffect => _gridDashPathEffect;
+  DashPathEffect? get gridDashPathEffect => _gridDashPathEffect;
 
   // ignore: unnecessary_getters_setters
-  set gridDashPathEffect(DashPathEffect value) {
+  set gridDashPathEffect(DashPathEffect? value) {
     _gridDashPathEffect = value;
   }
 
@@ -388,10 +388,10 @@ abstract class AxisBase extends ComponentBase {
   }
 
   // ignore: unnecessary_getters_setters
-  DashPathEffect get axisLineDashPathEffect => _axisLineDashPathEffect;
+  DashPathEffect? get axisLineDashPathEffect => _axisLineDashPathEffect;
 
   // ignore: unnecessary_getters_setters
-  set axisLineDashPathEffect(DashPathEffect value) {
+  set axisLineDashPathEffect(DashPathEffect? value) {
     _axisLineDashPathEffect = value;
   }
 

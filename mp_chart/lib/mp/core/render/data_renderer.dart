@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:flutter/painting.dart';
 import 'package:mp_chart/mp/core/adapter_android_mp.dart';
 import 'package:mp_chart/mp/core/animator.dart';
@@ -8,22 +6,22 @@ import 'package:mp_chart/mp/core/data_provider/chart_interface.dart';
 import 'package:mp_chart/mp/core/highlight/highlight.dart';
 import 'package:mp_chart/mp/core/render/renderer.dart';
 import 'package:mp_chart/mp/core/utils/painter_utils.dart';
-import 'package:mp_chart/mp/core/view_port.dart';
 import 'package:mp_chart/mp/core/utils/utils.dart';
+import 'package:mp_chart/mp/core/view_port.dart';
 
 abstract class DataRenderer extends Renderer {
   /// the animator object used to perform animations on the chart data
-  Animator _animator;
+  late Animator _animator;
 
   /// main paint object used for rendering
-  Paint _renderPaint;
+  late Paint _renderPaint;
 
   /// paint used for highlighting values
-  Paint _highlightPaint;
+  late Paint _highlightPaint;
 
-  Paint _drawPaint;
+  late Paint _drawPaint;
 
-  TextPainter _valuePaint;
+  late TextPainter _valuePaint;
 
   DataRenderer(Animator animator, ViewPortHandler viewPortHandler)
       : super(viewPortHandler) {
@@ -35,7 +33,7 @@ abstract class DataRenderer extends Renderer {
 
     _drawPaint = Paint();
 
-    _valuePaint = PainterUtils.create(_valuePaint, null,
+    _valuePaint = PainterUtils.create(null, null,
         Color.fromARGB(255, 63, 63, 63), Utils.convertDpToPixel(9));
 
     _highlightPaint = Paint()
@@ -46,7 +44,7 @@ abstract class DataRenderer extends Renderer {
   }
 
   bool isDrawingValuesAllowed(ChartInterface chart) {
-    return chart.getData().getEntryCount() <
+    return chart.getData()!.getEntryCount() <
         chart.getMaxVisibleCount() * viewPortHandler.getScaleX();
   }
 
@@ -76,7 +74,7 @@ abstract class DataRenderer extends Renderer {
   /// object.
   ///
   /// @param set
-  void applyValueTextStyle(IDataSet set) {
+  void applyValueTextStyle(IDataSet? set) {
     _valuePaint = PainterUtils.create(_valuePaint, null,
         Color.fromARGB(255, 63, 63, 63), Utils.convertDpToPixel(9),
         fontFamily: set?.getValueTypeface()?.fontFamily,
@@ -105,7 +103,8 @@ abstract class DataRenderer extends Renderer {
   /// @param x         position
   /// @param y         position
   /// @param color
-  void drawValue(Canvas c, String valueText, double x, double y, Color color, double textSize, TypeFace typeFace);
+  void drawValue(Canvas c, String valueText, double x, double y, Color color,
+      double textSize, TypeFace typeFace);
 
   /// Draws any kind of additional information (e.g. line-circles).
   ///

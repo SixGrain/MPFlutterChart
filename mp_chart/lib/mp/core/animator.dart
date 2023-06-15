@@ -10,7 +10,7 @@ const double MAX = 1.0;
 
 abstract class Animator {
   /// object that is updated upon animation update
-  AnimatorUpdateListener listener;
+  AnimatorUpdateListener? listener;
 
   /// The phase of drawn values on the y-axis. 0 - 1
   double phaseY = MAX;
@@ -18,7 +18,7 @@ abstract class Animator {
   /// The phase of drawn values on the x-axis. 0 - 1
   double phaseX = MAX;
 
-  double angle;
+  double angle = 0;
 
   Animator(this.listener);
 
@@ -120,7 +120,7 @@ abstract class Animator {
 class ChartAnimator extends Animator {
   static const int REFRESH_RATE = 16;
 
-  Timer _countdownTimer;
+  Timer? _countdownTimer;
 
   bool _isShowed = false;
 
@@ -146,21 +146,21 @@ class ChartAnimator extends Animator {
     angle = fromAngle;
     _countdownTimer =
         Timer.periodic(Duration(milliseconds: REFRESH_RATE), (timer) {
-      if (durationMillis < 0) {
-        angle = toAngle;
-        _countdownTimer?.cancel();
-        _countdownTimer = null;
-      } else {
-        angle = fromAngle +
-            (toAngle - fromAngle) *
-                (1.0 - easing.getInterpolation(durationMillis / totalTime));
-        if (angle >= toAngle) {
-          angle = toAngle;
-        }
-        durationMillis -= REFRESH_RATE;
-      }
-      listener?.onRotateUpdate(angle);
-    });
+          if (durationMillis < 0) {
+            angle = toAngle;
+            _countdownTimer?.cancel();
+            _countdownTimer = null;
+          } else {
+            angle = fromAngle +
+                (toAngle - fromAngle) *
+                    (1.0 - easing.getInterpolation(durationMillis / totalTime));
+            if (angle >= toAngle) {
+              angle = toAngle;
+            }
+            durationMillis -= REFRESH_RATE;
+          }
+          listener?.onRotateUpdate(angle);
+        });
   }
 
   void animateX2(int durationMillis, EasingFunction easing) {
@@ -173,19 +173,19 @@ class ChartAnimator extends Animator {
     phaseX = MIN;
     _countdownTimer =
         Timer.periodic(Duration(milliseconds: REFRESH_RATE), (timer) {
-      if (durationMillis < 0) {
-        phaseX = MAX;
-        _countdownTimer?.cancel();
-        _countdownTimer = null;
-      } else {
-        phaseX = MAX - easing.getInterpolation(durationMillis / totalTime);
-        if (phaseX >= MAX) {
-          phaseX = MAX;
-        }
-        durationMillis -= REFRESH_RATE;
-      }
-      listener?.onAnimationUpdate(phaseX, phaseY);
-    });
+          if (durationMillis < 0) {
+            phaseX = MAX;
+            _countdownTimer?.cancel();
+            _countdownTimer = null;
+          } else {
+            phaseX = MAX - easing.getInterpolation(durationMillis / totalTime);
+            if (phaseX >= MAX) {
+              phaseX = MAX;
+            }
+            durationMillis -= REFRESH_RATE;
+          }
+          listener?.onAnimationUpdate(phaseX, phaseY);
+        });
   }
 
   void animateXY2(
@@ -204,27 +204,27 @@ class ChartAnimator extends Animator {
     phaseY = MIN;
     _countdownTimer =
         Timer.periodic(Duration(milliseconds: REFRESH_RATE), (timer) {
-      if (durationMillisX < 0 && durationMillisY < 0) {
-        phaseX = MAX;
-        phaseY = MAX;
-        _countdownTimer?.cancel();
-        _countdownTimer = null;
-      } else {
-        phaseX = MAX - easing.getInterpolation(durationMillisX / totalTimeX);
-        if (phaseX >= MAX) {
-          phaseX = MAX;
-        }
+          if (durationMillisX < 0 && durationMillisY < 0) {
+            phaseX = MAX;
+            phaseY = MAX;
+            _countdownTimer?.cancel();
+            _countdownTimer = null;
+          } else {
+            phaseX = MAX - easing.getInterpolation(durationMillisX / totalTimeX);
+            if (phaseX >= MAX) {
+              phaseX = MAX;
+            }
 
-        phaseY = MAX - easing.getInterpolation(durationMillisY / totalTimeY);
-        if (phaseY >= MAX) {
-          phaseY = MAX;
-        }
+            phaseY = MAX - easing.getInterpolation(durationMillisY / totalTimeY);
+            if (phaseY >= MAX) {
+              phaseY = MAX;
+            }
 
-        durationMillisX -= REFRESH_RATE;
-        durationMillisY -= REFRESH_RATE;
-      }
-      listener?.onAnimationUpdate(phaseX, phaseY);
-    });
+            durationMillisX -= REFRESH_RATE;
+            durationMillisY -= REFRESH_RATE;
+          }
+          listener?.onAnimationUpdate(phaseX, phaseY);
+        });
   }
 
   void animateXY3(int durationMillisX, int durationMillisY,
@@ -243,27 +243,27 @@ class ChartAnimator extends Animator {
     phaseY = MIN;
     _countdownTimer =
         Timer.periodic(Duration(milliseconds: REFRESH_RATE), (timer) {
-      if (durationMillisX < 0 && durationMillisY < 0) {
-        phaseX = MAX;
-        phaseY = MAX;
-        _countdownTimer?.cancel();
-        _countdownTimer = null;
-      } else {
-        phaseX = MAX - easingX.getInterpolation(durationMillisX / totalTimeX);
-        if (phaseX >= MAX) {
-          phaseX = MAX;
-        }
+          if (durationMillisX < 0 && durationMillisY < 0) {
+            phaseX = MAX;
+            phaseY = MAX;
+            _countdownTimer?.cancel();
+            _countdownTimer = null;
+          } else {
+            phaseX = MAX - easingX.getInterpolation(durationMillisX / totalTimeX);
+            if (phaseX >= MAX) {
+              phaseX = MAX;
+            }
 
-        phaseY = MAX - easingY.getInterpolation(durationMillisY / totalTimeY);
-        if (phaseY >= MAX) {
-          phaseY = MAX;
-        }
+            phaseY = MAX - easingY.getInterpolation(durationMillisY / totalTimeY);
+            if (phaseY >= MAX) {
+              phaseY = MAX;
+            }
 
-        durationMillisX -= REFRESH_RATE;
-        durationMillisY -= REFRESH_RATE;
-      }
-      listener?.onAnimationUpdate(phaseX, phaseY);
-    });
+            durationMillisX -= REFRESH_RATE;
+            durationMillisY -= REFRESH_RATE;
+          }
+          listener?.onAnimationUpdate(phaseX, phaseY);
+        });
   }
 
   void animateY2(int durationMillis, EasingFunction easing) {
@@ -276,19 +276,19 @@ class ChartAnimator extends Animator {
     phaseY = MIN;
     _countdownTimer =
         Timer.periodic(Duration(milliseconds: REFRESH_RATE), (timer) {
-      if (durationMillis < 0) {
-        phaseY = MAX;
-        _countdownTimer?.cancel();
-        _countdownTimer = null;
-      } else {
-        phaseY = MAX - easing.getInterpolation(durationMillis / totalTime);
-        if (phaseY >= MAX) {
-          phaseY = MAX;
-        }
-        durationMillis -= REFRESH_RATE;
-      }
-      listener?.onAnimationUpdate(phaseX, phaseY);
-    });
+          if (durationMillis < 0) {
+            phaseY = MAX;
+            _countdownTimer?.cancel();
+            _countdownTimer = null;
+          } else {
+            phaseY = MAX - easing.getInterpolation(durationMillis / totalTime);
+            if (phaseY >= MAX) {
+              phaseY = MAX;
+            }
+            durationMillis -= REFRESH_RATE;
+          }
+          listener?.onAnimationUpdate(phaseX, phaseY);
+        });
   }
 }
 
@@ -298,17 +298,19 @@ class ChartAnimatorBySys extends Animator {
   static const int ANIMATE_XY = 2;
   static const int ANIMATE_SPIN = 3;
 
-  AnimationController _controller;
+  late AnimationController _controller;
   ChartTickerProvider _provider = ChartTickerProvider();
 
-  EasingFunction easingFunction_1;
-  EasingFunction easingFunction_2;
+  late EasingFunction easingFunction_1;
+  EasingFunction? easingFunction_2;
 
-  double fromAngle;
-  double toAngle;
+  double fromAngle = 0;
 
-  double durationMinPercent;
-  bool xDurationLong;
+  double toAngle = 0;
+
+  double durationMinPercent = 0;
+
+  bool xDurationLong = false;
 
   bool animating = false;
 
@@ -345,12 +347,12 @@ class ChartAnimatorBySys extends Animator {
                 phaseX = easingFunction_1.getInterpolation(percent);
                 var percentMin = percent / durationMinPercent;
                 percentMin = percentMin > 1 ? 1 : percentMin;
-                phaseY = easingFunction_2.getInterpolation(percentMin);
+                phaseY = easingFunction_2!.getInterpolation(percentMin);
               } else {
                 phaseY = easingFunction_1.getInterpolation(percent);
                 var percentMin = percent / durationMinPercent;
                 percentMin = percentMin > 1 ? 1 : percentMin;
-                phaseX = easingFunction_2.getInterpolation(percentMin);
+                phaseX = easingFunction_2!.getInterpolation(percentMin);
               }
             } else {
               if (xDurationLong) {
@@ -469,7 +471,7 @@ class ChartAnimatorBySys extends Animator {
 
   @override
   void reset() {
-    _controller?.reset();
+    _controller.reset();
   }
 
   @override
@@ -535,7 +537,7 @@ abstract class Easing {
   static const EasingFunction EaseInElastic = EaseInElasticEasingFunction();
   static const EasingFunction EaseOutElastic = EaseOutElasticEasingFunction();
   static const EasingFunction EaseInOutElastic =
-      EaseInOutElasticEasingFunction();
+  EaseInOutElasticEasingFunction();
   static const EasingFunction EaseInBack = EaseInBackEasingFunction();
   static const EasingFunction EaseOutBack = EaseOutBackEasingFunction();
   static const EasingFunction EaseInOutBack = EaseInOutBackEasingFunction();
@@ -733,7 +735,7 @@ class EaseOutExpoEasingFunction implements EasingFunction {
 
   @override
   double getInterpolation(double input) {
-    return (input == 1) ? 1 : (-pow(2, -10 * (input + 1)));
+    return (input == 1) ? 1 : (-pow(2, -10 * (input + 1))).toDouble();
   }
 }
 
@@ -742,7 +744,7 @@ class EaseInExpoEasingFunction implements EasingFunction {
 
   @override
   double getInterpolation(double input) {
-    return (input == 0) ? 0 : pow(2, 10 * (input - 1));
+    return (input == 0) ? 0 : pow(2, 10 * (input - 1)).toDouble();
   }
 }
 
@@ -802,7 +804,7 @@ class EaseInQuartEasingFunction implements EasingFunction {
 
   @override
   double getInterpolation(double input) {
-    return pow(input, 4);
+    return pow(input, 4).toDouble();
   }
 }
 
@@ -835,7 +837,7 @@ class EaseInCubicEasingFunction implements EasingFunction {
 
   @override
   double getInterpolation(double input) {
-    return pow(input, 3);
+    return pow(input, 3).toDouble();
   }
 }
 

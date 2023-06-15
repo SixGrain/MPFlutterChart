@@ -1,5 +1,7 @@
 import 'dart:math';
 
+import 'package:example/demo/action_state.dart';
+import 'package:example/demo/util.dart';
 import 'package:flutter/material.dart';
 import 'package:mp_chart/mp/chart/pie_chart.dart';
 import 'package:mp_chart/mp/controller/pie_chart_controller.dart';
@@ -15,8 +17,6 @@ import 'package:mp_chart/mp/core/image_loader.dart';
 import 'package:mp_chart/mp/core/render/pie_chart_renderer.dart';
 import 'package:mp_chart/mp/core/utils/color_utils.dart';
 import 'package:mp_chart/mp/core/value_formatter/percent_formatter.dart';
-import 'package:example/demo/action_state.dart';
-import 'package:example/demo/util.dart';
 
 class PieChartHalfPie extends StatefulWidget {
   @override
@@ -26,7 +26,7 @@ class PieChartHalfPie extends StatefulWidget {
 }
 
 class PieChartHalfPieState extends SimpleActionState<PieChartHalfPie> {
-  PieChartController _controller;
+  late PieChartController _controller;
   var random = Random(1);
 
   @override
@@ -49,7 +49,7 @@ class PieChartHalfPieState extends SimpleActionState<PieChartHalfPie> {
   }
 
   // ignore: non_constant_identifier_names
-  final List<String> PARTIES = List()
+  final List<String> PARTIES = []
     ..add("Party A")
     ..add("Party B")
     ..add("Party C")
@@ -81,7 +81,7 @@ class PieChartHalfPieState extends SimpleActionState<PieChartHalfPie> {
     var desc = Description()..enabled = false;
     _controller = PieChartController(
         legendSettingFunction: (legend, controller) {
-          _formatter.setPieChartPainter(controller);
+          _formatter.setPieChartPainter(controller as PieChartController);
           legend
             ..verticalAlignment = (LegendVerticalAlignment.TOP)
             ..horizontalAlignment = (LegendHorizontalAlignment.CENTER)
@@ -124,7 +124,7 @@ class PieChartHalfPieState extends SimpleActionState<PieChartHalfPie> {
     var count = 4;
     var range = 100;
 
-    List<PieEntry> values = List();
+    List<PieEntry> values = [];
 
     for (int i = 0; i < count; i++) {
       values.add(new PieEntry(

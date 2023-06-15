@@ -1,5 +1,7 @@
 import 'dart:math';
 
+import 'package:example/demo/action_state.dart';
+import 'package:example/demo/util.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart' as intl;
 import 'package:mp_chart/mp/chart/line_chart.dart';
@@ -14,8 +16,6 @@ import 'package:mp_chart/mp/core/enums/y_axis_label_position.dart';
 import 'package:mp_chart/mp/core/image_loader.dart';
 import 'package:mp_chart/mp/core/utils/color_utils.dart';
 import 'package:mp_chart/mp/core/value_formatter/value_formatter.dart';
-import 'package:example/demo/action_state.dart';
-import 'package:example/demo/util.dart';
 
 class EvenMoreHourly extends StatefulWidget {
   @override
@@ -146,7 +146,7 @@ class EvenMoreHourlyState extends LineActionState<EvenMoreHourly> {
     // now in hours
     int now = Util.currentTimeMillis();
 
-    List<Entry> values = List();
+    List<Entry> values = [];
 
     // count = hours
     double to = now + count;
@@ -171,8 +171,8 @@ class EvenMoreHourlyState extends LineActionState<EvenMoreHourly> {
     set1.setDrawCircleHole(false);
 
     // create a data object with the data sets
-    controller.data = LineData.fromList(List()..add(set1));
-    controller.data
+    controller.data = LineData.fromList([]..add(set1));
+    controller.data!
       ..setValueTextColor(ColorUtils.getHoloBlue())
       ..setValueTextSize(9);
 

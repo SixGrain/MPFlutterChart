@@ -5,10 +5,10 @@ import 'package:mp_chart/mp/painter/pie_redar_chart_painter.dart';
 
 abstract class PieRadarHighlighter<T extends PieRadarChartPainter>
     implements IHighlighter {
-  T _painter;
+  late T _painter;
 
   /// buffer for storing previously highlighted values
-  List<Highlight> _highlightBuffer = List();
+  List<Highlight> _highlightBuffer = [];
 
   PieRadarHighlighter(T painter) {
     this._painter = painter;
@@ -19,7 +19,7 @@ abstract class PieRadarHighlighter<T extends PieRadarChartPainter>
   T get painter => _painter;
 
   @override
-  Highlight getHighlight(double x, double y) {
+  Highlight? getHighlight(double x, double y) {
     double touchDistanceToCenter = _painter.distanceToCenter(x, y);
 
     // check if a slice was touched
@@ -37,7 +37,7 @@ abstract class PieRadarHighlighter<T extends PieRadarChartPainter>
 
       // check if the index could be found
       if (index < 0 ||
-          index >= _painter.getData().getMaxEntryCountSet().getEntryCount()) {
+          index >= _painter.getData()!.getMaxEntryCountSet()!.getEntryCount()) {
         return null;
       } else {
         return getClosestHighlight(index, x, y);
@@ -51,5 +51,5 @@ abstract class PieRadarHighlighter<T extends PieRadarChartPainter>
   /// @param x
   /// @param y
   /// @return
-  Highlight getClosestHighlight(int index, double x, double y);
+  Highlight? getClosestHighlight(int index, double x, double y);
 }

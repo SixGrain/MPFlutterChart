@@ -1,5 +1,7 @@
 import 'dart:math';
 
+import 'package:example/demo/action_state.dart';
+import 'package:example/demo/util.dart';
 import 'package:flutter/material.dart';
 import 'package:mp_chart/mp/chart/bar_chart.dart';
 import 'package:mp_chart/mp/chart/chart.dart';
@@ -26,8 +28,6 @@ import 'package:mp_chart/mp/core/enums/legend_vertical_alignment.dart';
 import 'package:mp_chart/mp/core/enums/x_axis_position.dart';
 import 'package:mp_chart/mp/core/utils/color_utils.dart';
 import 'package:mp_chart/mp/core/value_formatter/percent_formatter.dart';
-import 'package:example/demo/action_state.dart';
-import 'package:example/demo/util.dart';
 
 class ScrollingChartMultiple extends StatefulWidget {
   @override
@@ -38,7 +38,7 @@ class ScrollingChartMultiple extends StatefulWidget {
 
 class ScrollingChartMultipleState
     extends SimpleActionState<ScrollingChartMultiple> {
-  List<Controller> _controllers = List();
+  List<Controller> _controllers = [];
   var random = Random(1);
   bool _isParentMove = true;
   double _curX = 0.0;
@@ -104,13 +104,15 @@ class ScrollingChartMultipleState
   }
 
   Widget _renderItem(int index) {
-    Chart chart;
-    if (_controllers[index] is LineChartController) {
-      chart = _getLineChart(_controllers[index]);
-    } else if (_controllers[index] is BarChartController) {
-      chart = _getBarChart(_controllers[index]);
-    } else if (_controllers[index] is PieChartController) {
-      chart = _getPieChart(_controllers[index]);
+    final controller = _controllers[index];
+
+    late Chart chart;
+    if (controller is LineChartController) {
+      chart = _getLineChart(controller);
+    } else if (controller is BarChartController) {
+      chart = _getBarChart(controller);
+    } else if (controller is PieChartController) {
+      chart = _getPieChart(controller);
     }
 
     return Container(height: 200, child: chart);
@@ -210,7 +212,7 @@ class ScrollingChartMultipleState
   }
 
   LineData _generateDataLine(int cnt) {
-    List<Entry> values1 = List();
+    List<Entry> values1 = [];
 
     for (int i = 0; i < 12; i++) {
       values1.add(Entry(x: i.toDouble(), y: (random.nextDouble() * 65) + 40));
@@ -222,7 +224,7 @@ class ScrollingChartMultipleState
     d1.setHighLightColor(Color.fromARGB(255, 244, 117, 117));
     d1.setDrawValues(false);
 
-    List<Entry> values2 = List();
+    List<Entry> values2 = [];
 
     for (int i = 0; i < 12; i++) {
       values2.add(Entry(x: i.toDouble(), y: values1[i].y - 30));
@@ -236,7 +238,7 @@ class ScrollingChartMultipleState
     d2.setCircleColor(ColorUtils.VORDIPLOM_COLORS[0]);
     d2.setDrawValues(false);
 
-    List<ILineDataSet> sets = List();
+    List<ILineDataSet> sets = [];
     sets.add(d1);
     sets.add(d2);
 
@@ -244,7 +246,7 @@ class ScrollingChartMultipleState
   }
 
   BarData _generateDataBar(int cnt) {
-    List<BarEntry> entries = List();
+    List<BarEntry> entries = [];
 
     for (int i = 0; i < 12; i++) {
       entries
@@ -255,13 +257,13 @@ class ScrollingChartMultipleState
     d.setColors1(ColorUtils.VORDIPLOM_COLORS);
     d.setHighLightAlpha(255);
 
-    BarData cd = BarData(List()..add(d));
+    BarData cd = BarData([]..add(d));
     cd.barWidth = (0.9);
     return cd;
   }
 
   PieData _generateDataPie() {
-    List<PieEntry> entries = List();
+    List<PieEntry> entries = [];
 
     for (int i = 0; i < 4; i++) {
       entries.add(PieEntry(
@@ -294,7 +296,7 @@ class ScrollingChartMultipleState
   }
 
   PieChart _getPieChart(PieChartController controller) {
-    controller.data
+    controller.data!
       ..setValueFormatter(PercentFormatter())
       ..setValueTextSize(11)
       ..setValueTextColor(ColorUtils.WHITE);

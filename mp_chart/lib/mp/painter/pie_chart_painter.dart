@@ -1,25 +1,15 @@
 import 'dart:math';
-import 'dart:ui';
 
 import 'package:flutter/painting.dart';
 import 'package:flutter/rendering.dart';
 import 'package:mp_chart/mp/core/adapter_android_mp.dart';
-import 'package:mp_chart/mp/core/animator.dart';
-import 'package:mp_chart/mp/core/axis/x_axis.dart';
-import 'package:mp_chart/mp/core/common_interfaces.dart';
 import 'package:mp_chart/mp/core/data/pie_data.dart';
 import 'package:mp_chart/mp/core/data_interfaces/i_pie_data_set.dart';
-import 'package:mp_chart/mp/core/description.dart';
-import 'package:mp_chart/mp/core/functions.dart';
 import 'package:mp_chart/mp/core/highlight/highlight.dart';
 import 'package:mp_chart/mp/core/highlight/pie_highlighter.dart';
-import 'package:mp_chart/mp/core/legend/legend.dart';
-import 'package:mp_chart/mp/core/marker/i_marker.dart';
 import 'package:mp_chart/mp/core/poolable/point.dart';
-import 'package:mp_chart/mp/core/render/legend_renderer.dart';
 import 'package:mp_chart/mp/core/render/pie_chart_renderer.dart';
 import 'package:mp_chart/mp/core/utils/utils.dart';
-import 'package:mp_chart/mp/core/view_port.dart';
 import 'package:mp_chart/mp/painter/pie_redar_chart_painter.dart';
 
 class PieChartPainter extends PieRadarChartPainter<PieData> {
@@ -39,7 +29,7 @@ class PieChartPainter extends PieRadarChartPainter<PieData> {
   final bool _drawRoundedSlices; // = false
 
   /// variable for the text that is drawn in the center of the pie-chart
-  final String _centerText; // = ""
+  final String? _centerText; // = ""
 
   /// indicates the size of the hole in the center of the piechart, default:
   /// radius / 2
@@ -66,63 +56,63 @@ class PieChartPainter extends PieRadarChartPainter<PieData> {
   Rect _circleBox = Rect.zero;
 
   /// array that holds the width of each pie-slice in degrees
-  List<double> _drawAngles = List(1);
+  List<double> _drawAngles = List.filled(1, 0);
 
   /// array that holds the absolute angle in degrees of each slice
-  List<double> _absoluteAngles = List(1);
+  List<double> _absoluteAngles = List.filled(1, 0);
 
   /// Hole color
   Color _holeColor;
 
   MPPointF _centerTextOffset;
 
-  TypeFace _centerTextTypeface;
-  TypeFace _entryLabelTypeface;
+  TypeFace? _centerTextTypeface;
+  TypeFace? _entryLabelTypeface;
 
-  PieChartPainter(
-      PieData data,
-      Animator animator,
-      ViewPortHandler viewPortHandler,
-      double maxHighlightDistance,
-      bool highLightPerTapEnabled,
-      double extraLeftOffset,
-      double extraTopOffset,
-      double extraRightOffset,
-      double extraBottomOffset,
-      IMarker marker,
-      Description desc,
-      bool drawMarkers,
-      Color infoBgColor,
-      TextPainter infoPainter,
-      TextPainter descPainter,
-      XAxis xAxis,
-      Legend legend,
-      LegendRenderer legendRenderer,
-      DataRendererSettingFunction rendererSettingFunction,
-      OnChartValueSelectedListener selectedListener,
-      double rotationAngle,
-      double rawRotationAngle,
-      bool rotateEnabled,
-      double minOffset,
-      bool drawEntryLabels,
-      bool drawHole,
-      bool drawSlicesUnderHole,
-      bool usePercentValues,
-      bool drawRoundedSlices,
-      String centerText,
-      double centerTextOffsetX,
-      double centerTextOffsetY,
-      TypeFace entryLabelTypeface,
-      TypeFace centerTextTypeface,
-      double holeRadiusPercent,
-      double transparentCircleRadiusPercent,
-      bool drawCenterText,
-      double centerTextRadiusPercent,
-      double maxAngle,
-      double minAngleForSlices,
-      Color backgroundColor,
-      Color holeColor)
-      : _drawEntryLabels = drawEntryLabels,
+  PieChartPainter({
+    required super.data,
+    required super.animator,
+    required super.viewPortHandler,
+    required super.maxHighlightDistance,
+    required super.highLightPerTapEnabled,
+    required super.extraLeftOffset,
+    required super.extraTopOffset,
+    required super.extraRightOffset,
+    required super.extraBottomOffset,
+    required super.marker,
+    required super.description,
+    required super.drawMarkers,
+    required super.infoBgColor,
+    required super.infoPainter,
+    required super.descPainter,
+    required super.xAxis,
+    required super.legend,
+    required super.legendRenderer,
+    required super.rendererSettingFunction,
+    required super.selectedListener,
+    required super.rotationAngle,
+    required super.rawRotationAngle,
+    required super.rotateEnabled,
+    required super.minOffset,
+    required super.backgroundColor,
+    required bool drawEntryLabels,
+    required bool drawHole,
+    required bool drawSlicesUnderHole,
+    required bool usePercentValues,
+    required bool drawRoundedSlices,
+    required String centerText,
+    required double centerTextOffsetX,
+    required double centerTextOffsetY,
+    required TypeFace? entryLabelTypeface,
+    required TypeFace? centerTextTypeface,
+    required double holeRadiusPercent,
+    required double transparentCircleRadiusPercent,
+    required bool drawCenterText,
+    required double centerTextRadiusPercent,
+    required double maxAngle,
+    required double minAngleForSlices,
+    required Color holeColor,
+  })  : _drawEntryLabels = drawEntryLabels,
         _drawHole = drawHole,
         _drawSlicesUnderHole = drawSlicesUnderHole,
         _usePercentValues = usePercentValues,
@@ -138,33 +128,7 @@ class PieChartPainter extends PieRadarChartPainter<PieData> {
         _minAngleForSlices = minAngleForSlices,
         _centerTextTypeface = centerTextTypeface,
         _entryLabelTypeface = entryLabelTypeface,
-        _holeColor = holeColor,
-        super(
-            data,
-            animator,
-            viewPortHandler,
-            maxHighlightDistance,
-            highLightPerTapEnabled,
-            extraLeftOffset,
-            extraTopOffset,
-            extraRightOffset,
-            extraBottomOffset,
-            marker,
-            desc,
-            drawMarkers,
-            infoBgColor,
-            infoPainter,
-            descPainter,
-            xAxis,
-            legend,
-            legendRenderer,
-            rendererSettingFunction,
-            selectedListener,
-            rotationAngle,
-            rawRotationAngle,
-            rotateEnabled,
-            minOffset,
-            backgroundColor);
+        _holeColor = holeColor;
 
   @override
   void initDefaultWithData() {
@@ -178,10 +142,13 @@ class PieChartPainter extends PieRadarChartPainter<PieData> {
   @override
   void onPaint(Canvas canvas, Size size) {
     super.onPaint(canvas, size);
+
+    final renderer = this.renderer!;
+
     renderer.drawData(canvas);
 
     if (valuesToHighlight()) {
-      renderer.drawHighlighted(canvas, indicesToHighlight);
+      renderer.drawHighlighted(canvas, indicesToHighlight!);
     }
 
     renderer.drawExtras(canvas);
@@ -256,46 +223,49 @@ class PieChartPainter extends PieRadarChartPainter<PieData> {
         center.y);
 
     MPPointF.recycleInstance(center);
-    return List()..add(x)..add(y);
+    return []
+      ..add(x)
+      ..add(y);
   }
 
   /// calculates the needed angles for the chart slices
   void calcAngles() {
-    int entryCount = getData().getEntryCount();
+    final data = getData()!;
+    int entryCount = data.getEntryCount();
 
     if (_drawAngles.length != entryCount) {
-      _drawAngles = List(entryCount);
+      _drawAngles = List.filled(entryCount, 0);
     } else {
       for (int i = 0; i < entryCount; i++) {
         _drawAngles[i] = 0;
       }
     }
     if (_absoluteAngles.length != entryCount) {
-      _absoluteAngles = List(entryCount);
+      _absoluteAngles = List.filled(entryCount, 0);
     } else {
       for (int i = 0; i < entryCount; i++) {
         _absoluteAngles[i] = 0;
       }
     }
 
-    double yValueSum = (getData() as PieData).getYValueSum();
+    double yValueSum = (data as PieData).getYValueSum();
 
-    List<IPieDataSet> dataSets = getData().dataSets;
+    List<IPieDataSet> dataSets = data.dataSets;
 
     bool hasMinAngle =
         _minAngleForSlices != 0 && entryCount * _minAngleForSlices <= _maxAngle;
-    List<double> minAngles = List(entryCount);
+    List<double> minAngles = List.filled(entryCount, 0);
 
     int cnt = 0;
     double offset = 0;
     double diff = 0;
 
-    for (int i = 0; i < getData().getDataSetCount(); i++) {
+    for (int i = 0; i < data.getDataSetCount(); i++) {
       IPieDataSet set = dataSets[i];
 
       for (int j = 0; j < set.getEntryCount(); j++) {
         double drawAngle =
-            calcAngle2(set.getEntryForIndex(j).y.abs(), yValueSum);
+            calcAngle2(set.getEntryForIndex(j)!.y.abs(), yValueSum);
 
         if (hasMinAngle) {
           double temp = drawAngle - _minAngleForSlices;
@@ -343,10 +313,10 @@ class PieChartPainter extends PieRadarChartPainter<PieData> {
   bool needsHighlight(int index) {
     // no highlight
     if (!valuesToHighlight()) return false;
-    for (int i = 0; i < indicesToHighlight.length; i++)
+    for (int i = 0; i < indicesToHighlight!.length; i++)
 
       // check if the xvalue for the given dataset needs highlight
-      if (indicesToHighlight[i].x.toInt() == index) return true;
+      if (indicesToHighlight![i].x.toInt() == index) return true;
 
     return false;
   }
@@ -385,7 +355,7 @@ class PieChartPainter extends PieRadarChartPainter<PieData> {
   /// @param xIndex
   /// @return
   int getDataSetIndexForIndex(int xIndex) {
-    List<IPieDataSet> dataSets = getData().dataSets;
+    List<IPieDataSet> dataSets = getData()!.dataSets as List<IPieDataSet>;
 
     for (int i = 0; i < dataSets.length; i++) {
       if (dataSets[i].getEntryForXValue2(xIndex.toDouble(), double.nan) != null)
@@ -431,7 +401,7 @@ class PieChartPainter extends PieRadarChartPainter<PieData> {
   /// returns the text that is drawn in the center of the pie-chart
   ///
   /// @return
-  String getCenterText() {
+  String? getCenterText() {
     return _centerText;
   }
 
@@ -445,8 +415,8 @@ class PieChartPainter extends PieRadarChartPainter<PieData> {
   @override
   double getRequiredLegendOffset() {
     // ignore: null_aware_before_operator
-    var offset = legendRenderer.legendLabelPaint.text?.style?.fontSize * 2.0;
-    return offset == null ? Utils.convertDpToPixel(9) : offset;
+    var offset = legendRenderer.legendLabelPaint.text?.style?.fontSize;
+    return offset == null ? Utils.convertDpToPixel(9) : offset * 2.0;
   }
 
   @override

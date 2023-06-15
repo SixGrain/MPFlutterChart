@@ -1,4 +1,3 @@
-import 'dart:ui';
 
 import 'package:flutter/painting.dart';
 import 'package:mp_chart/mp/core/axis/y_axis.dart';
@@ -29,9 +28,9 @@ class YAxisRendererHorizontalBarChart extends YAxisRenderer {
     // zoom / contentrect bounds)
     if (viewPortHandler.contentHeight() > 10 &&
         !viewPortHandler.isFullyZoomedOutX()) {
-      MPPointD p1 = trans.getValuesByTouchPoint1(
+      MPPointD p1 = trans!.getValuesByTouchPoint1(
           viewPortHandler.contentLeft(), viewPortHandler.contentTop());
-      MPPointD p2 = trans.getValuesByTouchPoint1(
+      MPPointD p2 = trans!.getValuesByTouchPoint1(
           viewPortHandler.contentRight(), viewPortHandler.contentTop());
 
       if (!inverted) {
@@ -126,9 +125,9 @@ class YAxisRendererHorizontalBarChart extends YAxisRenderer {
         yAxis.drawTopYLabelEntry ? yAxis.entryCount : (yAxis.entryCount - 1);
 
     for (int i = from; i < to; i++) {
-      String text = yAxis.getFormattedLabel(i);
+      String? text = yAxis.getFormattedLabel(i);
       axisLabelPaint.text =
-          TextSpan(text: text, style: axisLabelPaint.text.style);
+          TextSpan(text: text, style: axisLabelPaint.text?.style);
       axisLabelPaint.layout();
 
       if (axisDependency == AxisDependency.LEFT) {
@@ -162,7 +161,7 @@ class YAxisRendererHorizontalBarChart extends YAxisRenderer {
   @override
   List<double> getTransformedPositions() {
     if (mGetTransformedPositionsBuffer.length != yAxis.entryCount * 2) {
-      mGetTransformedPositionsBuffer = List(yAxis.entryCount * 2);
+      mGetTransformedPositionsBuffer = List.filled(yAxis.entryCount * 2, 0);
     }
     List<double> positions = mGetTransformedPositionsBuffer;
 
@@ -171,7 +170,7 @@ class YAxisRendererHorizontalBarChart extends YAxisRenderer {
       positions[i] = yAxis.entries[i ~/ 2];
     }
 
-    trans.pointValuesToPixel(positions);
+    trans!.pointValuesToPixel(positions);
     return positions;
   }
 
@@ -205,7 +204,7 @@ class YAxisRendererHorizontalBarChart extends YAxisRenderer {
     c.clipRect(limitLineClippingRect);
 
     // draw zero line
-    MPPointD pos = trans.getPixelForValues(0, 0);
+    MPPointD pos = trans!.getPixelForValues(0, 0);
 
     zeroLinePaint
       ..color = yAxis.zeroLineColor
@@ -224,7 +223,7 @@ class YAxisRendererHorizontalBarChart extends YAxisRenderer {
   }
 
   Path mRenderLimitLinesPathBuffer = Path();
-  List<double> mRenderLimitLinesBuffer = List(4);
+  List<double> mRenderLimitLinesBuffer = List.filled(4, 0);
 
   /// Draws the LimitLines associated with this axis to the screen.
   /// This is the standard XAxis renderer using the YAxis limit lines.
@@ -232,7 +231,7 @@ class YAxisRendererHorizontalBarChart extends YAxisRenderer {
   /// @param c
   @override
   void renderLimitLines(Canvas c) {
-    List<LimitLine> limitLines = yAxis.getLimitLines();
+    List<LimitLine>? limitLines = yAxis.getLimitLines();
 
     if (limitLines == null || limitLines.length <= 0) return;
 
@@ -260,7 +259,7 @@ class YAxisRendererHorizontalBarChart extends YAxisRenderer {
       pts[0] = l.limit;
       pts[2] = l.limit;
 
-      trans.pointValuesToPixel(pts);
+      trans!.pointValuesToPixel(pts);
 
       pts[1] = viewPortHandler.contentTop();
       pts[3] = viewPortHandler.contentBottom();
@@ -274,7 +273,7 @@ class YAxisRendererHorizontalBarChart extends YAxisRenderer {
         ..strokeWidth = l.lineWidth;
 
       if (l.dashPathEffect != null) {
-        limitLinePath = l.dashPathEffect.convert2DashPath(limitLinePath);
+        limitLinePath = l.dashPathEffect!.convert2DashPath(limitLinePath);
       }
       c.drawPath(limitLinePath, limitLinePaint);
       limitLinePath.reset();

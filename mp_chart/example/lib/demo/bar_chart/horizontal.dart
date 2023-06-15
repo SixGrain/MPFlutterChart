@@ -1,9 +1,11 @@
 import 'dart:math';
 
-import 'package:mp_chart/mp/controller/horizontal_bar_chart_controller.dart';
-import 'package:mp_chart/mp/core/common_interfaces.dart';
+import 'package:example/demo/action_state.dart';
+import 'package:example/demo/util.dart';
 import 'package:flutter/material.dart';
 import 'package:mp_chart/mp/chart/horizontal_bar_chart.dart';
+import 'package:mp_chart/mp/controller/horizontal_bar_chart_controller.dart';
+import 'package:mp_chart/mp/core/common_interfaces.dart';
 import 'package:mp_chart/mp/core/data/bar_data.dart';
 import 'package:mp_chart/mp/core/data_interfaces/i_bar_data_set.dart';
 import 'package:mp_chart/mp/core/data_set/bar_data_set.dart';
@@ -19,8 +21,6 @@ import 'package:mp_chart/mp/core/highlight/highlight.dart';
 import 'package:mp_chart/mp/core/image_loader.dart';
 import 'package:mp_chart/mp/core/limit_line.dart';
 import 'package:mp_chart/mp/core/utils/color_utils.dart';
-import 'package:example/demo/action_state.dart';
-import 'package:example/demo/util.dart';
 
 class BarChartHorizontal extends StatefulWidget {
   @override
@@ -136,7 +136,7 @@ class BarChartHorizontalState
     var img = await ImageLoader.loadImage('assets/img/star.png');
     double barWidth = 9;
     double spaceForBar = 10;
-    List<BarEntry> values = List();
+    List<BarEntry> values = [];
 
     for (int i = 0; i < count; i++) {
       double val = random.nextDouble() * range;
@@ -149,11 +149,11 @@ class BarChartHorizontalState
 
     set1.setDrawIcons(false);
 
-    List<IBarDataSet> dataSets = List();
+    List<IBarDataSet> dataSets = [];
     dataSets.add(set1);
 
     controller.data = BarData(dataSets);
-    controller.data
+    controller.data!
       ..setValueTextSize(10)
       ..setValueTypeface(Util.LIGHT)
       ..barWidth = barWidth;
@@ -251,7 +251,7 @@ class BarChartHorizontalState
   void onNothingSelected() {}
 
   @override
-  void onValueSelected(Entry e, Highlight h) {
+  void onValueSelected(Entry? e, Highlight? h) {
 //    if (e == null)
 //      return;
 //

@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:example/demo/action_state.dart';
 import 'package:flutter/material.dart';
 import 'package:mp_chart/mp/chart/candlestick_chart.dart';
 import 'package:mp_chart/mp/controller/candlestick_chart_controller.dart';
@@ -11,7 +12,6 @@ import 'package:mp_chart/mp/core/enums/axis_dependency.dart';
 import 'package:mp_chart/mp/core/enums/x_axis_position.dart';
 import 'package:mp_chart/mp/core/image_loader.dart';
 import 'package:mp_chart/mp/core/utils/color_utils.dart';
-import 'package:example/demo/action_state.dart';
 
 class OtherChartCandlestick extends StatefulWidget {
   @override
@@ -161,7 +161,7 @@ class OtherChartCandlestickState
     var img = await ImageLoader.loadImage('assets/img/star.png');
 //    chart.resetTracking();
 
-    List<CandleEntry> values = List();
+    List<CandleEntry> values = [];
 
     for (int i = 0; i < count; i++) {
       double multi = (range + 1);
@@ -198,7 +198,7 @@ class OtherChartCandlestickState
     set1.setNeutralColor(ColorUtils.BLUE);
     //set1.setHighlightLineWidth(1f);
 
-    controller.data = CandleData.fromList(List()..add(set1));
+    controller.data = CandleData.fromList([]..add(set1));
 
     setState(() {});
   }

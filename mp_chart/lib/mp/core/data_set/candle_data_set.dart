@@ -51,7 +51,7 @@ class CandleDataSet extends LineScatterCandleRadarDataSet<CandleEntry>
 
   @override
   DataSet<CandleEntry> copy1() {
-    List<CandleEntry> entries = List<CandleEntry>();
+    List<CandleEntry> entries = <CandleEntry>[];
     for (int i = 0; i < values.length; i++) {
       entries.add(values[i].copy());
     }
@@ -79,7 +79,8 @@ class CandleDataSet extends LineScatterCandleRadarDataSet<CandleEntry>
   }
 
   @override
-  void calcMinMax1(CandleEntry e) {
+  void calcMinMax1(CandleEntry? e) {
+    if (e == null) return;
     if (e.shadowLow < getYMin()) yMin = e.shadowLow;
 
     if (e.shadowHigh > getYMax()) yMax = e.shadowHigh;
@@ -228,7 +229,7 @@ class CandleDataSet extends LineScatterCandleRadarDataSet<CandleEntry>
   }
 
   @override
-  DashPathEffect getDashPathEffectHighlight() {
+  DashPathEffect? getDashPathEffectHighlight() {
     return null;
   }
 }

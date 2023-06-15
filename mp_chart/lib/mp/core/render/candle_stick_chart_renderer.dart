@@ -6,24 +6,24 @@ import 'package:mp_chart/mp/core/data_interfaces/i_candle_data_set.dart';
 import 'package:mp_chart/mp/core/data_provider/candle_data_provider.dart';
 import 'package:mp_chart/mp/core/entry/candle_entry.dart';
 import 'package:mp_chart/mp/core/highlight/highlight.dart';
+import 'package:mp_chart/mp/core/poolable/point.dart';
 import 'package:mp_chart/mp/core/render/line_scatter_candle_radar_renderer.dart';
 import 'package:mp_chart/mp/core/transformer/transformer.dart';
 import 'package:mp_chart/mp/core/utils/canvas_utils.dart';
 import 'package:mp_chart/mp/core/utils/color_utils.dart';
 import 'package:mp_chart/mp/core/utils/painter_utils.dart';
+import 'package:mp_chart/mp/core/utils/utils.dart';
 import 'package:mp_chart/mp/core/value_formatter/value_formatter.dart';
 import 'package:mp_chart/mp/core/view_port.dart';
-import 'package:mp_chart/mp/core/poolable/point.dart';
-import 'package:mp_chart/mp/core/utils/utils.dart';
 
 class CandleStickChartRenderer extends LineScatterCandleRadarRenderer {
-  CandleDataProvider _porvider;
+  late CandleDataProvider _porvider;
 
-  List<double> _shadowBuffers = List(8);
-  List<double> _bodyBuffers = List(4);
-  List<double> _rangeBuffers = List(4);
-  List<double> _openBuffers = List(4);
-  List<double> _closeBuffers = List(4);
+  List<double> _shadowBuffers = List.filled(8, 0);
+  List<double> _bodyBuffers = List.filled(4, 0);
+  List<double> _rangeBuffers = List.filled(4, 0);
+  List<double> _openBuffers = List.filled(4, 0);
+  List<double> _closeBuffers = List.filled(4, 0);
 
   CandleStickChartRenderer(CandleDataProvider chart, Animator animator,
       ViewPortHandler viewPortHandler)
@@ -38,7 +38,7 @@ class CandleStickChartRenderer extends LineScatterCandleRadarRenderer {
 
   @override
   void drawData(Canvas c) {
-    CandleData candleData = _porvider.getCandleData();
+    CandleData candleData = _porvider.getCandleData()!;
 
     for (ICandleDataSet set in candleData.dataSets) {
       if (set.isVisible()) drawDataSet(c, set);
@@ -46,7 +46,7 @@ class CandleStickChartRenderer extends LineScatterCandleRadarRenderer {
   }
 
   void drawDataSet(Canvas c, ICandleDataSet dataSet) {
-    Transformer trans = _porvider.getTransformer(dataSet.getAxisDependency());
+    Transformer trans = _porvider.getTransformer(dataSet.getAxisDependency())!;
 
     double phaseY = animator.getPhaseY();
     double barSpace = dataSet.getBarSpace();
@@ -59,7 +59,7 @@ class CandleStickChartRenderer extends LineScatterCandleRadarRenderer {
     // draw the body
     for (int j = xBounds.min; j <= xBounds.range + xBounds.min; j++) {
       // get the entry
-      CandleEntry e = dataSet.getEntryForIndex(j);
+      CandleEntry? e = dataSet.getEntryForIndex(j);
 
       if (e == null) continue;
 
@@ -227,7 +227,7 @@ class CandleStickChartRenderer extends LineScatterCandleRadarRenderer {
   void drawValues(Canvas c) {
     // if values are drawn
     if (isDrawingValuesAllowed(_porvider)) {
-      List<ICandleDataSet> dataSets = _porvider.getCandleData().dataSets;
+      List<ICandleDataSet> dataSets = _porvider.getCandleData()!.dataSets;
 
       for (int i = 0; i < dataSets.length; i++) {
         ICandleDataSet dataSet = dataSets[i];
@@ -238,7 +238,7 @@ class CandleStickChartRenderer extends LineScatterCandleRadarRenderer {
         applyValueTextStyle(dataSet);
 
         Transformer trans =
-            _porvider.getTransformer(dataSet.getAxisDependency());
+            _porvider.getTransformer(dataSet.getAxisDependency())!;
 
         xBounds.set(_porvider, dataSet);
 
@@ -251,7 +251,7 @@ class CandleStickChartRenderer extends LineScatterCandleRadarRenderer {
 
         double yOffset = Utils.convertDpToPixel(5);
 
-        ValueFormatter formatter = dataSet.getValueFormatter();
+        ValueFormatter formatter = dataSet.getValueFormatter()!;
 
         MPPointF iconsOffset = MPPointF.getInstance3(dataSet.getIconsOffset());
         iconsOffset.x = Utils.convertDpToPixel(iconsOffset.x);
@@ -266,7 +266,7 @@ class CandleStickChartRenderer extends LineScatterCandleRadarRenderer {
           if (!viewPortHandler.isInBoundsLeft(x) ||
               !viewPortHandler.isInBoundsY(y)) continue;
 
-          CandleEntry entry = dataSet.getEntryForIndex(j ~/ 2 + xBounds.min);
+          CandleEntry entry = dataSet.getEntryForIndex(j ~/ 2 + xBounds.min)!;
 
           if (dataSet.isDrawValuesEnabled()) {
             drawValue(
@@ -283,7 +283,7 @@ class CandleStickChartRenderer extends LineScatterCandleRadarRenderer {
             CanvasUtils.drawImage(
                 c,
                 Offset(x + iconsOffset.x, y + iconsOffset.y),
-                entry.mIcon,
+                entry.mIcon!,
                 Size(15, 15),
                 drawPaint);
           }
@@ -296,7 +296,7 @@ class CandleStickChartRenderer extends LineScatterCandleRadarRenderer {
 
   @override
   void drawValue(Canvas c, String valueText, double x, double y, Color color,
-      double textSize, TypeFace typeFace) {
+      double textSize, TypeFace? typeFace) {
     valuePaint = PainterUtils.create(valuePaint, valueText, color, textSize,
         fontFamily: typeFace?.fontFamily, fontWeight: typeFace?.fontWeight);
     valuePaint.layout();
@@ -309,23 +309,23 @@ class CandleStickChartRenderer extends LineScatterCandleRadarRenderer {
 
   @override
   void drawHighlighted(Canvas c, List<Highlight> indices) {
-    CandleData candleData = _porvider.getCandleData();
+    CandleData candleData = _porvider.getCandleData()!;
 
     for (Highlight high in indices) {
-      ICandleDataSet set = candleData.getDataSetByIndex(high.dataSetIndex);
+      ICandleDataSet? set = candleData.getDataSetByIndex(high.dataSetIndex);
 
       if (set == null || !set.isHighlightEnabled()) continue;
 
-      CandleEntry e = set.getEntryForXValue2(high.x, high.y);
+      CandleEntry? e = set.getEntryForXValue2(high.x, high.y);
 
       if (!isInBoundsX(e, set)) continue;
 
-      double lowValue = e.shadowLow * animator.getPhaseY();
+      double lowValue = e!.shadowLow * animator.getPhaseY();
       double highValue = e.shadowHigh * animator.getPhaseY();
       double y = (lowValue + highValue) / 2;
 
       MPPointD pix = _porvider
-          .getTransformer(set.getAxisDependency())
+          .getTransformer(set.getAxisDependency())!
           .getPixelForValues(e.x, y);
 
       high.setDraw(pix.x, pix.y);

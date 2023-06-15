@@ -25,10 +25,10 @@ import 'package:mp_chart/mp/core/poolable/point.dart';
 import 'package:mp_chart/mp/core/utils/utils.dart';
 
 class LineChartRenderer extends LineRadarRenderer {
-  LineDataProvider _provider;
+  late LineDataProvider _provider;
 
   /// paint for the inner circle of the value indicators
-  Paint _circlePaintInner;
+  late Paint _circlePaintInner;
 
   /**
    * Bitmap object used for drawing the paths (otherwise they are too long if
@@ -84,7 +84,7 @@ class LineChartRenderer extends LineRadarRenderer {
 //
 //    drawBitmap.eraseColor(Color.TRANSPARENT);
 
-    LineData lineData =  getData();
+    LineData lineData = getData()!;
 
     for (ILineDataSet set in lineData.dataSets) {
       if (set.isVisible()) drawDataSet(c, set);
@@ -115,14 +115,14 @@ class LineChartRenderer extends LineRadarRenderer {
 
   void drawHorizontalBezier(Canvas canvas, ILineDataSet dataSet) {
     double phaseY = animator.getPhaseY();
-    Transformer trans = _provider.getTransformer(dataSet.getAxisDependency());
+    Transformer trans = _provider.getTransformer(dataSet.getAxisDependency())!;
 
     xBounds.set(_provider, dataSet);
 
-    List<double> list = List();
+    List<double> list = [];
 
     if (xBounds.range >= 1) {
-      Entry prev = dataSet.getEntryForIndex(xBounds.min);
+      Entry prev = dataSet.getEntryForIndex(xBounds.min)!;
       Entry cur = prev;
       // let the spline start
       _cubicPath.moveTo(cur.x, cur.y * phaseY);
@@ -131,7 +131,7 @@ class LineChartRenderer extends LineRadarRenderer {
 
       for (int j = xBounds.min + 1; j <= xBounds.range + xBounds.min; j++) {
         prev = cur;
-        cur = dataSet.getEntryForIndex(j);
+        cur = dataSet.getEntryForIndex(j)!;
 
         final double cpx = (prev.x) + (cur.x - prev.x) / 2.0;
 
@@ -181,7 +181,7 @@ class LineChartRenderer extends LineRadarRenderer {
     }
 
     if (dataSet.getDashPathEffect() != null) {
-      _cubicPath = dataSet.getDashPathEffect().convert2DashPath(_cubicPath);
+      _cubicPath = dataSet.getDashPathEffect()!.convert2DashPath(_cubicPath);
     }
     canvas.drawPath(_cubicPath, renderPaint);
   }
@@ -189,13 +189,13 @@ class LineChartRenderer extends LineRadarRenderer {
   void drawCubicBezier(Canvas canvas, ILineDataSet dataSet) {
     double phaseY = animator.getPhaseY();
 
-    Transformer trans = _provider.getTransformer(dataSet.getAxisDependency());
+    Transformer trans = _provider.getTransformer(dataSet.getAxisDependency())!;
 
     xBounds.set(_provider, dataSet);
 
     double intensity = dataSet.getCubicIntensity();
 
-    List<double> list = List();
+    List<double> list = [];
 
     if (xBounds.range >= 1) {
       double prevDx = 0;
@@ -211,10 +211,10 @@ class LineChartRenderer extends LineRadarRenderer {
       final int firstIndex = xBounds.min + 1;
 //      final int lastIndex = xBounds.min + xBounds.range;
 
-      Entry prevPrev;
-      Entry prev = dataSet.getEntryForIndex(max(firstIndex - 2, 0));
-      Entry cur = dataSet.getEntryForIndex(max(firstIndex - 1, 0));
-      Entry next = cur;
+      Entry? prevPrev;
+      Entry? prev = dataSet.getEntryForIndex(max(firstIndex - 2, 0))!;
+      Entry? cur = dataSet.getEntryForIndex(max(firstIndex - 1, 0));
+      Entry? next = cur;
       int nextIndex = -1;
 
       if (cur == null) return;
@@ -226,14 +226,14 @@ class LineChartRenderer extends LineRadarRenderer {
       for (int j = xBounds.min + 1; j <= xBounds.range + xBounds.min; j++) {
         prevPrev = prev;
         prev = cur;
-        cur = nextIndex == j ? next : dataSet.getEntryForIndex(j);
+        cur = nextIndex == j ? next : dataSet.getEntryForIndex(j)!;
 
         nextIndex = j + 1 < dataSet.getEntryCount() ? j + 1 : j;
-        next = dataSet.getEntryForIndex(nextIndex);
+        next = dataSet.getEntryForIndex(nextIndex)!;
 
-        prevDx = (cur.x - prevPrev.x) * intensity;
+        prevDx = (cur!.x - prevPrev!.x) * intensity;
         prevDy = (cur.y - prevPrev.y) * intensity;
-        curDx = (next.x - prev.x) * intensity;
+        curDx = (next.x - prev!.x) * intensity;
         curDy = (next.y - prev.y) * intensity;
 
         list.add(prev.x + prevDx);
@@ -281,7 +281,7 @@ class LineChartRenderer extends LineRadarRenderer {
     }
 
     if (dataSet.getDashPathEffect() != null) {
-      _cubicPath = dataSet.getDashPathEffect().convert2DashPath(_cubicPath);
+      _cubicPath = dataSet.getDashPathEffect()!.convert2DashPath(_cubicPath);
     }
     canvas.drawPath(_cubicPath, renderPaint);
   }
@@ -289,12 +289,12 @@ class LineChartRenderer extends LineRadarRenderer {
   void drawCubicFill(Canvas c, ILineDataSet dataSet, Path spline,
       Transformer trans, XBounds bounds) {
     double fillMin =
-        dataSet.getFillFormatter().getFillLinePosition(dataSet, _provider);
+    dataSet.getFillFormatter().getFillLinePosition(dataSet, _provider);
 
-    List<double> list = List();
-    list.add(dataSet.getEntryForIndex(bounds.min + bounds.range).x);
+    List<double> list = [];
+    list.add(dataSet.getEntryForIndex(bounds.min + bounds.range)!.x);
     list.add(fillMin);
-    list.add(dataSet.getEntryForIndex(bounds.min).x);
+    list.add(dataSet.getEntryForIndex(bounds.min)!.x);
     list.add(fillMin);
 
     trans.pointValuesToPixel(list);
@@ -309,17 +309,25 @@ class LineChartRenderer extends LineRadarRenderer {
 //    } else {
 
     if (dataSet.isGradientEnabled()) {
-      drawFilledPath3(c, spline, dataSet.getGradientColor1().startColor.value,
-          dataSet.getGradientColor1().endColor.value, dataSet.getFillAlpha());
+      drawFilledPath3(c, spline, dataSet
+          .getGradientColor1()!
+          .startColor
+          .value,
+          dataSet
+              .getGradientColor1()!
+              .endColor
+              .value, dataSet.getFillAlpha());
     } else {
       drawFilledPath2(
-          c, spline, dataSet.getFillColor().value, dataSet.getFillAlpha());
+          c, spline, dataSet
+          .getFillColor()
+          .value, dataSet.getFillAlpha());
     }
 
 //    }
   }
 
-  List<double> mLineBuffer = List(4);
+  List<double> mLineBuffer = List.filled(4, 0);
 
   /// Draws a normal line.
   ///
@@ -331,7 +339,7 @@ class LineChartRenderer extends LineRadarRenderer {
     final bool isDrawSteppedEnabled = dataSet.getMode() == Mode.STEPPED;
     final int pointsPerEntryPair = isDrawSteppedEnabled ? 4 : 2;
 
-    Transformer trans = _provider.getTransformer(dataSet.getAxisDependency());
+    Transformer trans = _provider.getTransformer(dataSet.getAxisDependency())!;
 
     double phaseY = animator.getPhaseY();
 
@@ -354,12 +362,14 @@ class LineChartRenderer extends LineRadarRenderer {
     }
 
     // more than 1 color
-    if (dataSet.getColors().length > 1) {
+    if (dataSet
+        .getColors()
+        .length > 1) {
       if (mLineBuffer.length <= pointsPerEntryPair * 2)
-        mLineBuffer = List(pointsPerEntryPair * 4);
+        mLineBuffer = List.filled(pointsPerEntryPair * 4, 0);
 
       for (int j = xBounds.min; j <= xBounds.range + xBounds.min; j++) {
-        Entry e = dataSet.getEntryForIndex(j);
+        Entry? e = dataSet.getEntryForIndex(j);
         if (e == null) continue;
 
         mLineBuffer[0] = e.x;
@@ -408,10 +418,10 @@ class LineChartRenderer extends LineRadarRenderer {
 
       if (mLineBuffer.length <
           max((entryCount) * pointsPerEntryPair, pointsPerEntryPair) * 2)
-        mLineBuffer = List(
-            max((entryCount) * pointsPerEntryPair, pointsPerEntryPair) * 4);
+        mLineBuffer = List.filled(
+            max((entryCount) * pointsPerEntryPair, pointsPerEntryPair) * 4, 0);
 
-      Entry e1, e2;
+      Entry? e1, e2;
 
       e1 = dataSet.getEntryForIndex(xBounds.min);
 
@@ -441,7 +451,7 @@ class LineChartRenderer extends LineRadarRenderer {
           trans.pointValuesToPixel(mLineBuffer);
 
           final int size = max((xBounds.range + 1) * pointsPerEntryPair,
-                  pointsPerEntryPair) *
+              pointsPerEntryPair) *
               2;
 
           renderPaint..color = dataSet.getColor1();
@@ -459,8 +469,8 @@ class LineChartRenderer extends LineRadarRenderer {
   /// @param dataSet
   /// @param trans
   /// @param bounds
-  void drawLinearFill(
-      Canvas c, ILineDataSet dataSet, Transformer trans, XBounds bounds) {
+  void drawLinearFill(Canvas c, ILineDataSet dataSet, Transformer trans,
+      XBounds bounds) {
     final int startingIndex = bounds.min;
     final int endingIndex = bounds.range + bounds.min;
     final int indexInterval = 128;
@@ -488,12 +498,20 @@ class LineChartRenderer extends LineRadarRenderer {
           drawFilledPath3(
               c,
               filled,
-              dataSet.getGradientColor1().startColor.value,
-              dataSet.getGradientColor1().endColor.value,
+              dataSet
+                  .getGradientColor1()!
+                  .startColor
+                  .value,
+              dataSet
+                  .getGradientColor1()!
+                  .endColor
+                  .value,
               dataSet.getFillAlpha());
         } else {
           drawFilledPath2(
-              c, filled, dataSet.getFillColor().value, dataSet.getFillAlpha());
+              c, filled, dataSet
+              .getFillColor()
+              .value, dataSet.getFillAlpha());
         }
       }
 
@@ -511,15 +529,15 @@ class LineChartRenderer extends LineRadarRenderer {
   void generateFilledPath(final ILineDataSet dataSet, final int startIndex,
       final int endIndex, final Path outputPath, final Transformer trans) {
     final double fillMin =
-        dataSet.getFillFormatter().getFillLinePosition(dataSet, _provider);
+    dataSet.getFillFormatter().getFillLinePosition(dataSet, _provider);
     final double phaseY = animator.getPhaseY();
     final bool isDrawSteppedEnabled = dataSet.getMode() == Mode.STEPPED;
 
-    List<double> points = List();
+    List<double> points = [];
     final Path filled = outputPath;
     filled.reset();
 
-    final Entry entry = dataSet.getEntryForIndex(startIndex);
+    final Entry entry = dataSet.getEntryForIndex(startIndex)!;
 
     points.add(entry.x);
     points.add(fillMin);
@@ -529,18 +547,18 @@ class LineChartRenderer extends LineRadarRenderer {
 //    filled.lineTo(entry.x, entry.y * phaseY);
 
     // create a  path
-    Entry currentEntry;
-    Entry previousEntry = entry;
+    Entry? currentEntry;
+    Entry? previousEntry = entry;
     for (int x = startIndex + 1; x <= endIndex; x++) {
       currentEntry = dataSet.getEntryForIndex(x);
 
       if (isDrawSteppedEnabled) {
-        points.add(currentEntry.x);
-        points.add(previousEntry.y * phaseY);
+        points.add(currentEntry!.x);
+        points.add(previousEntry!.y * phaseY);
 //        filled.lineTo(currentEntry.x, previousEntry.y * phaseY);
       }
 
-      points.add(currentEntry.x);
+      points.add(currentEntry!.x);
       points.add(currentEntry.y * phaseY);
 //      filled.lineTo(currentEntry.x, currentEntry.y * phaseY);
 
@@ -568,7 +586,7 @@ class LineChartRenderer extends LineRadarRenderer {
   @override
   void drawValues(Canvas c) {
     if (isDrawingValuesAllowed(_provider)) {
-      List<ILineDataSet> dataSets = getData().dataSets;
+      List<ILineDataSet> dataSets = getData()!.dataSets;
 
       for (int i = 0; i < dataSets.length; i++) {
         ILineDataSet dataSet = dataSets[i];
@@ -579,7 +597,7 @@ class LineChartRenderer extends LineRadarRenderer {
         applyValueTextStyle(dataSet);
 
         Transformer trans =
-            _provider.getTransformer(dataSet.getAxisDependency());
+        _provider.getTransformer(dataSet.getAxisDependency())!;
 
         // make sure the values do not interfear with the circles
         int valOffset = (dataSet.getCircleRadius() * 1.75).toInt();
@@ -594,7 +612,7 @@ class LineChartRenderer extends LineRadarRenderer {
             animator.getPhaseY(),
             xBounds.min,
             xBounds.max);
-        ValueFormatter formatter = dataSet.getValueFormatter();
+        ValueFormatter formatter = dataSet.getValueFormatter()!;
 
         MPPointF iconsOffset = MPPointF.getInstance3(dataSet.getIconsOffset());
         iconsOffset.x = Utils.convertDpToPixel(iconsOffset.x);
@@ -609,7 +627,7 @@ class LineChartRenderer extends LineRadarRenderer {
           if (!viewPortHandler.isInBoundsLeft(x) ||
               !viewPortHandler.isInBoundsY(y)) continue;
 
-          Entry entry = dataSet.getEntryForIndex(j ~/ 2 + xBounds.min);
+          Entry entry = dataSet.getEntryForIndex(j ~/ 2 + xBounds.min)!;
 
           if (dataSet.isDrawValuesEnabled()) {
             drawValue(
@@ -626,7 +644,7 @@ class LineChartRenderer extends LineRadarRenderer {
             CanvasUtils.drawImage(
                 c,
                 Offset(x + iconsOffset.x, y + iconsOffset.y),
-                entry.mIcon,
+                entry.mIcon!,
                 Size(15, 15),
                 drawPaint);
           }
@@ -639,7 +657,7 @@ class LineChartRenderer extends LineRadarRenderer {
 
   @override
   void drawValue(Canvas c, String valueText, double x, double y, Color color,
-      double textSize, TypeFace typeFace) {
+      double textSize, TypeFace? typeFace) {
     valuePaint = PainterUtils.create(valuePaint, valueText, color, textSize,
         fontFamily: typeFace?.fontFamily, fontWeight: typeFace?.fontWeight);
     valuePaint.layout();
@@ -658,7 +676,7 @@ class LineChartRenderer extends LineRadarRenderer {
 //   HashMap<IDataSet, DataSetImageCache> mImageCaches =  HashMap<>();
 
   /// buffer for drawing the circles
-  List<double> mCirclesBuffer = List(2);
+  List<double> mCirclesBuffer = List.filled(2, 0);
   Map<IDataSet, DataSetImageCache> mImageCaches = Map();
 
   void drawCircles(Canvas c) {
@@ -669,7 +687,7 @@ class LineChartRenderer extends LineRadarRenderer {
     mCirclesBuffer[0] = 0;
     mCirclesBuffer[1] = 0;
 
-    List<ILineDataSet> dataSets = getData().dataSets;
+    List<ILineDataSet> dataSets = getData()!.dataSets;
 
     Transformer trans;
     for (int i = 0; i < dataSets.length; i++) {
@@ -681,7 +699,7 @@ class LineChartRenderer extends LineRadarRenderer {
 
       _circlePaintInner..color = dataSet.getCircleHoleColor();
 
-      trans = _provider.getTransformer(dataSet.getAxisDependency());
+      trans = _provider.getTransformer(dataSet.getAxisDependency())!;
       xBounds.set(_provider, dataSet);
 
       double circleRadius = dataSet.getCircleRadius();
@@ -695,7 +713,7 @@ class LineChartRenderer extends LineRadarRenderer {
       int boundsRangeCount = xBounds.range + xBounds.min;
 
       for (int j = xBounds.min; j <= boundsRangeCount; j++) {
-        Entry e = dataSet.getEntryForIndex(j);
+        Entry? e = dataSet.getEntryForIndex(j);
 
         if (e == null) break;
 
@@ -735,27 +753,27 @@ class LineChartRenderer extends LineRadarRenderer {
   }
 
   // ignore: unused_element
-  Future<Codec> _loadImage(ByteData data) async {
+  Future<Codec> _loadImage(ByteData? data) async {
     if (data == null) throw 'Unable to read data';
     return await instantiateImageCodec(data.buffer.asUint8List());
   }
 
   @override
   void drawHighlighted(Canvas c, List<Highlight> indices) {
-    LineData lineData = getData();
+    LineData lineData = getData()!;
 
     for (Highlight high in indices) {
-      ILineDataSet set = lineData.getDataSetByIndex(high.dataSetIndex);
+      ILineDataSet? set = lineData.getDataSetByIndex(high.dataSetIndex);
 
       if (set == null || !set.isHighlightEnabled()) continue;
 
-      Entry e = set.getEntryForXValue2(high.x, high.y);
+      Entry? e = set.getEntryForXValue2(high.x, high.y);
 
       if (!isInBoundsX(e, set)) continue;
 
       MPPointD pix = _provider
-          .getTransformer(set.getAxisDependency())
-          .getPixelForValues(e.x, e.y * animator.getPhaseY());
+          .getTransformer(set.getAxisDependency())!
+          .getPixelForValues(e!.x, e.y * animator.getPhaseY());
 
       high.setDraw(pix.x, pix.y);
 
@@ -764,7 +782,7 @@ class LineChartRenderer extends LineRadarRenderer {
     }
   }
 
-  LineData getData() {
+  LineData? getData() {
     return _provider.getLineData();
   }
 

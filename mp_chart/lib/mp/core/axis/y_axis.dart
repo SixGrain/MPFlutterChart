@@ -1,5 +1,4 @@
 import 'dart:math';
-import 'dart:ui';
 
 import 'package:flutter/painting.dart';
 import 'package:mp_chart/mp/core/axis/axis_base.dart';
@@ -44,7 +43,7 @@ class YAxis extends AxisBase {
   YAxisLabelPosition _position = YAxisLabelPosition.OUTSIDE_CHART;
 
   /// the side this axis object represents
-  AxisDependency _axisDependency;
+  late AxisDependency _axisDependency;
 
   /// the minimum width that the axis should take (in dp).
   /// <p/>

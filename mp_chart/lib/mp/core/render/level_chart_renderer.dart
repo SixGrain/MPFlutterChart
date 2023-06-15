@@ -11,7 +11,7 @@ import 'line_chart_renderer.dart';
 class LevelChartRenderer extends LineChartRenderer {
   LevelChartRenderer(LineDataProvider chart, Animator animator, ViewPortHandler viewPortHandler) : super(chart, animator, viewPortHandler);
 
-  @override LineData getData() {
+  @override LineData? getData() {
     return (provider as LevelDataProvider).getLevelData();
   }
 }

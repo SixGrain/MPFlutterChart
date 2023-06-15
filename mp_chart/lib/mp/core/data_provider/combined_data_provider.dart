@@ -16,5 +16,5 @@ mixin CombinedDataProvider
         CandleDataProvider,
         ScatterDataProvider,
         FilledLineDataProvider {
-  CombinedData getCombinedData();
+  CombinedData? getCombinedData();
 }

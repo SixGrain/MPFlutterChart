@@ -41,13 +41,13 @@ class BarBuffer extends AbstractBuffer<IBarDataSet> {
     double barWidthHalf = _barWidth / 2.0;
 
     for (int i = 0; i < size; i++) {
-      BarEntry e = data.getEntryForIndex(i);
+      BarEntry? e = data.getEntryForIndex(i);
 
       if (e == null) continue;
 
       double x = e.x;
       double y = e.y;
-      List<double> vals = e.yVals;
+      List<double>? vals = e.yVals;
 
       if (!_containsStacks || vals == null) {
         double left = x - barWidthHalf;

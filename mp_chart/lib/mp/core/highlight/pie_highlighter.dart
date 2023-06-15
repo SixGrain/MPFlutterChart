@@ -12,7 +12,7 @@ class PieHighlighter extends PieRadarHighlighter<PieChartPainter> {
   Highlight getClosestHighlight(int index, double x, double y) {
     IPieDataSet set = (painter.getData() as PieData).getDataSet();
 
-    final Entry entry = set.getEntryForIndex(index);
+    final Entry entry = set.getEntryForIndex(index)!;
 
     return new Highlight(
         x: index.toDouble(),

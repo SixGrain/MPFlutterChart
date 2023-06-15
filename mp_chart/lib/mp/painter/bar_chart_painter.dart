@@ -1,28 +1,12 @@
-import 'package:flutter/painting.dart';
 import 'package:flutter/rendering.dart';
-import 'package:mp_chart/mp/core/animator.dart';
-import 'package:mp_chart/mp/core/axis/x_axis.dart';
-import 'package:mp_chart/mp/core/axis/y_axis.dart';
-import 'package:mp_chart/mp/core/common_interfaces.dart';
 import 'package:mp_chart/mp/core/data/bar_data.dart';
 import 'package:mp_chart/mp/core/data_interfaces/i_bar_data_set.dart';
 import 'package:mp_chart/mp/core/data_provider/bar_data_provider.dart';
-import 'package:mp_chart/mp/core/description.dart';
 import 'package:mp_chart/mp/core/entry/bar_entry.dart';
 import 'package:mp_chart/mp/core/enums/axis_dependency.dart';
-import 'package:mp_chart/mp/core/functions.dart';
 import 'package:mp_chart/mp/core/highlight/bar_highlighter.dart';
 import 'package:mp_chart/mp/core/highlight/highlight.dart';
-import 'package:mp_chart/mp/core/legend/legend.dart';
-import 'package:mp_chart/mp/core/marker/i_marker.dart';
-import 'package:mp_chart/mp/core/range_chart_listener.dart';
 import 'package:mp_chart/mp/core/render/bar_chart_renderer.dart';
-import 'package:mp_chart/mp/core/render/legend_renderer.dart';
-import 'package:mp_chart/mp/core/render/x_axis_renderer.dart';
-import 'package:mp_chart/mp/core/render/y_axis_renderer.dart';
-import 'package:mp_chart/mp/core/chart_trans_listener.dart';
-import 'package:mp_chart/mp/core/transformer/transformer.dart';
-import 'package:mp_chart/mp/core/view_port.dart';
 import 'package:mp_chart/mp/painter/bar_line_chart_painter.dart';
 
 class BarChartPainter extends BarLineChartBasePainter<BarData>
@@ -38,116 +22,65 @@ class BarChartPainter extends BarLineChartBasePainter<BarData>
 
   final bool _fitBars;
 
-  BarChartPainter(
-      BarData data,
-      Animator animator,
-      ViewPortHandler viewPortHandler,
-      double maxHighlightDistance,
-      bool highLightPerTapEnabled,
-      double extraLeftOffset,
-      double extraTopOffset,
-      double extraRightOffset,
-      double extraBottomOffset,
-      IMarker marker,
-      Description desc,
-      bool drawMarkers,
-      Color infoBgColor,
-      TextPainter infoPainter,
-      TextPainter descPainter,
-      XAxis xAxis,
-      Legend legend,
-      LegendRenderer legendRenderer,
-      DataRendererSettingFunction rendererSettingFunction,
-      OnChartValueSelectedListener selectedListener,
-      int maxVisibleCount,
-      bool autoScaleMinMaxEnabled,
-      bool pinchZoomEnabled,
-      bool doubleTapToZoomEnabled,
-      bool highlightPerDragEnabled,
-      bool dragXEnabled,
-      bool dragYEnabled,
-      bool scaleXEnabled,
-      bool scaleYEnabled,
-      Paint gridBackgroundPaint,
-      Paint backgroundPaint,
-      Paint rangePaint,
-      Paint borderPaint,
-      bool drawGridBackground,
-      bool drawBorders,
-      bool clipValuesToContent,
-      double minOffset,
-      bool keepPositionOnRotation,
-      OnDrawListener drawListener,
-      YAxis axisLeft,
-      YAxis axisRight,
-      YAxisRenderer axisRendererLeft,
-      YAxisRenderer axisRendererRight,
-      Transformer leftAxisTransformer,
-      Transformer rightAxisTransformer,
-      XAxisRenderer xAxisRenderer,
-      Matrix4 zoomMatrixBuffer,
-      bool customViewPortEnabled,
-      bool highlightFullBarEnabled,
-      bool drawValueAboveBar,
-      bool drawBarShadow,
-      bool fitBars,
-      ChartPositionListener chartPositionListener,
-      ChartTransListener chartTransListener)
-      : _highlightFullBarEnabled = highlightFullBarEnabled,
+  BarChartPainter({
+    required super.data,
+    required super.animator,
+    required super.viewPortHandler,
+    required super.maxHighlightDistance,
+    required super.highLightPerTapEnabled,
+    required super.extraLeftOffset,
+    required super.extraTopOffset,
+    required super.extraRightOffset,
+    required super.extraBottomOffset,
+    required super.marker,
+    required super.description,
+    required super.drawMarkers,
+    required super.infoBgColor,
+    required super.infoPainter,
+    required super.descPainter,
+    required super.xAxis,
+    required super.legend,
+    required super.legendRenderer,
+    required super.rendererSettingFunction,
+    required super.selectedListener,
+    required super.maxVisibleCount,
+    required super.autoScaleMinMaxEnabled,
+    required super.pinchZoomEnabled,
+    required super.doubleTapToZoomEnabled,
+    required super.highlightPerDragEnabled,
+    required super.dragXEnabled,
+    required super.dragYEnabled,
+    required super.scaleXEnabled,
+    required super.scaleYEnabled,
+    required super.gridBackgroundPaint,
+    required super.borderPaint,
+    required super.drawGridBackground,
+    required super.drawBorders,
+    required super.clipValuesToContent,
+    required super.minOffset,
+    required super.keepPositionOnRotation,
+    required super.drawListener,
+    required super.axisLeft,
+    required super.axisRight,
+    required super.axisRendererLeft,
+    required super.axisRendererRight,
+    required super.leftAxisTransformer,
+    required super.rightAxisTransformer,
+    required super.xAxisRenderer,
+    required super.zoomMatrixBuffer,
+    required super.customViewPortEnabled,
+    required super.backgroundPaint,
+    required super.rangePaint,
+    required super.chartTransListener,
+    required super.chartPositionListener,
+    required bool highlightFullBarEnabled,
+    required bool drawValueAboveBar,
+    required bool drawBarShadow,
+    required bool fitBars,
+  })  : _highlightFullBarEnabled = highlightFullBarEnabled,
         _drawValueAboveBar = drawValueAboveBar,
         _drawBarShadow = drawBarShadow,
-        _fitBars = fitBars,
-        super(
-            data,
-            animator,
-            viewPortHandler,
-            maxHighlightDistance,
-            highLightPerTapEnabled,
-            extraLeftOffset,
-            extraTopOffset,
-            extraRightOffset,
-            extraBottomOffset,
-            marker,
-            desc,
-            drawMarkers,
-            infoBgColor,
-            infoPainter,
-            descPainter,
-            xAxis,
-            legend,
-            legendRenderer,
-            rendererSettingFunction,
-            selectedListener,
-            maxVisibleCount,
-            autoScaleMinMaxEnabled,
-            pinchZoomEnabled,
-            doubleTapToZoomEnabled,
-            highlightPerDragEnabled,
-            dragXEnabled,
-            dragYEnabled,
-            scaleXEnabled,
-            scaleYEnabled,
-            gridBackgroundPaint,
-            borderPaint,
-            drawGridBackground,
-            drawBorders,
-            clipValuesToContent,
-            minOffset,
-            keepPositionOnRotation,
-            drawListener,
-            axisLeft,
-            axisRight,
-            axisRendererLeft,
-            axisRendererRight,
-            leftAxisTransformer,
-            rightAxisTransformer,
-            xAxisRenderer,
-            zoomMatrixBuffer,
-            customViewPortEnabled,
-            backgroundPaint,
-            rangePaint,
-            chartTransListener,
-      chartPositionListener);
+        _fitBars = fitBars;
 
   @override
   void initDefaultWithData() {
@@ -160,18 +93,20 @@ class BarChartPainter extends BarLineChartBasePainter<BarData>
 
   @override
   void calcMinMax() {
+    final data = getBarData()!;
+
     if (_fitBars) {
-      xAxis.calculate(getBarData().xMin - getBarData().barWidth / 2.0,
-          getBarData().xMax + getBarData().barWidth / 2.0);
+      xAxis.calculate(
+          data.xMin - data.barWidth / 2.0, data.xMax + data.barWidth / 2.0);
     } else {
-      xAxis.calculate(getBarData().xMin, getBarData().xMax);
+      xAxis.calculate(data.xMin, data.xMax);
     }
 
     // calculate axis range (min / max) according to provided data
-    axisLeft.calculate(getBarData().getYMin2(AxisDependency.LEFT),
-        getBarData().getYMax2(AxisDependency.LEFT));
-    axisRight.calculate(getBarData().getYMin2(AxisDependency.RIGHT),
-        getBarData().getYMax2(AxisDependency.RIGHT));
+    axisLeft.calculate(
+        data.getYMin2(AxisDependency.LEFT), data.getYMax2(AxisDependency.LEFT));
+    axisRight.calculate(data.getYMin2(AxisDependency.RIGHT),
+        data.getYMax2(AxisDependency.RIGHT));
   }
 
   /// Returns the Highlight object (contains x-index and DataSet index) of the selected value at the given touch
@@ -182,11 +117,11 @@ class BarChartPainter extends BarLineChartBasePainter<BarData>
   /// @param y
   /// @return
   @override
-  Highlight getHighlightByTouchPoint(double x, double y) {
+  Highlight? getHighlightByTouchPoint(double x, double y) {
     if (getBarData() == null) {
       return null;
     } else {
-      Highlight h = highlighter.getHighlight(x, y);
+      Highlight? h = highlighter?.getHighlight(x, y);
       if (h == null || !isHighlightFullBarEnabled()) return h;
 
       // For isHighlightFullBarEnabled, remove stackIndex
@@ -209,7 +144,7 @@ class BarChartPainter extends BarLineChartBasePainter<BarData>
   Rect getBarBounds(BarEntry e) {
     Rect bounds = Rect.zero;
 
-    IBarDataSet set = getBarData().getDataSetForEntry(e);
+    IBarDataSet? set = getBarData()?.getDataSetForEntry(e);
 
     if (set == null) {
       bounds = Rect.fromLTRB(double.minPositive, double.minPositive,
@@ -220,7 +155,7 @@ class BarChartPainter extends BarLineChartBasePainter<BarData>
     double y = e.y;
     double x = e.x;
 
-    double barWidth = getBarData().barWidth;
+    double barWidth = getBarData()!.barWidth;
 
     double left = x - barWidth / 2.0;
     double right = x + barWidth / 2.0;
@@ -229,7 +164,7 @@ class BarChartPainter extends BarLineChartBasePainter<BarData>
 
     bounds = Rect.fromLTRB(left, top, right, bottom);
 
-    return getTransformer(set.getAxisDependency()).rectValueToPixel(bounds);
+    return getTransformer(set.getAxisDependency())!.rectValueToPixel(bounds);
   }
 
   /// returns true if drawing values above bars is enabled, false if not
@@ -277,12 +212,12 @@ class BarChartPainter extends BarLineChartBasePainter<BarData>
       throw Exception(
           "You need to set data for the chart before grouping bars.");
     } else {
-      getBarData().groupBars(fromX, groupSpace, barSpace);
+      getBarData()!.groupBars(fromX, groupSpace, barSpace);
     }
   }
 
   @override
-  BarData getBarData() {
-    return getData();
+  BarData? getBarData() {
+    return getData() as BarData?;
   }
 }

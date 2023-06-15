@@ -1,5 +1,7 @@
 import 'dart:math';
 
+import 'package:example/demo/action_state.dart';
+import 'package:example/demo/util.dart';
 import 'package:flutter/material.dart';
 import 'package:mp_chart/mp/chart/bar_chart.dart';
 import 'package:mp_chart/mp/controller/bar_chart_controller.dart';
@@ -12,8 +14,6 @@ import 'package:mp_chart/mp/core/enums/legend_horizontal_alignment.dart';
 import 'package:mp_chart/mp/core/enums/legend_orientation.dart';
 import 'package:mp_chart/mp/core/enums/legend_vertical_alignment.dart';
 import 'package:mp_chart/mp/core/utils/color_utils.dart';
-import 'package:example/demo/action_state.dart';
-import 'package:example/demo/util.dart';
 
 class BarChartSine extends StatefulWidget {
   @override
@@ -23,7 +23,7 @@ class BarChartSine extends StatefulWidget {
 }
 
 class BarChartSineState extends BarActionState<BarChartSine> {
-  List<BarEntry> _data;
+  List<BarEntry> _data = [];
   var random = Random(1);
   int _count = 150;
 
@@ -31,7 +31,6 @@ class BarChartSineState extends BarActionState<BarChartSine> {
   void initState() {
     _initController();
     Util.loadAsset("othersine.txt").then((value) {
-      _data = List();
       List<String> lines = value.split("\n");
       for (int i = 0; i < lines.length; i++) {
         var datas = lines[i].split("#");
@@ -152,9 +151,9 @@ class BarChartSineState extends BarActionState<BarChartSine> {
   }
 
   void _initBarData(int count) {
-    if (_data == null) return;
+    if (_data.isEmpty) return;
 
-    List<BarEntry> entries = List();
+    List<BarEntry> entries = [];
     for (int i = 0; i < count; i++) {
       entries.add(_data[i]);
     }
@@ -162,8 +161,8 @@ class BarChartSineState extends BarActionState<BarChartSine> {
     BarDataSet set = BarDataSet(entries, "Sinus Function");
     set.setColor1(Color.fromARGB(255, 240, 120, 124));
 
-    controller.data = BarData(List()..add(set));
-    controller.data
+    controller.data = BarData([]..add(set));
+    controller.data!
       ..setValueTextSize(10)
       ..setValueTypeface(Util.LIGHT)
       ..setDrawValues(false)

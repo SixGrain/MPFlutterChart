@@ -1,6 +1,8 @@
 import 'dart:math';
 import 'dart:ui' as ui;
 
+import 'package:example/demo/action_state.dart';
+import 'package:example/demo/util.dart';
 import 'package:flutter/material.dart';
 import 'package:mp_chart/mp/chart/scatter_chart.dart';
 import 'package:mp_chart/mp/controller/scatter_chart_controller.dart';
@@ -19,8 +21,6 @@ import 'package:mp_chart/mp/core/image_loader.dart';
 import 'package:mp_chart/mp/core/render/i_shape_renderer.dart';
 import 'package:mp_chart/mp/core/utils/color_utils.dart';
 import 'package:mp_chart/mp/core/view_port.dart';
-import 'package:example/demo/action_state.dart';
-import 'package:example/demo/util.dart';
 
 class OtherChartScatterPlot extends StatefulWidget {
   @override
@@ -169,14 +169,14 @@ class OtherChartScatterPlotState
   }
 
   void _initScatterData(int count, double range) async {
-    List<ui.Image> imgs = List(3);
-    imgs[0] = await ImageLoader.loadImage('assets/img/star.png');
-    imgs[1] = await ImageLoader.loadImage('assets/img/add.png');
-    imgs[2] = await ImageLoader.loadImage('assets/img/close.png');
+    List<ui.Image> imgs = [];
+    imgs.add(await ImageLoader.loadImage('assets/img/star.png'));
+    imgs.add(await ImageLoader.loadImage('assets/img/add.png'));
+    imgs.add(await ImageLoader.loadImage('assets/img/close.png'));
 
-    List<Entry> values1 = List();
-    List<Entry> values2 = List();
-    List<Entry> values3 = List();
+    List<Entry> values1 = [];
+    List<Entry> values2 = [];
+    List<Entry> values3 = [];
 
     for (int i = 0; i < count; i++) {
       double val = (random.nextDouble() * range) + 3;
@@ -210,14 +210,14 @@ class OtherChartScatterPlotState
     set2.setScatterShapeSize(8);
     set3.setScatterShapeSize(8);
 
-    List<IScatterDataSet> dataSets = List();
+    List<IScatterDataSet> dataSets = [];
     dataSets.add(set1); // add the data sets
     dataSets.add(set2);
     dataSets.add(set3);
 
     // create a data object with the data sets
     controller.data = ScatterData.fromList(dataSets);
-    controller.data.setValueTypeface(Util.LIGHT);
+    controller.data!.setValueTypeface(Util.LIGHT);
 
     setState(() {});
   }
@@ -226,7 +226,7 @@ class OtherChartScatterPlotState
   void onNothingSelected() {}
 
   @override
-  void onValueSelected(Entry e, Highlight h) {}
+  void onValueSelected(Entry? e, Highlight? h) {}
 }
 
 class CustomScatterShapeRenderer implements IShapeRenderer {

@@ -8,6 +8,7 @@ import 'package:mp_chart/mp/core/utils/utils.dart';
 class ViewPortHandler {
   Matrix4 rangeMatrix = Matrix4.identity();
   MPPointD mainChartDimensions = MPPointD(0, 0);
+
   /// matrix used for touch events
   final Matrix4 _matrixTouch = Matrix4.identity();
 
@@ -257,7 +258,7 @@ class ViewPortHandler {
     return save;
   }
 
-  List<double> valsBufferForFitScreen = List(16);
+  List<double> valsBufferForFitScreen = List.filled(16, 0);
 
   /// Resets all zooming and dragging and makes the chart fit exactly it's
   /// bounds.
@@ -328,7 +329,7 @@ class ViewPortHandler {
     refresh(save);
   }
 
-  List<double> matrixBuffer = List(16);
+  List<double> matrixBuffer = List.filled(16, 0);
 
   /// call this method to refresh the graph with a given matrix
   ///
@@ -345,7 +346,7 @@ class ViewPortHandler {
   /// limits the maximum scale and X translation of the given matrix
   ///
   /// @param matrix
-  void limitTransAndScale(Matrix4 matrix, Rect content) {
+  void limitTransAndScale(Matrix4 matrix, Rect? content) {
     for (int i = 0; i < 16; i++) {
       matrixBuffer[i] = matrix.storage[i];
     }
@@ -472,23 +473,23 @@ class ViewPortHandler {
     return isInBoundsX(x) && isInBoundsY(y);
   }
 
-  bool isInBoundsLeft(double x) {
+  bool isInBoundsLeft(double? x) {
     if (x == null) return false;
     return _contentRect.left <= x + 1;
   }
 
-  bool isInBoundsRight(double x) {
+  bool isInBoundsRight(double? x) {
     if (x == null) return false;
     x = ((x * 100.0).toInt()) / 100.0;
     return _contentRect.right >= x - 1;
   }
 
-  bool isInBoundsTop(double y) {
+  bool isInBoundsTop(double? y) {
     if (y == null) return false;
     return _contentRect.top <= y;
   }
 
-  bool isInBoundsBottom(double y) {
+  bool isInBoundsBottom(double? y) {
     if (y == null) return false;
     y = ((y * 100.0).toInt()) / 100.0;
     return _contentRect.bottom >= y;
@@ -607,12 +608,12 @@ class ViewPortHandler {
     return _scaleY < _maxScaleY;
   }
 
-  void setRangeMatrix(Matrix4 rangeMatrix, double mainChartWidth, double mainChartHeight) {
-     rangeMatrix.copyInto(this.rangeMatrix);
-     mainChartDimensions.x = mainChartWidth;
-     mainChartDimensions.y = mainChartHeight;
+  void setRangeMatrix(
+      Matrix4 rangeMatrix, double mainChartWidth, double mainChartHeight) {
+    rangeMatrix.copyInto(this.rangeMatrix);
+    mainChartDimensions.x = mainChartWidth;
+    mainChartDimensions.y = mainChartHeight;
   }
 }
-
 
 class HorizontalViewPortHandler extends ViewPortHandler {}

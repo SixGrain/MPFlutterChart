@@ -16,7 +16,7 @@ class Transformer {
   /// matrix for handling the different offsets of the chart
   Matrix4 _matrixOffset = Matrix4.identity();
 
-  ViewPortHandler _viewPortHandler;
+  late ViewPortHandler _viewPortHandler;
 
   Transformer(ViewPortHandler viewPortHandler) {
     this._viewPortHandler = viewPortHandler;
@@ -75,7 +75,8 @@ class Transformer {
     }
   }
 
-  List<double> _valuePointsForGenerateTransformedValuesScatter = List(1);
+  List<double> _valuePointsForGenerateTransformedValuesScatter =
+      List.filled(1, 0);
 
   /// Transforms an List of Entry into a double array containing the x and
   /// y values Matrix4Utils.transformed with all matrices for the SCATTERCHART.
@@ -88,12 +89,12 @@ class Transformer {
     count = count % 2 == 0 ? count : count - 1;
 
     if (_valuePointsForGenerateTransformedValuesScatter.length != count) {
-      _valuePointsForGenerateTransformedValuesScatter = List(count);
+      _valuePointsForGenerateTransformedValuesScatter = List.filled(count, 0);
     }
     List<double> valuePoints = _valuePointsForGenerateTransformedValuesScatter;
 
     for (int j = 0; j < count; j += 2) {
-      Entry e = data.getEntryForIndex(j ~/ 2 + from);
+      Entry? e = data.getEntryForIndex(j ~/ 2 + from);
 
       if (e != null) {
         valuePoints[j] = e.x;
@@ -109,7 +110,8 @@ class Transformer {
     return valuePoints;
   }
 
-  List<double> _valuePointsForGenerateTransformedValuesBubble = List(1);
+  List<double> _valuePointsForGenerateTransformedValuesBubble =
+      List.filled(1, 0);
 
   /// Transforms an List of Entry into a double array containing the x and
   /// y values Matrix4Utils.transformed with all matrices for the BUBBLECHART.
@@ -122,12 +124,12 @@ class Transformer {
         (to - from + 1) * 2; // (int) Math.ceil((to - from) * phaseX) * 2;
 
     if (_valuePointsForGenerateTransformedValuesBubble.length != count) {
-      _valuePointsForGenerateTransformedValuesBubble = List(count);
+      _valuePointsForGenerateTransformedValuesBubble = List.filled(count, 0);
     }
     List<double> valuePoints = _valuePointsForGenerateTransformedValuesBubble;
 
     for (int j = 0; j < count; j += 2) {
-      Entry e = data.getEntryForIndex(j ~/ 2 + from);
+      Entry? e = data.getEntryForIndex(j ~/ 2 + from);
 
       if (e != null) {
         valuePoints[j] = e.x;
@@ -143,7 +145,7 @@ class Transformer {
     return valuePoints;
   }
 
-  List<double> _valuePointsForGenerateTransformedValuesLine = List(1);
+  List<double> _valuePointsForGenerateTransformedValuesLine = List.filled(1, 0);
 
   /// Transforms an List of Entry into a double array containing the x and
   /// y values Matrix4Utils.transformed with all matrices for the LINECHART.
@@ -155,12 +157,12 @@ class Transformer {
     final int count = ((((max - min) * phaseX) + 1).toInt() * 2);
 
     if (_valuePointsForGenerateTransformedValuesLine.length != count) {
-      _valuePointsForGenerateTransformedValuesLine = List(count);
+      _valuePointsForGenerateTransformedValuesLine = List.filled(count, 0);
     }
     List<double> valuePoints = _valuePointsForGenerateTransformedValuesLine;
 
     for (int j = 0; j < count; j += 2) {
-      Entry e = data.getEntryForIndex(j ~/ 2 + min);
+      Entry? e = data.getEntryForIndex(j ~/ 2 + min);
 
       if (e != null) {
         valuePoints[j] = e.x;
@@ -176,7 +178,8 @@ class Transformer {
     return valuePoints;
   }
 
-  List<double> _valuePointsForGenerateTransformedValuesCandle = List(1);
+  List<double> _valuePointsForGenerateTransformedValuesCandle =
+      List.filled(1, 0);
 
   /// Transforms an List of Entry into a double array containing the x and
   /// y values Matrix4Utils.transformed with all matrices for the CANDLESTICKCHART.
@@ -189,12 +192,12 @@ class Transformer {
     count = count % 2 == 0 ? count : count - 1;
 
     if (_valuePointsForGenerateTransformedValuesCandle.length != count) {
-      _valuePointsForGenerateTransformedValuesCandle = List(count);
+      _valuePointsForGenerateTransformedValuesCandle = List.filled(count, 0);
     }
     List<double> valuePoints = _valuePointsForGenerateTransformedValuesCandle;
 
     for (int j = 0; j < count; j += 2) {
-      CandleEntry e = data.getEntryForIndex(j ~/ 2 + from);
+      CandleEntry? e = data.getEntryForIndex(j ~/ 2 + from);
 
       if (e != null) {
         valuePoints[j] = e.x;
@@ -309,7 +312,7 @@ class Transformer {
   }
 
   /// buffer for performance
-  List<double> _ptsBuffer = List(2);
+  List<double> _ptsBuffer = List.filled(2, 0);
 
   /// Returns a recyclable MPPointD instance.
   /// returns the x and y values in the chart at the given touch point

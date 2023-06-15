@@ -9,7 +9,7 @@ import 'package:mp_chart/mp/core/poolable/point.dart';
 import 'package:mp_chart/mp/core/utils/utils.dart';
 
 class XAxisRendererRadarChart extends XAxisRenderer {
-  RadarChartPainter _painter;
+  late RadarChartPainter _painter;
 
   XAxisRendererRadarChart(
       ViewPortHandler viewPortHandler, XAxis xAxis, RadarChartPainter chart)
@@ -38,10 +38,10 @@ class XAxisRendererRadarChart extends XAxisRenderer {
     MPPointF center = _painter.getCenterOffsets();
     MPPointF pOut = MPPointF.getInstance1(0, 0);
     for (int i = 0;
-        i < _painter.getData().getMaxEntryCountSet().getEntryCount();
+        i < _painter.getData()!.getMaxEntryCountSet()!.getEntryCount();
         i++) {
       String label =
-          xAxis.getValueFormatter().getAxisLabel(i.toDouble(), xAxis);
+          xAxis.getValueFormatter()!.getAxisLabel(i.toDouble(), xAxis);
 
       double angle = (sliceangle * i + _painter.getRotationAngle()) % 360;
 

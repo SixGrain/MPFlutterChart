@@ -6,6 +6,7 @@ import 'package:example/demo/util.dart';
 import 'package:flutter/material.dart';
 import 'package:mp_chart/mp/chart/bar_chart.dart';
 import 'package:mp_chart/mp/controller/bar_chart_controller.dart';
+import 'package:mp_chart/mp/core/chart_trans_listener.dart';
 import 'package:mp_chart/mp/core/color/gradient_color.dart';
 import 'package:mp_chart/mp/core/common_interfaces.dart';
 import 'package:mp_chart/mp/core/data/bar_data.dart';
@@ -22,7 +23,6 @@ import 'package:mp_chart/mp/core/enums/y_axis_label_position.dart';
 import 'package:mp_chart/mp/core/highlight/highlight.dart';
 import 'package:mp_chart/mp/core/image_loader.dart';
 import 'package:mp_chart/mp/core/touch_listener.dart';
-import 'package:mp_chart/mp/core/chart_trans_listener.dart';
 import 'package:mp_chart/mp/core/utils/color_utils.dart';
 import 'package:mp_chart/mp/core/value_formatter/day_axis_value_formatter.dart';
 import 'package:mp_chart/mp/core/value_formatter/my_value_formatter.dart';
@@ -178,7 +178,8 @@ class BarChartBasicState extends BarActionState<BarChartBasic>
             ..drawGridLines = false
             ..setGranularity(1.0)
             ..setLabelCount1(7)
-            ..setValueFormatter(DayAxisValueFormatter(controller));
+            ..setValueFormatter(
+                DayAxisValueFormatter(controller as BarChartController));
         },
         selectionListener: this,
         drawBarShadow: false,
@@ -197,7 +198,7 @@ class BarChartBasicState extends BarActionState<BarChartBasic>
   void _initData(int count, double range, ui.Image img) {
     double start = 1;
 
-    List<BarEntry> values = List();
+    List<BarEntry> values = [];
 
     for (int i = start.toInt(); i < start + count; i++) {
       double val = (random.nextDouble() * (range + 1));
@@ -228,7 +229,7 @@ class BarChartBasicState extends BarActionState<BarChartBasic>
     Color endColor4 = ColorUtils.HOLO_RED_DARK;
     Color endColor5 = ColorUtils.HOLO_ORANGE_DARK;
 
-    List<GradientColor> gradientColors = List();
+    List<GradientColor> gradientColors = [];
     gradientColors.add(GradientColor(startColor1, endColor1));
     gradientColors.add(GradientColor(startColor2, endColor2));
     gradientColors.add(GradientColor(startColor3, endColor3));
@@ -237,11 +238,11 @@ class BarChartBasicState extends BarActionState<BarChartBasic>
 
     set1.setGradientColors(gradientColors);
 
-    List<IBarDataSet> dataSets = List();
+    List<IBarDataSet> dataSets = [];
     dataSets.add(set1);
 
     controller.data = BarData(dataSets);
-    controller.data
+    controller.data!
       ..setValueTextSize(10)
       ..setValueTypeface(Util.LIGHT)
       ..barWidth = 0.9;
@@ -257,7 +258,7 @@ class BarChartBasicState extends BarActionState<BarChartBasic>
   void onNothingSelected() {}
 
   @override
-  void onValueSelected(Entry e, Highlight h) {
+  void onValueSelected(Entry? e, Highlight? h) {
 //    if (e == null)
 //      return;
 //

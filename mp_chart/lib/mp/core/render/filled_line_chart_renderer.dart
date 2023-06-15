@@ -2,8 +2,8 @@ import 'dart:math';
 import 'dart:ui';
 
 import 'package:flutter/painting.dart';
-import 'package:mp_chart/mp/core/bounds.dart';
 import 'package:mp_chart/mp/core/animator.dart';
+import 'package:mp_chart/mp/core/bounds.dart';
 import 'package:mp_chart/mp/core/data/filled_line_data.dart';
 import 'package:mp_chart/mp/core/data_provider/filled_line_data_provider.dart';
 import 'package:mp_chart/mp/core/data_set/filled_line_data_set.dart';
@@ -11,11 +11,10 @@ import 'package:mp_chart/mp/core/entry/entry.dart';
 import 'package:mp_chart/mp/core/transformer/transformer.dart';
 import 'package:mp_chart/mp/core/view_port.dart';
 
-
 import 'line_chart_renderer.dart';
 
 class FilledLineChartRenderer extends LineChartRenderer {
-  FilledLineDataProvider _provider;
+  late FilledLineDataProvider _provider;
 
   Path _cubicPath = Path();
   Path _cubicFillPath = Path();
@@ -33,7 +32,7 @@ class FilledLineChartRenderer extends LineChartRenderer {
 
   @override
   void drawData(Canvas c) {
-    FilledLineData filledLineData = getFilledData();
+    FilledLineData filledLineData = getFilledData()!;
 
     for (FilledLineDataSet set in filledLineData.dataSets) {
       if (set.isVisible()) drawFilledDataSet(c, set);
@@ -49,14 +48,14 @@ class FilledLineChartRenderer extends LineChartRenderer {
   void drawFilledCubicBezier(Canvas canvas, FilledLineDataSet dataSet) {
     double phaseY = animator.getPhaseY();
 
-    Transformer trans = _provider.getTransformer(dataSet.getAxisDependency());
+    Transformer trans = _provider.getTransformer(dataSet.getAxisDependency())!;
 
     xBounds.set(_provider, dataSet);
 
     double intensity = dataSet.getCubicIntensity();
 
-    List<double> list = List();
-    List<double> backList = List();
+    List<double> list = [];
+    List<double> backList = [];
 
     if (xBounds.range >= 1) {
       fillDataPoints(dataSet.highLevelEntries, list, intensity, phaseY);
@@ -81,29 +80,26 @@ class FilledLineChartRenderer extends LineChartRenderer {
     _cubicFillPath.moveTo(list[0], list[1]);
     backList = backList.reversed.toList();
 
-    for(int i = 0; i < list.length; i += 2) {
-      _cubicPath.lineTo(list[i], list[i+1]);
-      _cubicFillPath.lineTo(list[i], list[i+1]);
+    for (int i = 0; i < list.length; i += 2) {
+      _cubicPath.lineTo(list[i], list[i + 1]);
+      _cubicFillPath.lineTo(list[i], list[i + 1]);
     }
 
-    for(int i = 0; i < backList.length; i += 2) {
-      _cubicPath.lineTo(backList[i+1], backList[i]);
-      _cubicFillPath.lineTo(backList[i+1], backList[i]);
+    for (int i = 0; i < backList.length; i += 2) {
+      _cubicPath.lineTo(backList[i + 1], backList[i]);
+      _cubicFillPath.lineTo(backList[i + 1], backList[i]);
     }
-
-
 
     drawFilledCubicFill(canvas, dataSet, _cubicFillPath, trans, xBounds);
 
-
     if (dataSet.getDashPathEffect() != null) {
-      _cubicPath = dataSet.getDashPathEffect().convert2DashPath(_cubicPath);
+      _cubicPath = dataSet.getDashPathEffect()!.convert2DashPath(_cubicPath);
     }
     canvas.drawPath(_cubicPath, renderPaint);
   }
 
-
-  void fillDataPoints(List<Entry> entries, List<double> points, double intensity, double phaseY) {
+  void fillDataPoints(List<Entry> entries, List<double> points,
+      double intensity, double phaseY) {
     double prevDx = 0;
     double prevDy = 0;
     double curDx = 0;
@@ -111,7 +107,7 @@ class FilledLineChartRenderer extends LineChartRenderer {
 
     final int firstIndex = xBounds.min + 1;
 
-    Entry prevPrev;
+    Entry? prevPrev;
     Entry prev = entries[max(firstIndex - 2, 0)];
     Entry cur = entries[max(firstIndex - 1, 0)];
     Entry next = cur;
@@ -148,19 +144,16 @@ class FilledLineChartRenderer extends LineChartRenderer {
       Transformer trans, XBounds bounds) {
     spline.close();
 
-
     if (dataSet.isGradientEnabled()) {
-      drawFilledPath3(c, spline, dataSet.getGradientColor1().startColor.value,
-          dataSet.getGradientColor1().endColor.value, dataSet.getFillAlpha());
+      drawFilledPath3(c, spline, dataSet.getGradientColor1()!.startColor.value,
+          dataSet.getGradientColor1()!.endColor.value, dataSet.getFillAlpha());
     } else {
-
       drawFilledPath2(
           c, spline, dataSet.getFillColor().value, dataSet.getFillAlpha());
     }
   }
 
-
-  FilledLineData getFilledData() {
+  FilledLineData? getFilledData() {
     return _provider.getFilledLineData();
   }
 

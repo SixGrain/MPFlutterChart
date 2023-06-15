@@ -1,5 +1,6 @@
-import 'package:flutter/material.dart';
 import 'dart:ui' as ui show window;
+
+import 'package:flutter/material.dart';
 
 /**
  * @Author: thl
@@ -38,7 +39,7 @@ class ScreenUtils {
   double _statusBarHeight = 0.0;
   double _bottomBarHeight = 0.0;
   double _appBarHeight = 0.0;
-  MediaQueryData _mediaQueryData;
+  late MediaQueryData _mediaQueryData;
 
   static final ScreenUtils _singleton = ScreenUtils();
 
@@ -48,16 +49,14 @@ class ScreenUtils {
   }
 
   _init() {
-    MediaQueryData mediaQuery = MediaQueryData.fromWindow(ui.window);
-    if (_mediaQueryData != mediaQuery) {
-      _mediaQueryData = mediaQuery;
-      _screenWidth = mediaQuery.size.width;
-      _screenHeight = mediaQuery.size.height;
-      _screenDensity = mediaQuery.devicePixelRatio;
-      _statusBarHeight = mediaQuery.padding.top;
-      _bottomBarHeight = mediaQuery.padding.bottom;
-      _appBarHeight = kToolbarHeight;
-    }
+    MediaQueryData mediaQuery = MediaQueryData.fromView(ui.window);
+    _mediaQueryData = mediaQuery;
+    _screenWidth = mediaQuery.size.width;
+    _screenHeight = mediaQuery.size.height;
+    _screenDensity = mediaQuery.devicePixelRatio;
+    _statusBarHeight = mediaQuery.padding.top;
+    _bottomBarHeight = mediaQuery.padding.bottom;
+    _appBarHeight = kToolbarHeight;
   }
 
   /// screen width

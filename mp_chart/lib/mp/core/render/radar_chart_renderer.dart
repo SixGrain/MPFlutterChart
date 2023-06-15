@@ -5,22 +5,22 @@ import 'package:mp_chart/mp/core/data/radar_data.dart';
 import 'package:mp_chart/mp/core/data_interfaces/i_radar_data_set.dart';
 import 'package:mp_chart/mp/core/entry/radar_entry.dart';
 import 'package:mp_chart/mp/core/highlight/highlight.dart';
+import 'package:mp_chart/mp/core/poolable/point.dart';
 import 'package:mp_chart/mp/core/render/line_radar_renderer.dart';
 import 'package:mp_chart/mp/core/utils/canvas_utils.dart';
 import 'package:mp_chart/mp/core/utils/color_utils.dart';
 import 'package:mp_chart/mp/core/utils/painter_utils.dart';
+import 'package:mp_chart/mp/core/utils/utils.dart';
 import 'package:mp_chart/mp/core/value_formatter/value_formatter.dart';
 import 'package:mp_chart/mp/core/view_port.dart';
 import 'package:mp_chart/mp/painter/radar_chart_painter.dart';
-import 'package:mp_chart/mp/core/poolable/point.dart';
-import 'package:mp_chart/mp/core/utils/utils.dart';
 
 class RadarChartRenderer extends LineRadarRenderer {
-  RadarChartPainter _painter;
+  late RadarChartPainter _painter;
 
   /// paint for drawing the web
-  Paint _webPaint;
-  Paint _highlightCirclePaint;
+  late Paint _webPaint;
+  late Paint _highlightCirclePaint;
 
   RadarChartRenderer(RadarChartPainter chart, Animator animator,
       ViewPortHandler viewPortHandler)
@@ -51,9 +51,9 @@ class RadarChartRenderer extends LineRadarRenderer {
 
   @override
   void drawData(Canvas c) {
-    RadarData radarData = _painter.getData();
+    RadarData radarData = _painter.getData() as RadarData;
 
-    int mostEntries = radarData.getMaxEntryCountSet().getEntryCount();
+    int mostEntries = radarData.getMaxEntryCountSet()!.getEntryCount();
 
     for (IRadarDataSet set in radarData.dataSets) {
       if (set.isVisible()) {
@@ -89,7 +89,7 @@ class RadarChartRenderer extends LineRadarRenderer {
     for (int j = 0; j < dataSet.getEntryCount(); j++) {
       renderPaint.color = dataSet.getColor2(j);
 
-      RadarEntry e = dataSet.getEntryForIndex(j);
+      RadarEntry e = dataSet.getEntryForIndex(j)!;
 
       Utils.getPosition(
           center,
@@ -124,8 +124,8 @@ class RadarChartRenderer extends LineRadarRenderer {
         drawFilledPath3(
             c,
             surface,
-            dataSet.getGradientColor1().startColor.value,
-            dataSet.getGradientColor1().endColor.value,
+            dataSet.getGradientColor1()!.startColor.value,
+            dataSet.getGradientColor1()!.endColor.value,
             dataSet.getFillAlpha());
       } else {
         drawFilledPath2(
@@ -163,22 +163,23 @@ class RadarChartRenderer extends LineRadarRenderer {
 
     double yoffset = Utils.convertDpToPixel(5);
 
-    for (int i = 0; i < _painter.getData().getDataSetCount(); i++) {
-      IRadarDataSet dataSet = _painter.getData().getDataSetByIndex(i);
+    for (int i = 0; i < _painter.getData()!.getDataSetCount(); i++) {
+      IRadarDataSet dataSet =
+          _painter.getData()!.getDataSetByIndex(i) as IRadarDataSet;
 
       if (!shouldDrawValues(dataSet)) continue;
 
       // apply the text-styling defined by the DataSet
       applyValueTextStyle(dataSet);
 
-      ValueFormatter formatter = dataSet.getValueFormatter();
+      ValueFormatter formatter = dataSet.getValueFormatter()!;
 
       MPPointF iconsOffset = MPPointF.getInstance3(dataSet.getIconsOffset());
       iconsOffset.x = Utils.convertDpToPixel(iconsOffset.x);
       iconsOffset.y = Utils.convertDpToPixel(iconsOffset.y);
 
       for (int j = 0; j < dataSet.getEntryCount(); j++) {
-        RadarEntry entry = dataSet.getEntryForIndex(j);
+        RadarEntry entry = dataSet.getEntryForIndex(j)!;
 
         Utils.getPosition(
             center,
@@ -204,7 +205,7 @@ class RadarChartRenderer extends LineRadarRenderer {
           //noinspection SuspiciousNameCombination
           pIcon.y += iconsOffset.x;
 
-          CanvasUtils.drawImage(c, Offset(pIcon.x, pIcon.y), entry.mIcon,
+          CanvasUtils.drawImage(c, Offset(pIcon.x, pIcon.y), entry.mIcon!,
               Size(15, 15), drawPaint);
         }
       }
@@ -219,7 +220,7 @@ class RadarChartRenderer extends LineRadarRenderer {
 
   @override
   void drawValue(Canvas c, String valueText, double x, double y, Color color,
-      double textSize, TypeFace typeFace) {
+      double textSize, TypeFace? typeFace) {
     valuePaint = PainterUtils.create(valuePaint, valueText, color, textSize,
         fontFamily: typeFace?.fontFamily, fontWeight: typeFace?.fontWeight);
     valuePaint.layout();
@@ -251,7 +252,7 @@ class RadarChartRenderer extends LineRadarRenderer {
 
     final int xIncrements = 1 + _painter.skipWebLineCount;
     int maxEntryCount =
-        _painter.getData().getMaxEntryCountSet().getEntryCount();
+        _painter.getData()!.getMaxEntryCountSet()!.getEntryCount();
 
     MPPointF p = MPPointF.getInstance1(0, 0);
     for (int i = 0; i < maxEntryCount; i += xIncrements) {
@@ -274,7 +275,7 @@ class RadarChartRenderer extends LineRadarRenderer {
     MPPointF p1out = MPPointF.getInstance1(0, 0);
     MPPointF p2out = MPPointF.getInstance1(0, 0);
     for (int j = 0; j < labelCount; j++) {
-      for (int i = 0; i < _painter.getData().getEntryCount(); i++) {
+      for (int i = 0; i < _painter.getData()!.getEntryCount(); i++) {
         double r =
             (_painter.yAxis.entries[j] - _painter.getYChartMin()) * factor;
 
@@ -301,18 +302,18 @@ class RadarChartRenderer extends LineRadarRenderer {
     MPPointF center = _painter.getCenterOffsets();
     MPPointF pOut = MPPointF.getInstance1(0, 0);
 
-    RadarData radarData = _painter.getData();
+    RadarData radarData = _painter.getData() as RadarData;
 
     for (Highlight high in indices) {
-      IRadarDataSet set = radarData.getDataSetByIndex(high.dataSetIndex);
+      IRadarDataSet? set = radarData.getDataSetByIndex(high.dataSetIndex);
 
       if (set == null || !set.isHighlightEnabled()) continue;
 
-      RadarEntry e = set.getEntryForIndex(high.x.toInt());
+      RadarEntry? e = set.getEntryForIndex(high.x.toInt());
 
       if (!isInBoundsX(e, set)) continue;
 
-      double y = (e.y - _painter.getYChartMin());
+      double y = (e!.y - _painter.getYChartMin());
 
       Utils.getPosition(
           center,

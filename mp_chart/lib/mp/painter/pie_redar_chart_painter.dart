@@ -1,23 +1,15 @@
 import 'dart:math';
 
 import 'package:flutter/painting.dart';
-import 'package:mp_chart/mp/core/animator.dart';
 import 'package:mp_chart/mp/core/axis/x_axis.dart';
-import 'package:mp_chart/mp/core/common_interfaces.dart';
 import 'package:mp_chart/mp/core/data/chart_data.dart';
 import 'package:mp_chart/mp/core/data_interfaces/i_data_set.dart';
-import 'package:mp_chart/mp/core/description.dart';
 import 'package:mp_chart/mp/core/entry/entry.dart';
 import 'package:mp_chart/mp/core/enums/legend_horizontal_alignment.dart';
 import 'package:mp_chart/mp/core/enums/legend_orientation.dart';
 import 'package:mp_chart/mp/core/enums/legend_vertical_alignment.dart';
-import 'package:mp_chart/mp/core/functions.dart';
-import 'package:mp_chart/mp/core/legend/legend.dart';
-import 'package:mp_chart/mp/core/marker/i_marker.dart';
 import 'package:mp_chart/mp/core/poolable/point.dart';
-import 'package:mp_chart/mp/core/render/legend_renderer.dart';
 import 'package:mp_chart/mp/core/utils/utils.dart';
-import 'package:mp_chart/mp/core/view_port.dart';
 import 'package:mp_chart/mp/painter/painter.dart';
 
 import 'radar_chart_painter.dart';
@@ -36,60 +28,39 @@ abstract class PieRadarChartPainter<T extends ChartData<IDataSet<Entry>>>
   /// Sets the minimum offset (padding) around the chart, defaults to 0.f
   final double _minOffset; //0.0
 
-  Color _backgroundColor;
+  Color? _backgroundColor;
 
-  PieRadarChartPainter(
-      T data,
-      Animator animator,
-      ViewPortHandler viewPortHandler,
-      double maxHighlightDistance,
-      bool highLightPerTapEnabled,
-      double extraLeftOffset,
-      double extraTopOffset,
-      double extraRightOffset,
-      double extraBottomOffset,
-      IMarker marker,
-      Description desc,
-      bool drawMarkers,
-      Color infoBgColor,
-      TextPainter infoPainter,
-      TextPainter descPainter,
-      XAxis xAxis,
-      Legend legend,
-      LegendRenderer legendRenderer,
-      DataRendererSettingFunction rendererSettingFunction,
-      OnChartValueSelectedListener selectedListener,
-      double rotationAngle,
-      double rawRotationAngle,
-      bool rotateEnabled,
-      double minOffset,
-      Color backgroundColor)
-      : _rotationAngle = rotationAngle,
+  PieRadarChartPainter({
+    required super.data,
+    required super.animator,
+    required super.viewPortHandler,
+    required super.maxHighlightDistance,
+    required super.highLightPerTapEnabled,
+    required super.extraLeftOffset,
+    required super.extraTopOffset,
+    required super.extraRightOffset,
+    required super.extraBottomOffset,
+    required super.marker,
+    required super.description,
+    required super.drawMarkers,
+    required super.infoBgColor,
+    required super.infoPainter,
+    required super.descPainter,
+    required super.xAxis,
+    required super.legend,
+    required super.legendRenderer,
+    required super.rendererSettingFunction,
+    required super.selectedListener,
+    required double rotationAngle,
+    required double rawRotationAngle,
+    required bool rotateEnabled,
+    required double minOffset,
+    required Color? backgroundColor,
+  })  : _rotationAngle = rotationAngle,
         _rawRotationAngle = rawRotationAngle,
         _rotateEnabled = rotateEnabled,
         _minOffset = minOffset,
-        _backgroundColor = backgroundColor,
-        super(
-            data,
-            animator,
-            viewPortHandler,
-            maxHighlightDistance,
-            highLightPerTapEnabled,
-            extraLeftOffset,
-            extraTopOffset,
-            extraRightOffset,
-            extraBottomOffset,
-            marker,
-            desc,
-            drawMarkers,
-            infoBgColor,
-            infoPainter,
-            descPainter,
-            xAxis,
-            legend,
-            legendRenderer,
-            rendererSettingFunction,
-            selectedListener);
+        _backgroundColor = backgroundColor;
 
   @override
   void calcMinMax() {
@@ -98,19 +69,19 @@ abstract class PieRadarChartPainter<T extends ChartData<IDataSet<Entry>>>
 
   @override
   int getMaxVisibleCount() {
-    return getData().getEntryCount();
+    return getData()!.getEntryCount();
   }
 
   @override
   void onPaint(Canvas canvas, Size size) {
     if (_backgroundColor != null) {
-      canvas.drawColor(_backgroundColor, BlendMode.src);
+      canvas.drawColor(_backgroundColor!, BlendMode.src);
     }
   }
 
   @override
   void calculateOffsets() {
-    if (legend != null) legendRenderer.computeLegend(getData());
+    if (legend != null) legendRenderer.computeLegend(getData()!);
     renderer?.initBuffers();
     calcMinMax();
 
@@ -119,6 +90,8 @@ abstract class PieRadarChartPainter<T extends ChartData<IDataSet<Entry>>>
     if (legend != null && legend.enabled && !legend.drawInside) {
       double fullLegendWidth = min(legend.neededWidth,
           viewPortHandler.getChartWidth() * legend.maxSizePercent);
+
+      final size = this.size!;
 
       switch (legend.orientation) {
         case LegendOrientation.VERTICAL:

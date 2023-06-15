@@ -12,13 +12,13 @@ class HorizontalBarBuffer extends BarBuffer {
     double barWidthHalf = barWidth / 2;
 
     for (int i = 0; i < size; i++) {
-      BarEntry e = data.getEntryForIndex(i);
+      BarEntry? e = data.getEntryForIndex(i);
 
       if (e == null) continue;
 
       double x = e.x;
       double y = e.y;
-      List<double> vals = e.yVals;
+      List<double>? vals = e.yVals;
 
       if (!containsStacks || vals == null) {
         double bottom = x - barWidthHalf;

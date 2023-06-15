@@ -1,5 +1,7 @@
 import 'dart:math';
 
+import 'package:example/demo/action_state.dart';
+import 'package:example/demo/util.dart';
 import 'package:flutter/material.dart';
 import 'package:mp_chart/mp/chart/bar_chart.dart';
 import 'package:mp_chart/mp/controller/bar_chart_controller.dart';
@@ -10,8 +12,6 @@ import 'package:mp_chart/mp/core/description.dart';
 import 'package:mp_chart/mp/core/entry/bar_entry.dart';
 import 'package:mp_chart/mp/core/enums/x_axis_position.dart';
 import 'package:mp_chart/mp/core/utils/color_utils.dart';
-import 'package:example/demo/action_state.dart';
-import 'package:example/demo/util.dart';
 
 class ScrollingChartTallBar extends StatefulWidget {
   @override
@@ -22,7 +22,7 @@ class ScrollingChartTallBar extends StatefulWidget {
 
 class ScrollingChartTallBarState
     extends SimpleActionState<ScrollingChartTallBar> {
-  BarChartController _controller;
+  late BarChartController _controller;
   var random = Random(1);
   bool _isParentMove = true;
   double _curX = 0.0;
@@ -158,7 +158,7 @@ class ScrollingChartTallBarState
   }
 
   BarData generateData() {
-    List<BarEntry> entries = List();
+    List<BarEntry> entries = [];
 
     for (int i = 0; i < 10; i++) {
       entries
@@ -169,7 +169,7 @@ class ScrollingChartTallBarState
     d.setColors1(ColorUtils.VORDIPLOM_COLORS);
     d.setDrawValues(false);
 
-    List<IBarDataSet> sets = List();
+    List<IBarDataSet> sets = [];
     sets.add(d);
 
     return BarData(sets);

@@ -4,6 +4,7 @@ import 'package:mp_chart/mp/core/entry/entry.dart';
 class FilledLineDataSet extends LineDataSet {
   List<Entry> lowLevelEntries;
   List<Entry> highLevelEntries;
-  FilledLineDataSet(this.highLevelEntries, this.lowLevelEntries, String label) : super(highLevelEntries, label);
 
+  FilledLineDataSet(this.highLevelEntries, this.lowLevelEntries, String label)
+      : super(highLevelEntries, label);
 }

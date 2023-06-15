@@ -107,12 +107,12 @@ abstract class Poolable {
 class ObjectPool<T extends Poolable> {
   static int ids = 0;
 
-  int poolId;
-  int desiredCapacity;
-  List<Object> objects;
-  int objectsPointer;
-  T modelObject;
-  double replenishPercentage;
+  int poolId = 0;
+  late int desiredCapacity;
+  late List<Object?> objects;
+  late int objectsPointer;
+  late T modelObject;
+  late double replenishPercentage;
 
   /// Returns the id of the given pool instance.
   ///
@@ -140,7 +140,7 @@ class ObjectPool<T extends Poolable> {
           "Object Pool must be instantiated with a capacity greater than 0!");
     }
     this.desiredCapacity = withCapacity;
-    this.objects = List(this.desiredCapacity);
+    this.objects = List.filled(this.desiredCapacity, null);
     this.objectsPointer = 0;
     this.modelObject = object;
     this.replenishPercentage = 1.0;
@@ -189,12 +189,12 @@ class ObjectPool<T extends Poolable> {
   /// cost.
   ///
   /// @return An instance of Poolable object T
-  T get() {
+  R get<R extends T>() {
     if (this.objectsPointer == -1 && this.replenishPercentage > 0.0) {
       this.refillPool1();
     }
 
-    T result = objects[this.objectsPointer];
+    R result = objects[this.objectsPointer] as R;
     result.currentOwnerId = Poolable.NO_OWNER;
     this.objectsPointer--;
 
@@ -256,7 +256,7 @@ class ObjectPool<T extends Poolable> {
   void resizePool() {
     final int oldCapacity = this.desiredCapacity;
     this.desiredCapacity *= 2;
-    List<Object> temp = List(this.desiredCapacity);
+    List<Object?> temp = List.filled(this.desiredCapacity, null);
     for (int i = 0; i < oldCapacity; i++) {
       temp[i] = this.objects[i];
     }

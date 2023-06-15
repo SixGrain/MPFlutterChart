@@ -21,20 +21,20 @@ import 'package:mp_chart/mp/core/view_port.dart';
 
 class LegendRenderer extends Renderer {
   /// paint for the legend labels
-  TextPainter _legendLabelPaint;
+  late TextPainter _legendLabelPaint;
 
   /// paint used for the legend forms
-  Paint _legendFormPaint;
+  late  Paint _legendFormPaint;
 
   /// the legend object this renderer renders
-  Legend _legend;
+  late  Legend _legend;
 
   LegendRenderer(ViewPortHandler viewPortHandler, Legend legend)
       : super(viewPortHandler) {
     this._legend = legend;
 
     _legendLabelPaint = PainterUtils.create(
-        _legendLabelPaint, null, ColorUtils.BLACK, Utils.convertDpToPixel(9));
+        null, null, ColorUtils.BLACK, Utils.convertDpToPixel(9));
 
     _legendFormPaint = Paint()
       ..isAntiAlias = true
@@ -59,18 +59,18 @@ class LegendRenderer extends Renderer {
     _legendLabelPaint = value;
   }
 
-  List<LegendEntry> _computedEntries = List(16);
+  List<LegendEntry?> _computedEntries = List.filled(16, null);
 
   /// Prepares the legend and calculates all needed forms, labels and colors.
   ///
   /// @param data
   void computeLegend(ChartData<IDataSet> data) {
     if (!_legend.isLegendCustom) {
-      _computedEntries = List();
+      _computedEntries = [];
 
       // loop for building up the colors and labels used in the legend
       for (int i = 0; i < data.getDataSetCount(); i++) {
-        IDataSet dataSet = data.getDataSetByIndex(i);
+        IDataSet dataSet = data.getDataSetByIndex(i)!;
 
         List<Color> clrs = dataSet.getColors();
         int entryCount = dataSet.getEntryCount();
@@ -104,7 +104,7 @@ class LegendRenderer extends Renderer {
 
           for (int j = 0; j < clrs.length && j < entryCount; j++) {
             _computedEntries.add(LegendEntry(
-                pds.getEntryForIndex(j).label,
+                pds.getEntryForIndex(j)!.label,
                 dataSet.getForm(),
                 dataSet.getFormSize(),
                 dataSet.getFormLineWidth(),
@@ -146,14 +146,14 @@ class LegendRenderer extends Renderer {
           // all others
 
           for (int j = 0; j < clrs.length && j < entryCount; j++) {
-            String label;
+            String? label;
 
             // if multiple colors are set for a DataSet, group them
             if (j < clrs.length - 1 && j < entryCount - 1) {
               label = null;
             } else {
               // add label to the last entry
-              label = data.getDataSetByIndex(i).getLabel();
+              label = data.getDataSetByIndex(i)?.getLabel();
             }
 
             _computedEntries.add(LegendEntry(
@@ -168,10 +168,10 @@ class LegendRenderer extends Renderer {
       }
 
       if (_legend.extraEntries != null) {
-        _computedEntries.addAll(_legend.extraEntries);
+        _computedEntries.addAll(_legend.extraEntries!);
       }
 
-      _legend.entries = (_computedEntries);
+      _legend.entries = _computedEntries.whereType<LegendEntry>().toList();
     }
 
     _legendLabelPaint = getLabelPainter();
@@ -262,8 +262,8 @@ class LegendRenderer extends Renderer {
     switch (orientation) {
       case LegendOrientation.HORIZONTAL:
         {
-          List<FSize> calculatedLineSizes = _legend.calculatedLineSizes;
-          List<FSize> calculatedLabelSizes = _legend.calculatedLabelSizes;
+          List<FSize?> calculatedLineSizes = _legend.calculatedLineSizes;
+          List<FSize?> calculatedLabelSizes = _legend.calculatedLabelSizes;
           List<bool> calculatedLabelBreakPoints =
               _legend.calculatedLabelBreakPoints;
 
@@ -307,8 +307,8 @@ class LegendRenderer extends Renderer {
                 horizontalAlignment == LegendHorizontalAlignment.CENTER &&
                 lineIndex < calculatedLineSizes.length) {
               posX += (direction == LegendDirection.RIGHT_TO_LEFT
-                      ? calculatedLineSizes[lineIndex].width
-                      : -calculatedLineSizes[lineIndex].width) /
+                      ? calculatedLineSizes[lineIndex]!.width
+                      : -calculatedLineSizes[lineIndex]!.width) /
                   2;
               lineIndex++;
             }
@@ -330,12 +330,12 @@ class LegendRenderer extends Renderer {
                     : formToTextSpace;
 
               if (direction == LegendDirection.RIGHT_TO_LEFT)
-                posX -= calculatedLabelSizes[i].width;
+                posX -= calculatedLabelSizes[i]!.width;
 
               drawLabel(c, posX, posY + labelLineHeight, e.label);
 
               if (direction == LegendDirection.LEFT_TO_RIGHT)
-                posX += calculatedLabelSizes[i].width;
+                posX += calculatedLabelSizes[i]!.width;
 
               posX += direction == LegendDirection.RIGHT_TO_LEFT
                   ? -xEntrySpace
@@ -485,7 +485,7 @@ class LegendRenderer extends Renderer {
               entry.formLineWidth.isNaN
                   ? legend.formLineWidth
                   : entry.formLineWidth);
-          final DashPathEffect formLineDashEffect =
+          final DashPathEffect? formLineDashEffect =
               entry.formLineDashEffect == null
                   ? legend.getFormLineDashEffect()
                   : entry.formLineDashEffect;
@@ -507,9 +507,9 @@ class LegendRenderer extends Renderer {
     c.restore();
   }
 
-  void drawLabel(Canvas c, double x, double y, String label) {
+  void drawLabel(Canvas c, double x, double y, String? label) {
     _legendLabelPaint.text =
-        TextSpan(text: label, style: _legendLabelPaint.text.style);
+        TextSpan(text: label, style: _legendLabelPaint.text?.style);
     _legendLabelPaint.layout();
     _legendLabelPaint.paint(c, Offset(x, y - _legendLabelPaint.height));
   }

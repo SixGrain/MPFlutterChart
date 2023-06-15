@@ -11,44 +11,38 @@ import 'package:mp_chart/mp/core/data_set/line_data_set.dart';
 import 'package:mp_chart/mp/core/description.dart';
 import 'package:mp_chart/mp/core/entry/entry.dart';
 import 'package:mp_chart/mp/core/enums/legend_form.dart';
-import 'package:mp_chart/mp/core/enums/limit_label_postion.dart';
 import 'package:mp_chart/mp/core/enums/x_axis_position.dart';
 import 'package:mp_chart/mp/core/image_loader.dart';
-import 'package:mp_chart/mp/core/limit_line.dart';
 import 'package:mp_chart/mp/core/utils/color_utils.dart';
-import 'package:example/demo/action_state.dart';
-import 'package:example/demo/util.dart';
 
-class LineChartWithRange extends StatefulWidget  {
+class LineChartWithRange extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
     return LineChartWithRangeState();
   }
-
-
 }
 
-class LineChartWithRangeState extends State<LineChartWithRange> with ChartTransListener {
+class LineChartWithRangeState extends State<LineChartWithRange>
+    with ChartTransListener {
   var random = Random(1);
   int _count = 45;
   double _range = 180.0;
 
-  LineChartController controller;
-  LineChartController miniController;
+  late LineChartController controller;
+  late LineChartController miniController;
 
   @override
   void scale(double scaleX, double scaleY, double x, double y) {
-    var k ="";
+    var k = "";
   }
 
   @override
   void translate(double dx, double dy) {
-    var k ="";
+    var k = "";
   }
 
   @override
   void initState() {
-
     _initMiniController();
     _initController();
     _initLineData(_count, _range);
@@ -59,11 +53,7 @@ class LineChartWithRangeState extends State<LineChartWithRange> with ChartTransL
     return Stack(
       children: <Widget>[
         Positioned(
-            right: 0,
-            left: 0,
-            top: 0,
-            bottom: 72,
-            child: _initLineChart()),
+            right: 0, left: 0, top: 0, bottom: 72, child: _initLineChart()),
         Positioned(
             height: 40,
             right: 16,
@@ -73,7 +63,6 @@ class LineChartWithRangeState extends State<LineChartWithRange> with ChartTransL
       ],
     );
   }
-
 
   String getTitle() {
     return "Line Chart Basic";
@@ -89,15 +78,17 @@ class LineChartWithRangeState extends State<LineChartWithRange> with ChartTransL
             ..labelAxisPadding = 10;
         },
         axisRightSettingFunction: (axisRight, controller) {
-          axisRight..enabled = (false)
+          axisRight
+            ..enabled = (false)
             ..labelAxisPadding = 10;
         },
         legendSettingFunction: (legend, controller) {
           legend.shape = (LegendForm.LINE);
         },
         xAxisSettingFunction: (xAxis, controller) {
-          xAxis..position = XAxisPosition.BOTTOM
-              ..labelAxisPadding = 10;
+          xAxis
+            ..position = XAxisPosition.BOTTOM
+            ..labelAxisPadding = 10;
         },
         drawGridBackground: false,
         backgroundColor: ColorUtils.WHITE,
@@ -117,7 +108,7 @@ class LineChartWithRangeState extends State<LineChartWithRange> with ChartTransL
           axisLeft
             ..setAxisMaximum(200)
             ..setAxisMinimum(-50)
-          ..enabled = false;
+            ..enabled = false;
         },
         axisRightSettingFunction: (axisRight, controller) {
           axisRight.enabled = (false);
@@ -126,7 +117,8 @@ class LineChartWithRangeState extends State<LineChartWithRange> with ChartTransL
           legend.enabled = false;
         },
         xAxisSettingFunction: (xAxis, controller) {
-          xAxis..enabled = (true)
+          xAxis
+            ..enabled = (true)
             ..drawGridLines = (true)
             ..position = (XAxisPosition.BOTTOM_INSIDE_RIGHT);
         },
@@ -139,14 +131,13 @@ class LineChartWithRangeState extends State<LineChartWithRange> with ChartTransL
         pinchZoomEnabled: true,
         description: desc,
         rangeColor: Colors.red,
-      drawRange: true
-    );
+        drawRange: true);
     miniController.setViewPortOffsets(0, 0, 0, 0);
   }
 
   void _initLineData(int count, double range) async {
     var img = await ImageLoader.loadImage('assets/img/star.png');
-    List<Entry> values = List();
+    List<Entry> values = [];
 
     for (int i = 0; i < count; i++) {
       double val = (random.nextDouble() * range) - 30;
@@ -159,7 +150,6 @@ class LineChartWithRangeState extends State<LineChartWithRange> with ChartTransL
     set1 = LineDataSet(values, "DataSet 1");
 
     set1.setDrawIcons(false);
-
 
     // black lines and points
     set1.setColor1(ColorUtils.BLACK);
@@ -190,7 +180,7 @@ class LineChartWithRangeState extends State<LineChartWithRange> with ChartTransL
     // set color of filled area
     set1.setGradientColor(ColorUtils.BLUE, ColorUtils.RED);
 
-    List<ILineDataSet> dataSets = List();
+    List<ILineDataSet> dataSets = [];
     dataSets.add(set1); // add the data sets
 
     // create a data object with the data sets
@@ -218,6 +208,6 @@ class LineChartWithRangeState extends State<LineChartWithRange> with ChartTransL
 
   @override
   Widget build(BuildContext context) {
-    return  getBody();
+    return getBody();
   }
 }
