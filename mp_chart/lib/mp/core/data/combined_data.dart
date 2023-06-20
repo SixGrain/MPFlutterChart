@@ -22,37 +22,37 @@ class CombinedData extends BarLineScatterCandleBubbleData<
 
   CombinedData() : super();
 
-  void setData0(LineData data) {
+  void setData0(LineData? data) {
     _levelData = data;
     notifyDataChanged();
   }
 
-  void setData1(LineData data) {
+  void setData1(LineData? data) {
     _lineData = data;
     notifyDataChanged();
   }
 
-  void setData2(BarData data) {
+  void setData2(BarData? data) {
     _barData = data;
     notifyDataChanged();
   }
 
-  void setData3(ScatterData data) {
+  void setData3(ScatterData? data) {
     _scatterData = data;
     notifyDataChanged();
   }
 
-  void setData4(CandleData data) {
+  void setData4(CandleData? data) {
     _candleData = data;
     notifyDataChanged();
   }
 
-  void setData5(BubbleData data) {
+  void setData5(BubbleData? data) {
     _bubbleData = data;
     notifyDataChanged();
   }
 
-  void setData6(FilledLineData data) {
+  void setData6(FilledLineData? data) {
     _filledLineData = data;
     notifyDataChanged();
   }
