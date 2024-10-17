@@ -5,7 +5,7 @@ import 'package:example/demo/util.dart';
 import 'package:flutter/material.dart';
 import 'package:mp_chart/mp/chart/pie_chart.dart';
 import 'package:mp_chart/mp/controller/pie_chart_controller.dart';
-import 'package:mp_chart/mp/core/animator.dart';
+import 'package:mp_chart/mp/core/animator.dart' as an;
 import 'package:mp_chart/mp/core/common_interfaces.dart';
 import 'package:mp_chart/mp/core/data/pie_data.dart';
 import 'package:mp_chart/mp/core/data_set/pie_data_set.dart';
@@ -246,7 +246,7 @@ class PieChartValueLinesState extends PieActionState<PieChartValueLines>
     var pieChart = PieChart(controller);
     controller.animator
       ..reset()
-      ..animateY2(1400, Easing.EaseInOutQuad);
+      ..animateY2(1400, an.Easing.EaseInOutQuad);
     return pieChart;
   }
 

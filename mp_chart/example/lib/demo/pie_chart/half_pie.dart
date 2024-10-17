@@ -5,7 +5,7 @@ import 'package:example/demo/util.dart';
 import 'package:flutter/material.dart';
 import 'package:mp_chart/mp/chart/pie_chart.dart';
 import 'package:mp_chart/mp/controller/pie_chart_controller.dart';
-import 'package:mp_chart/mp/core/animator.dart';
+import 'package:mp_chart/mp/core/animator.dart' as an;
 import 'package:mp_chart/mp/core/data/pie_data.dart';
 import 'package:mp_chart/mp/core/data_set/pie_data_set.dart';
 import 'package:mp_chart/mp/core/description.dart';
@@ -150,7 +150,7 @@ class PieChartHalfPieState extends SimpleActionState<PieChartHalfPie> {
 
   Widget _initPieChart() {
     var pieChart = PieChart(_controller);
-    _controller.animator.animateY2(1400, Easing.EaseInOutQuad);
+    _controller.animator.animateY2(1400, an.Easing.EaseInOutQuad);
     return pieChart;
   }
 }

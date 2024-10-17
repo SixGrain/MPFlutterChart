@@ -233,6 +233,7 @@ class CustomScatterShapeRenderer implements IShapeRenderer {
   @override
   void renderShape(
       Canvas c,
+      Entry entry,
       IScatterDataSet dataSet,
       ViewPortHandler viewPortHandler,
       double posX,

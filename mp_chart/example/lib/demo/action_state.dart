@@ -11,7 +11,7 @@ import 'package:mp_chart/mp/controller/line_chart_controller.dart';
 import 'package:mp_chart/mp/controller/pie_chart_controller.dart';
 import 'package:mp_chart/mp/controller/radar_chart_controller.dart';
 import 'package:mp_chart/mp/controller/scatter_chart_controller.dart';
-import 'package:mp_chart/mp/core/animator.dart';
+import 'package:mp_chart/mp/core/animator.dart' as an;
 import 'package:mp_chart/mp/core/data_interfaces/i_bar_data_set.dart';
 import 'package:mp_chart/mp/core/data_interfaces/i_candle_data_set.dart';
 import 'package:mp_chart/mp/core/data_interfaces/i_data_set.dart';
@@ -232,7 +232,7 @@ abstract class LineActionState<T extends StatefulWidget>
       case 'M':
         controller.animator
           ..reset()
-          ..animateY2(2000, Easing.EaseInCubic);
+          ..animateY2(2000, an.Easing.EaseInCubic);
         break;
       case 'N':
         controller.animator
@@ -507,7 +507,7 @@ abstract class PieActionState<T extends StatefulWidget> extends ActionState<T> {
         controller.animator
           ..reset()
           ..spin(2000, controller.rotationAngle, controller.rotationAngle + 360,
-              Easing.EaseInOutCubic);
+              an.Easing.EaseInOutCubic);
         break;
       case 'K':
         controller.animator
@@ -925,7 +925,7 @@ abstract class RadarActionState<T extends StatefulWidget>
         controller.animator
           ..reset()
           ..spin(2000, controller.rotationAngle, controller.rotationAngle + 360,
-              Easing.EaseInOutCubic);
+              an.Easing.EaseInOutCubic);
         break;
       case 'K':
         controller.animator

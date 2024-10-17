@@ -179,6 +179,7 @@ class LineChartWithRangeState extends State<LineChartWithRange>
 
     // set color of filled area
     set1.setGradientColor(ColorUtils.BLUE, ColorUtils.RED);
+    set1.setDrawIcons(true);
 
     List<ILineDataSet> dataSets = [];
     dataSets.add(set1); // add the data sets

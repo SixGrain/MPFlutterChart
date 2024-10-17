@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:mp_chart/mp/core/data_interfaces/i_scatter_data_set.dart';
+import 'package:mp_chart/mp/core/entry/entry.dart';
 import 'package:mp_chart/mp/core/render/i_shape_renderer.dart';
 import 'package:mp_chart/mp/core/view_port.dart';
 import 'package:mp_chart/mp/core/utils/utils.dart';
@@ -9,6 +10,7 @@ class ChevronUpShapeRenderer implements IShapeRenderer {
   @override
   void renderShape(
       Canvas c,
+      Entry entry,
       IScatterDataSet dataSet,
       ViewPortHandler viewPortHandler,
       double posX,

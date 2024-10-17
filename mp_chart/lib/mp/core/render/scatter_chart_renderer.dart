@@ -8,15 +8,15 @@ import 'package:mp_chart/mp/core/data_interfaces/i_scatter_data_set.dart';
 import 'package:mp_chart/mp/core/data_provider/scatter_data_provider.dart';
 import 'package:mp_chart/mp/core/entry/entry.dart';
 import 'package:mp_chart/mp/core/highlight/highlight.dart';
+import 'package:mp_chart/mp/core/poolable/point.dart';
 import 'package:mp_chart/mp/core/render/i_shape_renderer.dart';
 import 'package:mp_chart/mp/core/render/line_scatter_candle_radar_renderer.dart';
 import 'package:mp_chart/mp/core/transformer/transformer.dart';
 import 'package:mp_chart/mp/core/utils/canvas_utils.dart';
 import 'package:mp_chart/mp/core/utils/painter_utils.dart';
+import 'package:mp_chart/mp/core/utils/utils.dart';
 import 'package:mp_chart/mp/core/value_formatter/value_formatter.dart';
 import 'package:mp_chart/mp/core/view_port.dart';
-import 'package:mp_chart/mp/core/poolable/point.dart';
-import 'package:mp_chart/mp/core/utils/utils.dart';
 
 class ScatterChartRenderer extends LineScatterCandleRadarRenderer {
   late ScatterDataProvider _provider;
@@ -72,7 +72,7 @@ class ScatterChartRenderer extends LineScatterCandleRadarRenderer {
           !viewPortHandler.isInBoundsY(mPixelBuffer[1])) continue;
 
       renderPaint.color = dataSet.getColor2(i ~/ 2);
-      renderer.renderShape(c, dataSet, viewPortHandler, mPixelBuffer[0],
+      renderer.renderShape(c, e, dataSet, viewPortHandler, mPixelBuffer[0],
           mPixelBuffer[1], renderPaint);
     }
   }

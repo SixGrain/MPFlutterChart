@@ -5,7 +5,7 @@ import 'package:example/demo/util.dart';
 import 'package:flutter/material.dart';
 import 'package:mp_chart/mp/chart/radar_chart.dart';
 import 'package:mp_chart/mp/controller/radar_chart_controller.dart';
-import 'package:mp_chart/mp/core/animator.dart';
+import 'package:mp_chart/mp/core/animator.dart' as an;
 import 'package:mp_chart/mp/core/data/radar_data.dart';
 import 'package:mp_chart/mp/core/data_interfaces/i_radar_data_set.dart';
 import 'package:mp_chart/mp/core/data_set/radar_data_set.dart';
@@ -152,7 +152,7 @@ class OtherChartRadarState extends RadarActionState<OtherChartRadar> {
     var radarChart = RadarChart(controller);
     controller.animator
       ..reset()
-      ..animateXY2(1400, 1400, Easing.EaseInOutQuad);
+      ..animateXY2(1400, 1400, an.Easing.EaseInOutQuad);
     return radarChart;
   }
 }
